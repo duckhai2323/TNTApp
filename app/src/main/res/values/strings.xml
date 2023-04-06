@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">MyApp1</string>
+    <string name="text">
+        Mô tả:
+Tương thích với Bluetooth và không dây: Các loại tai nghe này được thiết kế với công nghệ V5.0 tương thích với Bluetooth để đảm bảo kết nối ổn định và âm thanh rõ ràng, vì vậy bạn có thể tự tin sử dụng chúng.
+Không thấm nước và có thể sạc lại: Những chiếc tai nghe chống nước này được thiết kế với pin tích hợp, có thể sử dụng trong một thời gian dài sau khi được sạc đầy, đủ để đáp ứng nhu cầu hàng ngày của bạn.
+Độ trễ thấp và điều khiển cảm ứng: Những tai nghe này có thể hoạt động với độ trễ thấp là 65ms. Bạn có thể điều khiển chúng thông qua cảm ứng, thuận tiện và dễ sử dụng.
+Có thể điều chỉnh và kéo dài: Bạn có thể chuyển đổi các chế độ theo yêu cầu, bao gồm chế độ chơi, chế độ chơi nhạc và chế độ cuộc gọi, để làm cho cuộc sống của bạn thanh lịch và thú vị.
+Ghép nối âm thanh nổi và tự động: Những tai nghe này cung cấp cho bạn hiệu ứng âm thanh thấp và do chip V5.0, chúng có thể tự động ghép nối với thiết bị của bạn.
+    </string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>
