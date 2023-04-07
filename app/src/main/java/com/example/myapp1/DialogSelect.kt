@@ -6,8 +6,10 @@ import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapp1.home.ClickInterface
@@ -116,6 +118,21 @@ class DialogSelect(var listBrand:MutableList<ItemBrand>,var listColor:MutableLis
 
                 var txtDismissWarranty:ImageView = view.findViewById(R.id.txtDismissWarranty)
                 txtDismissWarranty.setOnClickListener{
+                    bottomSheet.dismiss()
+                }
+            }
+
+            "price" -> {
+                view = LayoutInflater.from(context).inflate(R.layout.layout_fill_in,null)
+                var edtPrice:EditText = view.findViewById(R.id.edtPrice)
+                var txtSave:TextView = view.findViewById(R.id.txtSave)
+                txtSave.setOnClickListener{
+                    val strPrice:String = edtPrice.text.toString()
+                    mOnInputData?.sendData(strPrice + "đ","price")
+                    bottomSheet.dismiss()
+                }
+                var txtDismissPrice:ImageView = view.findViewById(R.id.txtDismissPrice)
+                txtDismissPrice.setOnClickListener{
                     bottomSheet.dismiss()
                 }
             }

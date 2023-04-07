@@ -17,6 +17,7 @@ import com.google.firebase.ktx.Firebase
 import org.w3c.dom.Text
 
 class DialogPhone : BottomSheetDialogFragment(),DialogSelect.OnInputData{
+    private var price:String?=null
     private var warranty:String?=null
     private var capacity:String?=null
     private var status:String?=null
@@ -42,6 +43,10 @@ class DialogPhone : BottomSheetDialogFragment(),DialogSelect.OnInputData{
     lateinit var txtBaoHanhMin:TextView
     lateinit var txtBaoHanh:TextView
     lateinit var edtBaoHanh:TextView
+
+    lateinit var txtGiaMin:TextView
+    lateinit var txtGia:TextView
+    lateinit var edtGia:TextView
     lateinit var bottomSheetDialog:BottomSheetDialog
     override fun sendData(data: String,obj:String) {
     }
@@ -82,6 +87,13 @@ class DialogPhone : BottomSheetDialogFragment(),DialogSelect.OnInputData{
             txtBaoHanh.visibility = View.VISIBLE
             edtBaoHanh.visibility = View.GONE
         }
+        else if(obj == "price"){
+            price = data
+            txtGiaMin.visibility = View.VISIBLE
+            txtGia.text = price
+            txtGia.visibility = View.VISIBLE
+            edtGia.visibility = View.GONE
+        }
     }
 
     @SuppressLint("MissingInflatedId")
@@ -111,6 +123,10 @@ class DialogPhone : BottomSheetDialogFragment(),DialogSelect.OnInputData{
         txtBaoHanhMin = view.findViewById(R.id.txtBaoHanhMin)
         txtBaoHanh = view.findViewById(R.id.txtBaoHanh)
         edtBaoHanh = view.findViewById(R.id.edtBaoHanh)
+
+        txtGiaMin = view.findViewById(R.id.txtGiaMin)
+        txtGia = view.findViewById(R.id.txtGia)
+        edtGia = view.findViewById(R.id.edtGia)
 
         var selectBrand:LinearLayout = view.findViewById(R.id.selectBrand)
         selectBrand.setOnClickListener {
@@ -191,6 +207,14 @@ class DialogPhone : BottomSheetDialogFragment(),DialogSelect.OnInputData{
             fragmentManager?.let { it1 -> dialogBrand.show(it1, "aaaa") }
         }
 
+        var selectPrice:LinearLayout = view.findViewById(R.id.selectPrice)
+        selectPrice.setOnClickListener {
+            var listColor:MutableList<ItemImageText> = mutableListOf()
+            var listBrand: MutableList<ItemBrand> = mutableListOf()
+            var listCapacity: MutableList<String> = mutableListOf()
+            var dialogBrand: DialogSelect = DialogSelect(listBrand,listColor,listCapacity,"price")
+            fragmentManager?.let { it1 -> dialogBrand.show(it1, "aaaa") }
+        }
 
         var imgClose:ImageView = view.findViewById(R.id.imgClose)
         imgClose.setOnClickListener{
