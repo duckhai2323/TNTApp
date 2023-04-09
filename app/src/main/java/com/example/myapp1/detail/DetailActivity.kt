@@ -124,7 +124,10 @@ class DetailActivity : AppCompatActivity() {
         listDetail.add(ItemImageText(R.drawable.detail4,""))
         listDetail.add(ItemImageText(R.drawable.detail5,""))
         listDetail.add(ItemImageText(R.drawable.detail2,""))
-        rvDetail.adapter = ViewItemAdapter0(listDetail)
+        rvDetail.adapter = ViewItemAdapter0(listDetail,object:ClickInterface{
+            override fun setOnClick(pos: Int) {
+            }
+        })
         rvDetail.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL,false)
 
         var txtPrice0 = findViewById<TextView>(R.id.txtPrice0)

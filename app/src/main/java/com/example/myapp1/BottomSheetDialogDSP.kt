@@ -9,12 +9,13 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.myapp1.electronic.DialogPhone
 import com.example.myapp1.home.ClickInterface
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
-class BottomSheetDialogDSP(var dialogDSP:DialogPhone): BottomSheetDialogFragment() {
+class BottomSheetDialogDSP(var dialogDSP: DialogPhone): BottomSheetDialogFragment() {
 
     lateinit var batdongsan:LinearLayout
     lateinit var xeco:LinearLayout

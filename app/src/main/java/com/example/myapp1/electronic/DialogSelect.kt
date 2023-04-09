@@ -1,4 +1,4 @@
-package com.example.myapp1
+package com.example.myapp1.electronic
 
 import android.annotation.SuppressLint
 import android.app.Dialog
@@ -12,6 +12,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.myapp1.*
 import com.example.myapp1.home.ClickInterface
 import com.example.myapp1.home.ItemImageText
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -20,7 +21,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
-class DialogSelect(var listBrand:MutableList<ItemBrand>,var listColor:MutableList<ItemImageText>,var listCapacity:MutableList<String>,var key:String): BottomSheetDialogFragment() {
+class DialogSelect(var listBrand:MutableList<ItemBrand>, var listColor:MutableList<ItemImageText>, var listCapacity:MutableList<String>, var key:String): BottomSheetDialogFragment() {
     private val db = Firebase.firestore
     lateinit var bottomSheet:BottomSheetDialog
     interface OnInputData{

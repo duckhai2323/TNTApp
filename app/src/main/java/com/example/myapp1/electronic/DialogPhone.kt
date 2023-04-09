@@ -1,4 +1,4 @@
-package com.example.myapp1
+package com.example.myapp1.electronic
 
 import android.annotation.SuppressLint
 import android.app.Dialog
@@ -8,15 +8,15 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import com.example.myapp1.R
 import com.example.myapp1.home.ItemImageText
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import org.w3c.dom.Text
 
-class DialogPhone : BottomSheetDialogFragment(),DialogSelect.OnInputData{
+class DialogPhone : BottomSheetDialogFragment(), DialogSelect.OnInputData {
     private var price:String?=null
     private var warranty:String?=null
     private var capacity:String?=null

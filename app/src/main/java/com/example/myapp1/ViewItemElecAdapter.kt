@@ -1,4 +1,4 @@
-package com.example.myapp1.home.adapter
+package com.example.myapp1
 
 import android.view.LayoutInflater
 import android.view.View
@@ -6,15 +6,15 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.myapp1.R
 import com.example.myapp1.home.ClickInterface
 import com.example.myapp1.home.ItemImageText
+import com.example.myapp1.home.adapter.ViewItemAdapter0
 
-class ViewItemAdapter0 (private val listItemGoiY0:MutableList<ItemImageText>, val itemTitle: ClickInterface) : RecyclerView.Adapter<ViewItemAdapter0.ItemViewHolder>() {
+class ViewItemElecAdapter (private val listItemGoiY0:MutableList<ItemImageText>, val itemTitle: ClickInterface) : RecyclerView.Adapter<ViewItemElecAdapter.ItemViewHolder>() {
     inner class ItemViewHolder(itemView: View): RecyclerView.ViewHolder(itemView)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
-        val view =  LayoutInflater.from(parent.context).inflate(R.layout.layout_itemgoiyhomnay0,parent,false)
+        val view =  LayoutInflater.from(parent.context).inflate(R.layout.layout_itemgoiy0,parent,false)
         return ItemViewHolder(view)
     }
 

@@ -1,4 +1,4 @@
-package com.example.myapp1
+package com.example.myapp1.electronic
 
 import android.view.LayoutInflater
 import android.view.View
@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.myapp1.R
 import com.example.myapp1.home.ClickInterface
 import com.squareup.picasso.Picasso
 

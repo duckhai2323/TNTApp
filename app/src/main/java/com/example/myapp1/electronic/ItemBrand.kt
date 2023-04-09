@@ -1,4 +1,4 @@
-package com.example.myapp1
+package com.example.myapp1.electronic
 
 class ItemBrand(
     var name:String,

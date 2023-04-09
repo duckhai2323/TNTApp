@@ -1,5 +1,6 @@
 package com.example.myapp1.home
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -10,6 +11,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
+import com.example.myapp1.ElectronicFragment
 import com.example.myapp1.R
 import com.example.myapp1.detail.DetailActivity
 import com.example.myapp1.home.adapter.ViewItemAdapter
@@ -18,6 +20,7 @@ import com.example.myapp1.home.adapter.ViewPageAdapter
 import com.example.myapp1.home.adapter.ViewProductAdapter
 import me.relex.circleindicator.CircleIndicator3
 class HomeFragment : Fragment() {
+    lateinit var mActivityHome:HomeActivity
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,7 +55,11 @@ class HomeFragment : Fragment() {
         listItemGoiY0.add(ItemImageText(R.drawable.chude2,"Đồ Chơi"))
         listItemGoiY0.add(ItemImageText(R.drawable.chude1,"Thời Trang"))
         listItemGoiY0.add(ItemImageText(R.drawable.chude3,"Điện Tử"))
-        rvGoiYChuDe.adapter = ViewItemAdapter0(listItemGoiY0)
+        rvGoiYChuDe.adapter = ViewItemAdapter0(listItemGoiY0,object:ClickInterface{
+            override fun setOnClick(pos: Int) {
+                mActivityHome.getFragment("electron")
+            }
+        })
         rvGoiYChuDe.layoutManager= LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL,false)
 
         //DisplaySuggest1()
@@ -87,5 +94,10 @@ class HomeFragment : Fragment() {
             context,2
         )
         return view
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        mActivityHome = requireActivity() as HomeActivity
     }
 }
