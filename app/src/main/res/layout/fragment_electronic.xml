@@ -69,6 +69,7 @@
             android:orientation="vertical">
 
             <LinearLayout
+                android:id="@+id/selectCity"
                 android:layout_width="match_parent"
                 android:layout_height="42dp"
                 android:layout_marginTop="10dp"
@@ -93,6 +94,7 @@
                     android:gravity="center"/>
 
                 <TextView
+                    android:id="@+id/city"
                     android:layout_width="wrap_content"
                     android:layout_height="45dp"
                     android:text="Toàn quốc"

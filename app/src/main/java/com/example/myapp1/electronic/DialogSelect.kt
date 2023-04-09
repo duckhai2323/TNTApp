@@ -24,9 +24,6 @@ import com.google.firebase.ktx.Firebase
 class DialogSelect(var listBrand:MutableList<ItemBrand>, var listColor:MutableList<ItemImageText>, var listCapacity:MutableList<String>, var key:String): BottomSheetDialogFragment() {
     private val db = Firebase.firestore
     lateinit var bottomSheet:BottomSheetDialog
-    interface OnInputData{
-        fun sendData(str:String,obj:String)
-    }
     private var mOnInputData: OnInputData? = null
     @SuppressLint("MissingInflatedId")
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {

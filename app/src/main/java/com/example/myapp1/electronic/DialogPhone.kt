@@ -8,6 +8,7 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import com.example.myapp1.OnInputData
 import com.example.myapp1.R
 import com.example.myapp1.home.ItemImageText
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -16,7 +17,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
-class DialogPhone : BottomSheetDialogFragment(), DialogSelect.OnInputData {
+class DialogPhone : BottomSheetDialogFragment(), OnInputData {
     private var price:String?=null
     private var warranty:String?=null
     private var capacity:String?=null

@@ -20,12 +20,22 @@ import com.example.myapp1.home.ItemProduct
 import me.relex.circleindicator.CircleIndicator3
 
 val TagElectron:String = ElectronicFragment::class.java.name
-class ElectronicFragment : Fragment() {
+class ElectronicFragment : Fragment(),OnInputData {
+    lateinit var txtCity:TextView
     @SuppressLint("MissingInflatedId")
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         val view:View =  inflater.inflate(R.layout.fragment_electronic, container, false)
         var backFragmentHom:ImageView = view.findViewById(R.id.backFragmentHome)
+
+        //selectCity
+        var selectCity:LinearLayout = view.findViewById(R.id.selectCity)
+        txtCity = view.findViewById(R.id.city)
+        selectCity.setOnClickListener {
+            var dialogSelectCity:DialogSelectCity = DialogSelectCity()
+            dialogSelectCity.show(requireFragmentManager(),"aaa")
+        }
+
 
         //DisplaySlider()
         val viewPage2: ViewPager2 = view.findViewById(R.id.viewpage2)
@@ -118,5 +128,13 @@ class ElectronicFragment : Fragment() {
             fragmentManager?.popBackStack()
         }
         return view
+    }
+
+    override fun sendData(str: String, obj: String) {
+
+    }
+
+    fun update(str:String,obj:String) {
+        txtCity.text = str
     }
 }

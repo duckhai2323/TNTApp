@@ -4,19 +4,16 @@ import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.fragment.app.Fragment
-import com.example.myapp1.BottomSheetDialogDSP
-import com.example.myapp1.ElectronicFragment
+import com.example.myapp1.*
 import com.example.myapp1.electronic.DialogPhone
 import com.example.myapp1.electronic.DialogSelect
-import com.example.myapp1.R
-import com.example.myapp1.TagElectron
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 private val homeFragment = HomeFragment()
 private val profileFragment = ProfleFragment()
 private val electronicFragment = ElectronicFragment()
-class HomeActivity : AppCompatActivity(), DialogSelect.OnInputData{
+class HomeActivity : AppCompatActivity(), OnInputData {
 
     private var dialogDSP: DialogPhone = DialogPhone()
     @SuppressLint("MissingInflatedId")
@@ -51,6 +48,7 @@ class HomeActivity : AppCompatActivity(), DialogSelect.OnInputData{
 
     override fun sendData(str: String,obj:String) {
         dialogDSP.updateDate(str,obj)
+        electronicFragment.update(str,obj)
     }
 
     private fun replaceFragment(fragment:Fragment) {
