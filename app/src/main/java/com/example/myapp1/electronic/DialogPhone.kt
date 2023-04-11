@@ -17,7 +17,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
-class DialogPhone : BottomSheetDialogFragment(), OnInputData {
+class DialogPhone : BottomSheetDialogFragment(){
     private var price:String?=null
     private var warranty:String?=null
     private var capacity:String?=null
@@ -49,8 +49,6 @@ class DialogPhone : BottomSheetDialogFragment(), OnInputData {
     lateinit var txtGia:TextView
     lateinit var edtGia:TextView
     lateinit var bottomSheetDialog:BottomSheetDialog
-    override fun sendData(data: String,obj:String) {
-    }
 
     fun updateDate (data:String,obj:String) {
         if(obj == "brand") {

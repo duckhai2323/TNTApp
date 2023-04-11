@@ -1,6 +1,7 @@
 package com.example.myapp1
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -14,13 +15,14 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
+import com.example.myapp1.detail.DetailActivity
 import com.example.myapp1.home.ClickInterface
 import com.example.myapp1.home.ItemImageText
 import com.example.myapp1.home.ItemProduct
 import me.relex.circleindicator.CircleIndicator3
 
 val TagElectron:String = ElectronicFragment::class.java.name
-class ElectronicFragment : Fragment(),OnInputData {
+class ElectronicFragment : Fragment(){
     lateinit var txtCity:TextView
     @SuppressLint("MissingInflatedId")
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -65,6 +67,12 @@ class ElectronicFragment : Fragment(),OnInputData {
         listItemGoiY0.add(ItemImageText(R.drawable.linhkien,"Linh kiện máy tính"))
         rvGoiYChuDe.adapter = ViewItemElecAdapter(listItemGoiY0,object: ClickInterface {
             override fun setOnClick(pos: Int) {
+                val intent1 = Intent(requireContext(), ProductActivity::class.java)
+                val bundle = Bundle()
+                bundle.putString("city",txtCity.text.toString())
+                bundle.putString("product",listItemGoiY0[pos].topic)
+                intent1.putExtras(bundle)
+                startActivity(intent1)
             }
         })
         rvGoiYChuDe.layoutManager= GridLayoutManager(context, 2, GridLayoutManager.HORIZONTAL, false)
@@ -128,10 +136,6 @@ class ElectronicFragment : Fragment(),OnInputData {
             fragmentManager?.popBackStack()
         }
         return view
-    }
-
-    override fun sendData(str: String, obj: String) {
-
     }
 
     fun update(str:String,obj:String) {

@@ -47,8 +47,11 @@ class HomeActivity : AppCompatActivity(), OnInputData {
     }
 
     override fun sendData(str: String,obj:String) {
-        dialogDSP.updateDate(str,obj)
-        electronicFragment.update(str,obj)
+        if(obj == "city") {
+            electronicFragment.update(str, obj)
+        } else {
+            dialogDSP.updateDate(str,obj)
+        }
     }
 
     private fun replaceFragment(fragment:Fragment) {
