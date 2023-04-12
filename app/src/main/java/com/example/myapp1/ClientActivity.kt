@@ -6,6 +6,7 @@ import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.myapp1.home.ItemProduct
 
 class ClientActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,16 +45,16 @@ class ClientActivity : AppCompatActivity() {
     }
 
     private fun DisplayBangTin() {
-        var listTin:MutableList<Tin> = mutableListOf()
+        var listTin:MutableList<ItemProduct> = mutableListOf()
         var rvDangsp = findViewById<RecyclerView>(R.id.rvDangsp)
-        listTin.add(Tin(R.drawable.product3,"Tai nghe chính hãng, hàng xịn AirPod Provip","259.000 đ","Đã sử dụng 1 năm"))
-        listTin.add(Tin(R.drawable.product4,"Tai nghe chính hãng, hàng xịn AirPod Provip","259.000 đ","Đã sử dụng 1 năm"))
-        listTin.add(Tin(R.drawable.product2,"Tai nghe chính hãng, hàng xịn AirPod Provip","259.000 đ","Đã sử dụng 1 năm"))
-        listTin.add(Tin(R.drawable.product4,"Tai nghe chính hãng, hàng xịn AirPod Provip","259.000 đ","Đã sử dụng 1 năm"))
-        listTin.add(Tin(R.drawable.product2,"Tai nghe chính hãng, hàng xịn AirPod Provip","259.000 đ","Đã sử dụng 1 năm"))
+        listTin.add(ItemProduct(R.drawable.product3,"Tai nghe chính hãng, hàng xịn AirPod Provip","259.000 đ","Đã sử dụng 1 năm"))
+        listTin.add(ItemProduct(R.drawable.product4,"Tai nghe chính hãng, hàng xịn AirPod Provip","259.000 đ","Đã sử dụng 1 năm"))
+        listTin.add(ItemProduct(R.drawable.product2,"Tai nghe chính hãng, hàng xịn AirPod Provip","259.000 đ","Đã sử dụng 1 năm"))
+        listTin.add(ItemProduct(R.drawable.product4,"Tai nghe chính hãng, hàng xịn AirPod Provip","259.000 đ","Đã sử dụng 1 năm"))
+        listTin.add(ItemProduct(R.drawable.product2,"Tai nghe chính hãng, hàng xịn AirPod Provip","259.000 đ","Đã sử dụng 1 năm"))
 
         if(listTin.size > 3) {
-            var listTin1:MutableList<Tin> = mutableListOf()
+            var listTin1:MutableList<ItemProduct> = mutableListOf()
             val xemtatca = findViewById<LinearLayout>(R.id.xemtatca1)
             xemtatca.visibility = View.VISIBLE
             listTin1.add(listTin[0])

@@ -1,11 +1,13 @@
 package com.example.myapp1
 
+import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.ImageView
+import android.widget.LinearLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapp1.electronic.DialogSelect
@@ -13,6 +15,7 @@ import com.example.myapp1.electronic.ItemBrand
 import com.example.myapp1.electronic.ViewItemBrandAdapter
 import com.example.myapp1.home.ClickInterface
 import com.example.myapp1.home.ItemImageText
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.firebase.firestore.ktx.firestore
@@ -23,6 +26,8 @@ class DialogFilter(val key:String):BottomSheetDialogFragment() {
     lateinit var bottomSheet: BottomSheetDialog
     private var mOnInputData: OnInputData? = null
 
+    private  var listBrand: MutableList<ItemBrand> = mutableListOf()
+
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         bottomSheet =  super.onCreateDialog(savedInstanceState) as BottomSheetDialog
         lateinit var view: View
@@ -32,7 +37,6 @@ class DialogFilter(val key:String):BottomSheetDialogFragment() {
                 view = LayoutInflater.from(context).inflate(R.layout.layout_selectbrand, null)
                 var rvBrand: RecyclerView = view.findViewById(R.id.rvBrand)
                 rvBrand.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-                var listBrand: MutableList<ItemBrand> = mutableListOf()
                 val db = Firebase.firestore
                 db.collection("category").document("electron")
                     .collection("telephone")
@@ -48,7 +52,7 @@ class DialogFilter(val key:String):BottomSheetDialogFragment() {
                             rvBrand.adapter = ViewItemBrandAdapter(listBrand, object : ClickInterface {
                                 override fun setOnClick(pos: Int) {
                                     mOnInputData?.sendData(listBrand[pos].name,key)
-                                    bottomSheet.dismiss()
+                                    addEventBrand(listBrand[pos])
                                 }
                             })
                         }
@@ -56,6 +60,35 @@ class DialogFilter(val key:String):BottomSheetDialogFragment() {
                 var txtDismiss: ImageView = view.findViewById(R.id.txtDismiss)
                 txtDismiss.setOnClickListener {
                     bottomSheet.dismiss()
+                }
+            }
+
+            "series" -> {
+                if(brand_ != null) {
+                    view = LayoutInflater.from(context).inflate(R.layout.layout_selectseries,null)
+                    val dbRef = db.collection("category").document("electron").collection("telephone")
+                    var listSeries:MutableList<String> = mutableListOf()
+                    var rvSeries:RecyclerView = view.findViewById(R.id.rvSeries)
+                    dbRef.whereEqualTo("name", brand_)
+                        .get()
+                        .addOnSuccessListener {it->
+                            if(!it.isEmpty) {
+                                for(document in it.documents){
+                                    listSeries = document.data?.get("array") as MutableList<String>
+                                }
+                                rvSeries.adapter = ViewItemAdapterString(listSeries,object:ClickInterface{
+                                    override fun setOnClick(pos: Int) {
+                                        mOnInputData?.sendData(listSeries[pos],"series")
+                                        bottomSheet.dismiss()
+                                    }
+                                })
+                            }
+                        }
+                    rvSeries.layoutManager = LinearLayoutManager(context,LinearLayoutManager.VERTICAL,false)
+                    var txtBackToBrand:ImageView = view.findViewById(R.id.txtBackToBrand)
+                    txtBackToBrand.setOnClickListener{
+                        bottomSheet.dismiss()
+                    }
                 }
             }
 
@@ -89,9 +122,123 @@ class DialogFilter(val key:String):BottomSheetDialogFragment() {
                     bottomSheet.dismiss()
                 }
             }
+
+            "status" -> {
+                view = LayoutInflater.from(context).inflate(R.layout.layout_selectstatus,null)
+                var LLOMoi: LinearLayout = view.findViewById(R.id.LLOMoi)
+                var LLOChuaSua: LinearLayout = view.findViewById(R.id.LLOChuaSua)
+                var LLODaSua: LinearLayout = view.findViewById(R.id.LLODaSua)
+                LLOMoi.setOnClickListener {
+                    mOnInputData?.sendData("Mới",key)
+                    bottomSheet.dismiss()
+                }
+                LLOChuaSua.setOnClickListener {
+                    mOnInputData?.sendData("Đã sử dụng (chưa sửa chữa)",key)
+                    bottomSheet.dismiss()
+                }
+                LLODaSua.setOnClickListener {
+                    mOnInputData?.sendData("Đã sử dụng (qua sửa chữa)",key)
+                    bottomSheet.dismiss()
+                }
+                var txtDismissStatus:ImageView = view.findViewById(R.id.txtDismissStatus)
+                txtDismissStatus.setOnClickListener{
+                    bottomSheet.dismiss()
+                }
+            }
+
+            "warranty" -> {
+                view = LayoutInflater.from(context).inflate(R.layout.layout_warranty,null)
+
+                var LLOConBaoHanh:LinearLayout = view.findViewById(R.id.LLOConBaoHanh)
+                var LLOHetBaoHanh:LinearLayout = view.findViewById(R.id.LLOHetBaoHanh)
+                LLOConBaoHanh.setOnClickListener {
+                    mOnInputData?.sendData("Còn bảo hành",key)
+                    bottomSheet.dismiss()
+                }
+
+                LLOHetBaoHanh.setOnClickListener {
+                    mOnInputData?.sendData("Hết bảo hành",key)
+                    bottomSheet.dismiss()
+                }
+
+                var txtDismissWarranty:ImageView = view.findViewById(R.id.txtDismissWarranty)
+                txtDismissWarranty.setOnClickListener{
+                    bottomSheet.dismiss()
+                }
+            }
+
+            "capacity" -> {
+                view = LayoutInflater.from(context).inflate(R.layout.layout_capacity,null)
+                var listCapacity: MutableList<String> = mutableListOf()
+                listCapacity.add("< 8GB")
+                listCapacity.add("8GB")
+                listCapacity.add("16GB")
+                listCapacity.add("32GB")
+                listCapacity.add("64GB")
+                listCapacity.add("128GB")
+                listCapacity.add("256GB")
+                listCapacity.add("> 256GB")
+                var txtDismissCapacity:ImageView = view.findViewById(R.id.txtDismissCapacity)
+                var rvCpacity:RecyclerView = view.findViewById(R.id.rvCapacity)
+                rvCpacity.adapter = ViewItemAdapterString(listCapacity,object:ClickInterface{
+                    override fun setOnClick(pos: Int) {
+                        mOnInputData?.sendData(listCapacity[pos],key)
+                        bottomSheet.dismiss()
+                    }
+                })
+                rvCpacity.layoutManager = LinearLayoutManager(context,LinearLayoutManager.VERTICAL,false)
+                txtDismissCapacity.setOnClickListener{
+                    bottomSheet.dismiss()
+                }
+            }
         }
+        bottomSheet.behavior.state = BottomSheetBehavior.STATE_EXPANDED
         bottomSheet.setContentView(view)
         return bottomSheet
+    }
+
+    @SuppressLint("MissingInflatedId")
+    private fun addEventBrand(itemBrand : ItemBrand) {
+        var view1 = LayoutInflater.from(context).inflate(R.layout.layout_selectseries,null)
+        val dbRef = db.collection("category").document("electron").collection("telephone")
+        var listSeries:MutableList<String> = mutableListOf()
+        var rvSeries:RecyclerView = view1.findViewById(R.id.rvSeries)
+        dbRef.whereEqualTo("name",itemBrand.name)
+            .get()
+            .addOnSuccessListener {it->
+                if(!it.isEmpty) {
+                    for(document in it.documents){
+                        listSeries = document.data?.get("array") as MutableList<String>
+                    }
+                    rvSeries.adapter = ViewItemAdapterString(listSeries,object:ClickInterface{
+                        override fun setOnClick(pos: Int) {
+                            mOnInputData?.sendData(listSeries[pos],"series")
+                            bottomSheet.dismiss()
+                        }
+                    })
+                }
+            }
+        rvSeries.layoutManager = LinearLayoutManager(context,LinearLayoutManager.VERTICAL,false)
+        bottomSheet.setContentView(view1)
+
+        var txtBackToBrand:ImageView = view1.findViewById(R.id.txtBackToBrand)
+        txtBackToBrand.setOnClickListener{
+            var view0:View = LayoutInflater.from(context).inflate(R.layout.layout_selectbrand,null)
+            bottomSheet.setContentView(view0)
+            var rvBrand:RecyclerView = view0.findViewById(R.id.rvBrand)
+            rvBrand.adapter = ViewItemBrandAdapter(listBrand,object:ClickInterface{
+                override fun setOnClick(pos: Int) {
+                    mOnInputData?.sendData(listBrand[pos].name,key)
+                    addEventBrand(listBrand[pos])
+                }
+            })
+            rvBrand.layoutManager = LinearLayoutManager(context,LinearLayoutManager.VERTICAL,false)
+
+            var txtDismiss:ImageView = view0.findViewById(R.id.txtDismiss)
+            txtDismiss.setOnClickListener{
+                bottomSheet.dismiss()
+            }
+        }
     }
 
     override fun onAttach(context: Context) {
