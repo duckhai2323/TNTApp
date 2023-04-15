@@ -4,38 +4,60 @@ import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapp1.home.ClickInterface
 import com.example.myapp1.home.ItemProduct
+import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.Query
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
+
 var brand_:String?=null
 class ProductActivity : AppCompatActivity(), OnInputData {
-    lateinit var viewAdapter:ViewItemFilteAdapter
-    lateinit var dialogFilte:DialogFilter
-    var listFilte:MutableList<FilteItem> = mutableListOf()
+    lateinit var addressStr:String
     lateinit var address:TextView
+    lateinit var viewAdapter:ViewItemFilteAdapter
+    var listFilte:MutableList<FilteItem> = mutableListOf()
+    lateinit var dialogFilte:DialogFilter
+    var listProductFilter = mutableListOf<ItemProduct>()
+    lateinit var product_:String
+    lateinit var rvProductFilter:RecyclerView
+    var mapFilter = mutableMapOf<String,String>()
     var position:Int = 0
+    private val db = Firebase.firestore
+    var check:Boolean = true
     override fun sendData(str: String, key: String) {
-        val item = FilteItem(
-            str,
-            R.drawable.outline_keyboard_arrow_down_24,
-            R.drawable.background_button2_1,
-            key
-        )
-        if (position == 1) {
-            when (key) {
-                "series" -> {
-                    viewAdapter.updateData(item, position + 1)
-                }
-                "brand" -> {
-                    brand_ = str
-                    viewAdapter.updateData(item, position)
+        mapFilter[key] = str
+        listProductFilter.clear()
+        if(key == "address") {
+            address.text = str
+        } else {
+            val item = FilteItem(
+                str,
+                R.drawable.outline_keyboard_arrow_down_24,
+                R.drawable.background_button2_1,
+                key
+            )
+            if(key == "brand"){
+                brand_ = str
+                if(mapFilter["series"]?.isEmpty() == false) {
+                    var item1 = FilteItem(
+                        "Dòng máy",
+                        R.drawable.baseline_add_24_1,
+                        R.drawable.background_filter,
+                        "series"
+                    )
+                    viewAdapter.updateData(item1, position + 1)
+                    mapFilter.remove("series")
                 }
             }
-        } else viewAdapter.updateData(item, position)
-
+            viewAdapter.updateData(item, position)
+        }
+        FilterProduct()
     }
 
     @SuppressLint("MissingInflatedId")
@@ -48,14 +70,22 @@ class ProductActivity : AppCompatActivity(), OnInputData {
 
         if(bundle!=null) {
             address.text = bundle.getString("city")
-            when(bundle.getString("product")){
+            addressStr = address.text.toString()
+            mapFilter["address"] = addressStr
+
+            var addressLLO: LinearLayout = findViewById<LinearLayout>(R.id.addressLLO)
+            addressLLO.setOnClickListener {
+                dialogFilte = DialogFilter("address","aaa")
+                dialogFilte.show(supportFragmentManager,"aaa")
+            }
+            product_ = bundle.getString("product").toString()
+            when(product_){
                 "Điện thoại" -> {
+                    product_ = "telephone"
                     listFilte.add(FilteItem("Điện thoại",R.drawable.outline_keyboard_arrow_down_24,R.drawable.background_button2_1,"product"))
                     listFilte.add(FilteItem("Hãng",R.drawable.baseline_add_24_1,R.drawable.background_filter,"brand"))
                     listFilte.add(FilteItem("Dòng máy",R.drawable.baseline_add_24_1,R.drawable.background_filter,"series"))
                     listFilte.add(FilteItem("Giá",R.drawable.baseline_add_24_1,R.drawable.background_filter,"price"))
-                    listFilte.add(FilteItem("Ship COD",R.drawable.baseline_add_24_1,R.drawable.background_filter,"shipcod"))
-                    listFilte.add(FilteItem("Thanh toán đảm bảo",R.drawable.baseline_add_24_1,R.drawable.background_filter,"pay"))
                     listFilte.add(FilteItem("Tình trạng",R.drawable.baseline_add_24_1,R.drawable.background_filter,"status"))
                     listFilte.add(FilteItem("Bảo hành",R.drawable.baseline_add_24_1,R.drawable.background_filter,"warranty"))
                     listFilte.add(FilteItem("Dung lượng",R.drawable.baseline_add_24_1,R.drawable.background_filter,"capacity"))
@@ -64,12 +94,11 @@ class ProductActivity : AppCompatActivity(), OnInputData {
                 }
 
                 "Laptop" -> {
+                    product_="laptop"
                     listFilte.add(FilteItem("Laptop",R.drawable.outline_keyboard_arrow_down_24,R.drawable.background_button2_1,"product"))
                     listFilte.add(FilteItem("Hãng",R.drawable.baseline_add_24_1,R.drawable.background_filter,"brand"))
                     listFilte.add(FilteItem("Dòng máy",R.drawable.baseline_add_24_1,R.drawable.background_filter,"series"))
                     listFilte.add(FilteItem("Giá",R.drawable.baseline_add_24_1,R.drawable.background_filter,"price"))
-                    listFilte.add(FilteItem("Ship COD",R.drawable.baseline_add_24_1,R.drawable.background_filter,"shipcod"))
-                    listFilte.add(FilteItem("Thanh toán đảm bảo",R.drawable.baseline_add_24_1,R.drawable.background_filter,"pay"))
                     listFilte.add(FilteItem("Tình trạng",R.drawable.baseline_add_24_1,R.drawable.background_filter,"status"))
                     listFilte.add(FilteItem("Bảo hành",R.drawable.baseline_add_24_1,R.drawable.background_filter,"warranty"))
                     listFilte.add(FilteItem("RAM",R.drawable.baseline_add_24_1,R.drawable.background_filter,"ram"))
@@ -85,22 +114,51 @@ class ProductActivity : AppCompatActivity(), OnInputData {
         viewAdapter = ViewItemFilteAdapter(listFilte,object:ClickInterface{
             override fun setOnClick(pos: Int) {
                 position = pos
-                dialogFilte = DialogFilter(listFilte[pos].key)
+                dialogFilte = DialogFilter(listFilte[pos].key,product_)
                 dialogFilte.show(supportFragmentManager,"aaa")
             }
         })
         rvList.adapter = viewAdapter
         rvList.layoutManager = LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL, false)
 
-        var rvProductFilter:RecyclerView = findViewById<RecyclerView>(R.id.rvProductFilter)
-        var listProductFilter:MutableList<ItemProduct> = mutableListOf()
-        listProductFilter.add(ItemProduct(R.drawable.product2,"[Mã ELAP500K giảm 8% đơn 500K] Apple AirPods ...","đ28.000.000","Đã bán 10.6k"))
-        listProductFilter.add(ItemProduct(R.drawable.product3,"[Mã ELAP500K giảm 8% đơn 500K] Apple AirPods ...","đ28.000.000","Đã bán 10.6k"))
-        listProductFilter.add(ItemProduct(R.drawable.product4,"[Mã ELAP500K giảm 8% đơn 500K] Apple AirPods ...","đ28.000.000","Đã bán 10.6k"))
-        listProductFilter.add(ItemProduct(R.drawable.product5,"[Mã ELAP500K giảm 8% đơn 500K] Apple AirPods ...","đ28.000.000","Đã bán 10.6k"))
-        listProductFilter.add(ItemProduct(R.drawable.product2,"[Mã ELAP500K giảm 8% đơn 500K] Apple AirPods ...","đ28.000.000","Đã bán 10.6k"))
+        rvProductFilter = findViewById<RecyclerView>(R.id.rvProductFilter)
+        FilterProduct()
+        var imgAdapter:ImageView = findViewById<ImageView>(R.id.adapter)
+        imgAdapter.setOnClickListener{
+            if(check) {
+                rvProductFilter.adapter = ViewItemAdapterTin(listProductFilter)
+                rvProductFilter.layoutManager = LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false)
+                check = false
+            } else {
+                DisplayListProduct(listProductFilter)
+                check = true
+            }
+        }
+    }
 
-        var check:Boolean = true
+    private fun FilterProduct() {
+        listProductFilter.clear()
+        val dbRef = db.collection("products").document("electron").collection(product_)
+        var query: Query = dbRef
+        for((field,value) in mapFilter){
+            query = query.whereEqualTo(field,value)
+        }
+        query
+            .get()
+            .addOnSuccessListener {
+                if(!it.isEmpty) {
+                    for(document in it.documents) {
+                        val imageUrl = document.data?.get("picture") as MutableList<String>
+                        var title = document.data?.get("title").toString()
+                        var price = document.data?.get("price").toString()
+                        listProductFilter.add(ItemProduct(imageUrl[0],title,price,addressStr))
+                    }
+                    DisplayListProduct(listProductFilter)
+                }
+            }
+    }
+
+    private fun DisplayListProduct(listProductFilter: MutableList<ItemProduct>) {
         rvProductFilter.adapter = ViewItemProduct2Adapter(listProductFilter,object:ClickInterface{
             override fun setOnClick(pos: Int) {
 
@@ -109,24 +167,6 @@ class ProductActivity : AppCompatActivity(), OnInputData {
         rvProductFilter.layoutManager = GridLayoutManager(
             this,2
         )
-
-        var imgAdapter:ImageView = findViewById<ImageView>(R.id.adapter)
-        imgAdapter.setOnClickListener{
-            if(check) {
-                rvProductFilter.adapter = ViewItemAdapterTin(listProductFilter)
-                rvProductFilter.layoutManager = LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false)
-                check = false
-            } else {
-                rvProductFilter.adapter = ViewItemProduct2Adapter(listProductFilter,object:ClickInterface{
-                    override fun setOnClick(pos: Int) {
-
-                    }
-                })
-                rvProductFilter.layoutManager = GridLayoutManager(
-                    this,2
-                )
-                check = true
-            }
-        }
+        check = true
     }
 }

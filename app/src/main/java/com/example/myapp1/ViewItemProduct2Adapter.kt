@@ -8,6 +8,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapp1.home.ClickInterface
 import com.example.myapp1.home.ItemProduct
+import com.squareup.picasso.Picasso
 
 class ViewItemProduct2Adapter (private val listItemproduct:MutableList<ItemProduct>, val onProductClick: ClickInterface):
     RecyclerView.Adapter<ViewItemProduct2Adapter.ItemViewHolder>() {
@@ -25,7 +26,7 @@ class ViewItemProduct2Adapter (private val listItemproduct:MutableList<ItemProdu
             val txtPrice1 = findViewById<TextView>(R.id.txtprice1)
             val txtStatus1 = findViewById<TextView>(R.id.address)
 
-            imgProduct.setImageResource(listItemproduct[position].imageProduct)
+            Picasso.get().load(listItemproduct[position].imageProduct).into(imgProduct)
             txtInfor.text = listItemproduct[position].txtInfor
             txtPrice1.text = listItemproduct[position].txtPrice1
             txtStatus1.text = listItemproduct[position].txtStatus1

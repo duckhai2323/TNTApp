@@ -21,7 +21,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
-class DialogFilter(val key:String):BottomSheetDialogFragment() {
+class DialogFilter(val key:String, val product:String):BottomSheetDialogFragment() {
     private val db = Firebase.firestore
     lateinit var bottomSheet: BottomSheetDialog
     private var mOnInputData: OnInputData? = null
@@ -33,30 +33,53 @@ class DialogFilter(val key:String):BottomSheetDialogFragment() {
         lateinit var view: View
         when(key) {
 
+            "address" -> {
+                view = LayoutInflater.from(context).inflate(R.layout.layout_selectcity, null)
+                var list = resources.getStringArray(R.array.list_city)
+                var listCity:MutableList<String> = list.toMutableList()
+                var rvCity:RecyclerView = view.findViewById(R.id.rvCity)
+                rvCity.adapter = ViewItemAdapterString(listCity,object:ClickInterface{
+                    override fun setOnClick(pos: Int) {
+                        var str:String = listCity[pos]
+                        mOnInputData?.sendData(str,key)
+                        bottomSheet.dismiss()
+                    }
+                })
+                rvCity.layoutManager = LinearLayoutManager(context,LinearLayoutManager.VERTICAL,false)
+                var imgDismissCity:ImageView = view.findViewById(R.id.txtDismissCity)
+                imgDismissCity.setOnClickListener{
+                    bottomSheet.dismiss()
+                }
+            }
+
             "brand" -> {
                 view = LayoutInflater.from(context).inflate(R.layout.layout_selectbrand, null)
                 var rvBrand: RecyclerView = view.findViewById(R.id.rvBrand)
                 rvBrand.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
                 val db = Firebase.firestore
-                db.collection("category").document("electron")
-                    .collection("telephone")
-                    .get()
-                    .addOnSuccessListener {
-                        if(!it.isEmpty) {
-                            for(document in it.documents)
-                            {
-                                val name = document.data?.get("name").toString()
-                                val imageUrl = document.data?.get("imageBrand").toString()
-                                listBrand.add(ItemBrand(name,imageUrl))
-                            }
-                            rvBrand.adapter = ViewItemBrandAdapter(listBrand, object : ClickInterface {
-                                override fun setOnClick(pos: Int) {
-                                    mOnInputData?.sendData(listBrand[pos].name,key)
-                                    addEventBrand(listBrand[pos])
+                when(product) {
+                    "telephone" -> {
+                        db.collection("category").document("electron")
+                            .collection("telephone")
+                            .get()
+                            .addOnSuccessListener {
+                                if(!it.isEmpty) {
+                                    for(document in it.documents)
+                                    {
+                                        val name = document.data?.get("name").toString()
+                                        val imageUrl = document.data?.get("imageBrand").toString()
+                                        listBrand.add(ItemBrand(name,imageUrl))
+                                    }
+                                    rvBrand.adapter = ViewItemBrandAdapter(listBrand, object : ClickInterface {
+                                        override fun setOnClick(pos: Int) {
+                                            mOnInputData?.sendData(listBrand[pos].name,key)
+                                            bottomSheet.dismiss()
+                                        }
+                                    })
                                 }
-                            })
-                        }
+                            }
                     }
+                }
                 var txtDismiss: ImageView = view.findViewById(R.id.txtDismiss)
                 txtDismiss.setOnClickListener {
                     bottomSheet.dismiss()
@@ -197,8 +220,8 @@ class DialogFilter(val key:String):BottomSheetDialogFragment() {
         return bottomSheet
     }
 
-    @SuppressLint("MissingInflatedId")
-    private fun addEventBrand(itemBrand : ItemBrand) {
+    /*@SuppressLint("MissingInflatedId")
+    private fun addEventBrandPhone(itemBrand : ItemBrand) {
         var view1 = LayoutInflater.from(context).inflate(R.layout.layout_selectseries,null)
         val dbRef = db.collection("category").document("electron").collection("telephone")
         var listSeries:MutableList<String> = mutableListOf()
@@ -229,7 +252,7 @@ class DialogFilter(val key:String):BottomSheetDialogFragment() {
             rvBrand.adapter = ViewItemBrandAdapter(listBrand,object:ClickInterface{
                 override fun setOnClick(pos: Int) {
                     mOnInputData?.sendData(listBrand[pos].name,key)
-                    addEventBrand(listBrand[pos])
+                    addEventBrandPhone(listBrand[pos])
                 }
             })
             rvBrand.layoutManager = LinearLayoutManager(context,LinearLayoutManager.VERTICAL,false)
@@ -239,7 +262,7 @@ class DialogFilter(val key:String):BottomSheetDialogFragment() {
                 bottomSheet.dismiss()
             }
         }
-    }
+    }*/
 
     override fun onAttach(context: Context) {
         super.onAttach(context)

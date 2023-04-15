@@ -46,6 +46,7 @@
                 android:text="Tai nghe chính hãng, hàng xịn AirPod Provip"
                 android:textColor="@color/black"
                 android:textSize="17dp"
+                android:lines="2"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/cardView"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -63,17 +64,29 @@
                 app:layout_constraintStart_toEndOf="@+id/cardView"
                 app:layout_constraintTop_toBottomOf="@+id/txtInfoTin" />
 
-            <TextView
-                android:id="@+id/txtStatusTin"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Đã sử dụng 1 năm"
-                android:textColor="@color/textColor"
-                android:textSize="17dp"
-                android:layout_marginLeft="10dp"
+            <LinearLayout
                 android:layout_marginTop="10dp"
+                android:layout_marginLeft="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
                 app:layout_constraintStart_toEndOf="@+id/cardView"
-                app:layout_constraintTop_toBottomOf="@+id/txtPriceTin" />
+                app:layout_constraintTop_toBottomOf="@+id/txtPriceTin" >
+
+                <ImageView
+                    android:layout_gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="20dp"
+                    android:src="@drawable/ic_outline_location_on_24"/>
+
+                <TextView
+                    android:id="@+id/txtStatusTin"
+                    android:layout_width="wrap_content"
+                    android:layout_height="20dp"
+                    android:text="Đã sử dụng 1 năm"
+                    android:textColor="@color/textColor"
+                    android:textSize="17dp"/>
+
+            </LinearLayout>
 
             <ImageView
                 android:id="@+id/imageView28"

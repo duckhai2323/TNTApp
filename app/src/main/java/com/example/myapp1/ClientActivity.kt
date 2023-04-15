@@ -47,11 +47,11 @@ class ClientActivity : AppCompatActivity() {
     private fun DisplayBangTin() {
         var listTin:MutableList<ItemProduct> = mutableListOf()
         var rvDangsp = findViewById<RecyclerView>(R.id.rvDangsp)
-        listTin.add(ItemProduct(R.drawable.product3,"Tai nghe chính hãng, hàng xịn AirPod Provip","259.000 đ","Đã sử dụng 1 năm"))
-        listTin.add(ItemProduct(R.drawable.product4,"Tai nghe chính hãng, hàng xịn AirPod Provip","259.000 đ","Đã sử dụng 1 năm"))
-        listTin.add(ItemProduct(R.drawable.product2,"Tai nghe chính hãng, hàng xịn AirPod Provip","259.000 đ","Đã sử dụng 1 năm"))
-        listTin.add(ItemProduct(R.drawable.product4,"Tai nghe chính hãng, hàng xịn AirPod Provip","259.000 đ","Đã sử dụng 1 năm"))
-        listTin.add(ItemProduct(R.drawable.product2,"Tai nghe chính hãng, hàng xịn AirPod Provip","259.000 đ","Đã sử dụng 1 năm"))
+        listTin.add(ItemProduct(resources.getString(R.string.linkImage),"Tai nghe chính hãng, hàng xịn AirPod Provip","259.000 đ","Đã sử dụng 1 năm"))
+        listTin.add(ItemProduct(resources.getString(R.string.linkImage),"Tai nghe chính hãng, hàng xịn AirPod Provip","259.000 đ","Đã sử dụng 1 năm"))
+        listTin.add(ItemProduct(resources.getString(R.string.linkImage),"Tai nghe chính hãng, hàng xịn AirPod Provip","259.000 đ","Đã sử dụng 1 năm"))
+        listTin.add(ItemProduct(resources.getString(R.string.linkImage),"Tai nghe chính hãng, hàng xịn AirPod Provip","259.000 đ","Đã sử dụng 1 năm"))
+        listTin.add(ItemProduct(resources.getString(R.string.linkImage),"Tai nghe chính hãng, hàng xịn AirPod Provip","259.000 đ","Đã sử dụng 1 năm"))
 
         if(listTin.size > 3) {
             var listTin1:MutableList<ItemProduct> = mutableListOf()

@@ -70,12 +70,12 @@ class DetailActivity : AppCompatActivity() {
     private fun DisplayProduct() {
         val rvProduct = findViewById<RecyclerView>(R.id.rvProductDetail)
         val listProduct1:MutableList<ItemProduct> = mutableListOf()
-        listProduct1.add((ItemProduct(R.drawable.product2,"[Mã ELAP500K giảm 8% đơn 500K] Apple AirPods ...","đ28.000.000","Đã bán 10.6k")))
-        listProduct1.add((ItemProduct(R.drawable.product3,"[Mã ELAP500K giảm 8% đơn 500K] Apple AirPods ...","đ28.000.000","Đã bán 10.6k")))
-        listProduct1.add((ItemProduct(R.drawable.product4,"[Mã ELAP500K giảm 8% đơn 500K] Apple AirPods ...","đ28.000.000","Đã bán 10.6k")))
-        listProduct1.add((ItemProduct(R.drawable.product5,"[Mã ELAP500K giảm 8% đơn 500K] Apple AirPods ...","đ28.000.000","Đã bán 10.6k")))
-        listProduct1.add((ItemProduct(R.drawable.product3,"[Mã ELAP500K giảm 8% đơn 500K] Apple AirPods ...","đ28.000.000","Đã bán 10.6k")))
-        listProduct1.add((ItemProduct(R.drawable.product2,"[Mã ELAP500K giảm 8% đơn 500K] Apple AirPods ...","đ28.000.000","Đã bán 10.6k")))
+        listProduct1.add((ItemProduct(resources.getString(R.string.linkImage),"[Mã ELAP500K giảm 8% đơn 500K] Apple AirPods ...","đ28.000.000","Đã bán 10.6k")))
+        listProduct1.add((ItemProduct(resources.getString(R.string.linkImage),"[Mã ELAP500K giảm 8% đơn 500K] Apple AirPods ...","đ28.000.000","Đã bán 10.6k")))
+        listProduct1.add((ItemProduct(resources.getString(R.string.linkImage),"[Mã ELAP500K giảm 8% đơn 500K] Apple AirPods ...","đ28.000.000","Đã bán 10.6k")))
+        listProduct1.add((ItemProduct(resources.getString(R.string.linkImage),"[Mã ELAP500K giảm 8% đơn 500K] Apple AirPods ...","đ28.000.000","Đã bán 10.6k")))
+        listProduct1.add((ItemProduct(resources.getString(R.string.linkImage),"[Mã ELAP500K giảm 8% đơn 500K] Apple AirPods ...","đ28.000.000","Đã bán 10.6k")))
+        listProduct1.add((ItemProduct(resources.getString(R.string.linkImage),"[Mã ELAP500K giảm 8% đơn 500K] Apple AirPods ...","đ28.000.000","Đã bán 10.6k")))
 
         rvProduct.adapter = ViewProductAdapter(listProduct1,object : ClickInterface {
             override fun setOnClick(pos: Int) {

@@ -7,6 +7,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapp1.home.ItemProduct
+import com.squareup.picasso.Picasso
 
 class ViewItemAdapterTin(private val listTin:MutableList<ItemProduct>) : RecyclerView.Adapter<ViewItemAdapterTin.ItemViewHolder>(){
     inner class ItemViewHolder(itemView: View):RecyclerView.ViewHolder(itemView)
@@ -23,7 +24,7 @@ class ViewItemAdapterTin(private val listTin:MutableList<ItemProduct>) : Recycle
             var price = findViewById<TextView>(R.id.txtPriceTin)
             var status = findViewById<TextView>(R.id.txtStatusTin)
 
-            imageTin.setImageResource(listTin[position].imageProduct)
+            Picasso.get().load(listTin[position].imageProduct).into(imageTin)
             infor.text = listTin[position].txtInfor
             price.text = listTin[position].txtPrice1
             status.text = listTin[position].txtStatus1

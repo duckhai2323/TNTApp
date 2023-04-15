@@ -80,11 +80,11 @@ class ElectronicFragment : Fragment(){
         //DisplaySuggest1
         var rvGoiYElec1:RecyclerView = view.findViewById(R.id.rvGoiYElec1)
         var listGoiYElec1:MutableList<ItemProduct> = mutableListOf()
-        listGoiYElec1.add(ItemProduct(R.drawable.product2,"[Mã ELAP500K giảm 8% đơn 500K] Apple AirPods ...","đ28.000.000","Đã bán 10.6k"))
-        listGoiYElec1.add(ItemProduct(R.drawable.product3,"[Mã ELAP500K giảm 8% đơn 500K] Apple AirPods ...","đ28.000.000","Đã bán 10.6k"))
-        listGoiYElec1.add(ItemProduct(R.drawable.product4,"[Mã ELAP500K giảm 8% đơn 500K] Apple AirPods ...","đ28.000.000","Đã bán 10.6k"))
-        listGoiYElec1.add(ItemProduct(R.drawable.product5,"[Mã ELAP500K giảm 8% đơn 500K] Apple AirPods ...","đ28.000.000","Đã bán 10.6k"))
-        listGoiYElec1.add(ItemProduct(R.drawable.product2,"[Mã ELAP500K giảm 8% đơn 500K] Apple AirPods ...","đ28.000.000","Đã bán 10.6k"))
+        listGoiYElec1.add(ItemProduct(resources.getString(R.string.linkImage),"[Mã ELAP500K giảm 8% đơn 500K] Apple AirPods ...","đ28.000.000","Đã bán 10.6k"))
+        listGoiYElec1.add(ItemProduct(resources.getString(R.string.linkImage),"[Mã ELAP500K giảm 8% đơn 500K] Apple AirPods ...","đ28.000.000","Đã bán 10.6k"))
+        listGoiYElec1.add(ItemProduct(resources.getString(R.string.linkImage),"[Mã ELAP500K giảm 8% đơn 500K] Apple AirPods ...","đ28.000.000","Đã bán 10.6k"))
+        listGoiYElec1.add(ItemProduct(resources.getString(R.string.linkImage),"[Mã ELAP500K giảm 8% đơn 500K] Apple AirPods ...","đ28.000.000","Đã bán 10.6k"))
+        listGoiYElec1.add(ItemProduct(resources.getString(R.string.linkImage),"[Mã ELAP500K giảm 8% đơn 500K] Apple AirPods ...","đ28.000.000","Đã bán 10.6k"))
 
         rvGoiYElec1.adapter = ViewItemProdcut1Adapter(listGoiYElec1,object:ClickInterface{
             override fun setOnClick(pos: Int) {
@@ -116,12 +116,12 @@ class ElectronicFragment : Fragment(){
 
         var rvGoiYElec2:RecyclerView = view.findViewById(R.id.rvGoiYElec2)
         var listGoiYElec2:MutableList<ItemProduct> = mutableListOf()
-        listGoiYElec2.add(ItemProduct(R.drawable.product2,"[Mã ELAP500K giảm 8% đơn 500K] Apple AirPods ...","đ28.000.000","Đã bán 10.6k"))
-        listGoiYElec2.add(ItemProduct(R.drawable.product3,"[Mã ELAP500K giảm 8% đơn 500K] Apple AirPods ...","đ28.000.000","Đã bán 10.6k"))
-        listGoiYElec2.add(ItemProduct(R.drawable.product4,"[Mã ELAP500K giảm 8% đơn 500K] Apple AirPods ...","đ28.000.000","Đã bán 10.6k"))
-        listGoiYElec2.add(ItemProduct(R.drawable.product5,"[Mã ELAP500K giảm 8% đơn 500K] Apple AirPods ...","đ28.000.000","Đã bán 10.6k"))
-        listGoiYElec2.add(ItemProduct(R.drawable.product2,"[Mã ELAP500K giảm 8% đơn 500K] Apple AirPods ...","đ28.000.000","Đã bán 10.6k"))
-        listGoiYElec2.add(ItemProduct(R.drawable.product5,"[Mã ELAP500K giảm 8% đơn 500K] Apple AirPods ...","đ28.000.000","Đã bán 10.6k"))
+        listGoiYElec2.add(ItemProduct(resources.getString(R.string.linkImage),"[Mã ELAP500K giảm 8% đơn 500K] Apple AirPods ...","đ28.000.000","Đã bán 10.6k"))
+        listGoiYElec2.add(ItemProduct(resources.getString(R.string.linkImage),"[Mã ELAP500K giảm 8% đơn 500K] Apple AirPods ...","đ28.000.000","Đã bán 10.6k"))
+        listGoiYElec2.add(ItemProduct(resources.getString(R.string.linkImage),"[Mã ELAP500K giảm 8% đơn 500K] Apple AirPods ...","đ28.000.000","Đã bán 10.6k"))
+        listGoiYElec2.add(ItemProduct(resources.getString(R.string.linkImage),"[Mã ELAP500K giảm 8% đơn 500K] Apple AirPods ...","đ28.000.000","Đã bán 10.6k"))
+        listGoiYElec2.add(ItemProduct(resources.getString(R.string.linkImage),"[Mã ELAP500K giảm 8% đơn 500K] Apple AirPods ...","đ28.000.000","Đã bán 10.6k"))
+        listGoiYElec2.add(ItemProduct(resources.getString(R.string.linkImage),"[Mã ELAP500K giảm 8% đơn 500K] Apple AirPods ...","đ28.000.000","Đã bán 10.6k"))
 
         rvGoiYElec2.adapter = ViewItemProduct2Adapter(listGoiYElec2,object:ClickInterface{
             override fun setOnClick(pos: Int) {
