@@ -24,7 +24,7 @@ import com.google.firebase.ktx.Firebase
 class DialogSelect(var listBrand:MutableList<ItemBrand>, var listColor:MutableList<ItemImageText>, var listCapacity:MutableList<String>, var key:String): BottomSheetDialogFragment() {
     private val db = Firebase.firestore
     lateinit var bottomSheet:BottomSheetDialog
-    private var mOnInputData: OnInputData? = null
+    private var mOnInputData: OnInputData0? = null
     @SuppressLint("MissingInflatedId")
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         bottomSheet =  super.onCreateDialog(savedInstanceState) as BottomSheetDialog
@@ -44,6 +44,11 @@ class DialogSelect(var listBrand:MutableList<ItemBrand>, var listColor:MutableLi
                 txtDismiss.setOnClickListener {
                     bottomSheet.dismiss()
                 }
+
+                var txtCancle: TextView = view.findViewById(R.id.txtCancle)
+                txtCancle.setOnClickListener {
+                    bottomSheet.dismiss()
+                }
             }
 
             "color" -> {
@@ -57,6 +62,11 @@ class DialogSelect(var listBrand:MutableList<ItemBrand>, var listColor:MutableLi
                 })
                 var txtDismissColor:ImageView = view.findViewById(R.id.txtDismissColor)
                 txtDismissColor.setOnClickListener{
+                    bottomSheet.dismiss()
+                }
+
+                var txtCancle: TextView = view.findViewById(R.id.txtCancle)
+                txtCancle.setOnClickListener {
                     bottomSheet.dismiss()
                 }
             }
@@ -82,6 +92,11 @@ class DialogSelect(var listBrand:MutableList<ItemBrand>, var listColor:MutableLi
                 txtDismissStatus.setOnClickListener{
                     bottomSheet.dismiss()
                 }
+
+                var txtCancle: TextView = view.findViewById(R.id.txtCancle)
+                txtCancle.setOnClickListener {
+                    bottomSheet.dismiss()
+                }
             }
 
             "capacity" -> {
@@ -95,6 +110,11 @@ class DialogSelect(var listBrand:MutableList<ItemBrand>, var listColor:MutableLi
                 })
                 rvCpacity.layoutManager = LinearLayoutManager(context,LinearLayoutManager.VERTICAL,false)
                 txtDismissCapacity.setOnClickListener{
+                    bottomSheet.dismiss()
+                }
+
+                var txtCancle: TextView = view.findViewById(R.id.txtCancle)
+                txtCancle.setOnClickListener {
                     bottomSheet.dismiss()
                 }
             }
@@ -116,6 +136,11 @@ class DialogSelect(var listBrand:MutableList<ItemBrand>, var listColor:MutableLi
 
                 var txtDismissWarranty:ImageView = view.findViewById(R.id.txtDismissWarranty)
                 txtDismissWarranty.setOnClickListener{
+                    bottomSheet.dismiss()
+                }
+
+                var txtCancle: TextView = view.findViewById(R.id.txtCancle)
+                txtCancle.setOnClickListener {
                     bottomSheet.dismiss()
                 }
             }
@@ -178,6 +203,11 @@ class DialogSelect(var listBrand:MutableList<ItemBrand>, var listColor:MutableLi
         rvSeries.layoutManager = LinearLayoutManager(context,LinearLayoutManager.VERTICAL,false)
         bottomSheet.setContentView(view1)
 
+        var txtCancle: TextView = view1.findViewById(R.id.txtCancle)
+        txtCancle.setOnClickListener {
+            bottomSheet.dismiss()
+        }
+
        var txtBackToBrand:ImageView = view1.findViewById(R.id.txtBackToBrand)
         txtBackToBrand.setOnClickListener{
             var view0:View = LayoutInflater.from(context).inflate(R.layout.layout_selectbrand,null)
@@ -194,11 +224,16 @@ class DialogSelect(var listBrand:MutableList<ItemBrand>, var listColor:MutableLi
             txtDismiss.setOnClickListener{
                 bottomSheet.dismiss()
             }
+
+            var txtCancle: TextView = view0.findViewById(R.id.txtCancle)
+            txtCancle.setOnClickListener {
+                bottomSheet.dismiss()
+            }
         }
     }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        mOnInputData = context as? OnInputData
+        mOnInputData = context as? OnInputData0
     }
 }

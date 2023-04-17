@@ -1,6 +1,5 @@
 package com.example.myapp1
 
-import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
@@ -8,9 +7,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.myapp1.electronic.DialogSelect
 import com.example.myapp1.electronic.ItemBrand
 import com.example.myapp1.electronic.ViewItemBrandAdapter
 import com.example.myapp1.home.ClickInterface
@@ -24,7 +23,7 @@ import com.google.firebase.ktx.Firebase
 class DialogFilter(val key:String, val product:String):BottomSheetDialogFragment() {
     private val db = Firebase.firestore
     lateinit var bottomSheet: BottomSheetDialog
-    private var mOnInputData: OnInputData? = null
+    private var mOnInputData: OnInputData1? = null
 
     private  var listBrand: MutableList<ItemBrand> = mutableListOf()
 
@@ -41,7 +40,7 @@ class DialogFilter(val key:String, val product:String):BottomSheetDialogFragment
                 rvCity.adapter = ViewItemAdapterString(listCity,object:ClickInterface{
                     override fun setOnClick(pos: Int) {
                         var str:String = listCity[pos]
-                        mOnInputData?.sendData(str,key)
+                        mOnInputData?.sendData(str,key,"accept")
                         bottomSheet.dismiss()
                     }
                 })
@@ -50,6 +49,30 @@ class DialogFilter(val key:String, val product:String):BottomSheetDialogFragment
                 imgDismissCity.setOnClickListener{
                     bottomSheet.dismiss()
                 }
+            }
+
+            "electron" -> {
+                view = LayoutInflater.from(context).inflate(R.layout.layout_danhmuc, null)
+                var listDanhMuc:MutableList<String> = mutableListOf()
+                listDanhMuc.add("Điện thoại")
+                listDanhMuc.add("Laptop")
+                listDanhMuc.add("Máy tính bảng")
+                listDanhMuc.add("Máy tính để bàn")
+                listDanhMuc.add("Máy ảnh, Máy quay")
+                listDanhMuc.add("Tivi, Âm thanh")
+                listDanhMuc.add("Thiết bị đeo thông minh")
+                listDanhMuc.add("Phụ kiện (Màn hình, chuột...")
+                listDanhMuc.add("Linh kiện (RAM,Card...)")
+
+                var rvDanhMuc:RecyclerView = view.findViewById(R.id.rvDanhMuc)
+                rvDanhMuc.adapter = ViewItemAdapterString(listDanhMuc, object:ClickInterface{
+                    override fun setOnClick(pos: Int) {
+                        mOnInputData?.sendData(listDanhMuc[pos],key,"accept")
+                        bottomSheet.dismiss()
+                    }
+                })
+                rvDanhMuc.layoutManager = LinearLayoutManager(context,
+                    LinearLayoutManager.VERTICAL,false)
             }
 
             "brand" -> {
@@ -72,7 +95,7 @@ class DialogFilter(val key:String, val product:String):BottomSheetDialogFragment
                                     }
                                     rvBrand.adapter = ViewItemBrandAdapter(listBrand, object : ClickInterface {
                                         override fun setOnClick(pos: Int) {
-                                            mOnInputData?.sendData(listBrand[pos].name,key)
+                                            mOnInputData?.sendData(listBrand[pos].name,key,"accept")
                                             bottomSheet.dismiss()
                                         }
                                     })
@@ -82,6 +105,11 @@ class DialogFilter(val key:String, val product:String):BottomSheetDialogFragment
                 }
                 var txtDismiss: ImageView = view.findViewById(R.id.txtDismiss)
                 txtDismiss.setOnClickListener {
+                    bottomSheet.dismiss()
+                }
+                var txtCancle: TextView = view.findViewById(R.id.txtCancle)
+                txtCancle.setOnClickListener {
+                    mOnInputData?.sendData("Hãng",key,"cancle")
                     bottomSheet.dismiss()
                 }
             }
@@ -101,7 +129,7 @@ class DialogFilter(val key:String, val product:String):BottomSheetDialogFragment
                                 }
                                 rvSeries.adapter = ViewItemAdapterString(listSeries,object:ClickInterface{
                                     override fun setOnClick(pos: Int) {
-                                        mOnInputData?.sendData(listSeries[pos],"series")
+                                        mOnInputData?.sendData(listSeries[pos],"series","accept")
                                         bottomSheet.dismiss()
                                     }
                                 })
@@ -110,6 +138,11 @@ class DialogFilter(val key:String, val product:String):BottomSheetDialogFragment
                     rvSeries.layoutManager = LinearLayoutManager(context,LinearLayoutManager.VERTICAL,false)
                     var txtBackToBrand:ImageView = view.findViewById(R.id.txtBackToBrand)
                     txtBackToBrand.setOnClickListener{
+                        bottomSheet.dismiss()
+                    }
+                    var txtCancle: TextView = view.findViewById(R.id.txtCancle)
+                    txtCancle.setOnClickListener {
+                        mOnInputData?.sendData("Dòng máy",key,"cancle")
                         bottomSheet.dismiss()
                     }
                 }
@@ -136,12 +169,17 @@ class DialogFilter(val key:String, val product:String):BottomSheetDialogFragment
                 rvColor.adapter = ViewItemColorAdapter(listColor,object: ClickInterface {
                     override fun setOnClick(pos: Int) {
                         var color:String = listColor[pos].topic
-                        mOnInputData?.sendData(color,key)
+                        mOnInputData?.sendData(color,key,"accept")
                         bottomSheet.dismiss()
                     }
                 })
                 var txtDismissColor: ImageView = view.findViewById(R.id.txtDismissColor)
                 txtDismissColor.setOnClickListener{
+                    bottomSheet.dismiss()
+                }
+                var txtCancle: TextView = view.findViewById(R.id.txtCancle)
+                txtCancle.setOnClickListener {
+                    mOnInputData?.sendData("Màu sắc",key,"cancle")
                     bottomSheet.dismiss()
                 }
             }
@@ -152,19 +190,24 @@ class DialogFilter(val key:String, val product:String):BottomSheetDialogFragment
                 var LLOChuaSua: LinearLayout = view.findViewById(R.id.LLOChuaSua)
                 var LLODaSua: LinearLayout = view.findViewById(R.id.LLODaSua)
                 LLOMoi.setOnClickListener {
-                    mOnInputData?.sendData("Mới",key)
+                    mOnInputData?.sendData("Mới",key,"accept")
                     bottomSheet.dismiss()
                 }
                 LLOChuaSua.setOnClickListener {
-                    mOnInputData?.sendData("Đã sử dụng (chưa sửa chữa)",key)
+                    mOnInputData?.sendData("Đã sử dụng (chưa sửa chữa)",key,"accept")
                     bottomSheet.dismiss()
                 }
                 LLODaSua.setOnClickListener {
-                    mOnInputData?.sendData("Đã sử dụng (qua sửa chữa)",key)
+                    mOnInputData?.sendData("Đã sử dụng (qua sửa chữa)",key,"accept")
                     bottomSheet.dismiss()
                 }
                 var txtDismissStatus:ImageView = view.findViewById(R.id.txtDismissStatus)
                 txtDismissStatus.setOnClickListener{
+                    bottomSheet.dismiss()
+                }
+                var txtCancle: TextView = view.findViewById(R.id.txtCancle)
+                txtCancle.setOnClickListener {
+                    mOnInputData?.sendData("Tình trạng",key,"cancle")
                     bottomSheet.dismiss()
                 }
             }
@@ -175,17 +218,22 @@ class DialogFilter(val key:String, val product:String):BottomSheetDialogFragment
                 var LLOConBaoHanh:LinearLayout = view.findViewById(R.id.LLOConBaoHanh)
                 var LLOHetBaoHanh:LinearLayout = view.findViewById(R.id.LLOHetBaoHanh)
                 LLOConBaoHanh.setOnClickListener {
-                    mOnInputData?.sendData("Còn bảo hành",key)
+                    mOnInputData?.sendData("Còn bảo hành",key,"accept")
                     bottomSheet.dismiss()
                 }
 
                 LLOHetBaoHanh.setOnClickListener {
-                    mOnInputData?.sendData("Hết bảo hành",key)
+                    mOnInputData?.sendData("Hết bảo hành",key,"accept")
                     bottomSheet.dismiss()
                 }
 
                 var txtDismissWarranty:ImageView = view.findViewById(R.id.txtDismissWarranty)
                 txtDismissWarranty.setOnClickListener{
+                    bottomSheet.dismiss()
+                }
+                var txtCancle: TextView = view.findViewById(R.id.txtCancle)
+                txtCancle.setOnClickListener {
+                    mOnInputData?.sendData("Bào hành",key,"cancle")
                     bottomSheet.dismiss()
                 }
             }
@@ -201,16 +249,21 @@ class DialogFilter(val key:String, val product:String):BottomSheetDialogFragment
                 listCapacity.add("128GB")
                 listCapacity.add("256GB")
                 listCapacity.add("> 256GB")
-                var txtDismissCapacity:ImageView = view.findViewById(R.id.txtDismissCapacity)
                 var rvCpacity:RecyclerView = view.findViewById(R.id.rvCapacity)
                 rvCpacity.adapter = ViewItemAdapterString(listCapacity,object:ClickInterface{
                     override fun setOnClick(pos: Int) {
-                        mOnInputData?.sendData(listCapacity[pos],key)
+                        mOnInputData?.sendData(listCapacity[pos],key,"accept")
                         bottomSheet.dismiss()
                     }
                 })
                 rvCpacity.layoutManager = LinearLayoutManager(context,LinearLayoutManager.VERTICAL,false)
+                var txtDismissCapacity:ImageView = view.findViewById(R.id.txtDismissCapacity)
                 txtDismissCapacity.setOnClickListener{
+                    bottomSheet.dismiss()
+                }
+                var txtCancle: TextView = view.findViewById(R.id.txtCancle)
+                txtCancle.setOnClickListener {
+                    mOnInputData?.sendData("Dung lượng",key,"cancle")
                     bottomSheet.dismiss()
                 }
             }
@@ -266,6 +319,6 @@ class DialogFilter(val key:String, val product:String):BottomSheetDialogFragment
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        mOnInputData = context as? OnInputData
+        mOnInputData = context as? OnInputData1
     }
 }

@@ -15,7 +15,6 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
-import com.example.myapp1.detail.DetailActivity
 import com.example.myapp1.home.ClickInterface
 import com.example.myapp1.home.ItemImageText
 import com.example.myapp1.home.ItemProduct
@@ -69,6 +68,7 @@ class ElectronicFragment : Fragment(){
             override fun setOnClick(pos: Int) {
                 val intent1 = Intent(requireContext(), ProductActivity::class.java)
                 val bundle = Bundle()
+                bundle.putString("category","electron")
                 bundle.putString("city",txtCity.text.toString())
                 bundle.putString("product",listItemGoiY0[pos].topic)
                 intent1.putExtras(bundle)

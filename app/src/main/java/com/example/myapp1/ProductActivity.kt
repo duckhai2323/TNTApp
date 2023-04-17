@@ -11,38 +11,40 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapp1.home.ClickInterface
 import com.example.myapp1.home.ItemProduct
-import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
 var brand_:String?=null
-class ProductActivity : AppCompatActivity(), OnInputData {
+class ProductActivity : AppCompatActivity(), OnInputData1 {
     lateinit var addressStr:String
     lateinit var address:TextView
     lateinit var viewAdapter:ViewItemFilteAdapter
+    lateinit var category:String
+    lateinit var product_:String
+    lateinit var rvProductFilter:RecyclerView
     var listFilte:MutableList<FilteItem> = mutableListOf()
     lateinit var dialogFilte:DialogFilter
     var listProductFilter = mutableListOf<ItemProduct>()
-    lateinit var product_:String
-    lateinit var rvProductFilter:RecyclerView
     var mapFilter = mutableMapOf<String,String>()
     var position:Int = 0
     private val db = Firebase.firestore
     var check:Boolean = true
-    override fun sendData(str: String, key: String) {
-        mapFilter[key] = str
+    override fun sendData(str: String, key1: String,key2:String) {
+        mapFilter[key1] = str
         listProductFilter.clear()
-        if(key == "address") {
+        if(key1 == "address") {
             address.text = str
+            addressStr = str
         } else {
-            val item = FilteItem(
-                str,
-                R.drawable.outline_keyboard_arrow_down_24,
-                R.drawable.background_button2_1,
-                key
-            )
-            if(key == "brand"){
+            var item:FilteItem
+            if(key2 == "accept") {
+                item = FilteItem(str, R.drawable.outline_keyboard_arrow_down_24, R.drawable.background_button2_1, key1)
+            } else {
+                item = FilteItem(str, R.drawable.baseline_add_24_1, R.drawable.background_filter, key1)
+                mapFilter.remove(key1)
+            }
+            if(key1 == "brand"){
                 brand_ = str
                 if(mapFilter["series"]?.isEmpty() == false) {
                     var item1 = FilteItem(
@@ -53,6 +55,15 @@ class ProductActivity : AppCompatActivity(), OnInputData {
                     )
                     viewAdapter.updateData(item1, position + 1)
                     mapFilter.remove("series")
+                }
+            } else if(key1 == category){
+                if(str != product_) {
+                    product_ = str
+                    mapFilter.clear()
+                    mapFilter["address"] = addressStr
+                    listFilte.clear()
+                    createListFilter()
+                    displayListFilter()
                 }
             }
             viewAdapter.updateData(item, position)
@@ -78,49 +89,11 @@ class ProductActivity : AppCompatActivity(), OnInputData {
                 dialogFilte = DialogFilter("address","aaa")
                 dialogFilte.show(supportFragmentManager,"aaa")
             }
+            category = bundle.getString("category").toString()
             product_ = bundle.getString("product").toString()
-            when(product_){
-                "Điện thoại" -> {
-                    product_ = "telephone"
-                    listFilte.add(FilteItem("Điện thoại",R.drawable.outline_keyboard_arrow_down_24,R.drawable.background_button2_1,"product"))
-                    listFilte.add(FilteItem("Hãng",R.drawable.baseline_add_24_1,R.drawable.background_filter,"brand"))
-                    listFilte.add(FilteItem("Dòng máy",R.drawable.baseline_add_24_1,R.drawable.background_filter,"series"))
-                    listFilte.add(FilteItem("Giá",R.drawable.baseline_add_24_1,R.drawable.background_filter,"price"))
-                    listFilte.add(FilteItem("Tình trạng",R.drawable.baseline_add_24_1,R.drawable.background_filter,"status"))
-                    listFilte.add(FilteItem("Bảo hành",R.drawable.baseline_add_24_1,R.drawable.background_filter,"warranty"))
-                    listFilte.add(FilteItem("Dung lượng",R.drawable.baseline_add_24_1,R.drawable.background_filter,"capacity"))
-                    listFilte.add(FilteItem("Màu sắc",R.drawable.baseline_add_24_1,R.drawable.background_filter,"color"))
-                    listFilte.add(FilteItem("Thời gian sử dụng",R.drawable.baseline_add_24_1,R.drawable.background_filter,"time"))
-                }
-
-                "Laptop" -> {
-                    product_="laptop"
-                    listFilte.add(FilteItem("Laptop",R.drawable.outline_keyboard_arrow_down_24,R.drawable.background_button2_1,"product"))
-                    listFilte.add(FilteItem("Hãng",R.drawable.baseline_add_24_1,R.drawable.background_filter,"brand"))
-                    listFilte.add(FilteItem("Dòng máy",R.drawable.baseline_add_24_1,R.drawable.background_filter,"series"))
-                    listFilte.add(FilteItem("Giá",R.drawable.baseline_add_24_1,R.drawable.background_filter,"price"))
-                    listFilte.add(FilteItem("Tình trạng",R.drawable.baseline_add_24_1,R.drawable.background_filter,"status"))
-                    listFilte.add(FilteItem("Bảo hành",R.drawable.baseline_add_24_1,R.drawable.background_filter,"warranty"))
-                    listFilte.add(FilteItem("RAM",R.drawable.baseline_add_24_1,R.drawable.background_filter,"ram"))
-                    listFilte.add(FilteItem("Ổ cứng",R.drawable.baseline_add_24_1,R.drawable.background_filter,"c"))
-                    listFilte.add(FilteItem("Card màn hình",R.drawable.baseline_add_24_1,R.drawable.background_filter,"card"))
-                    listFilte.add(FilteItem("Màu sắc",R.drawable.baseline_add_24_1,R.drawable.background_filter,"color"))
-                    listFilte.add(FilteItem("Thời gian sử dụng",R.drawable.baseline_add_24_1,R.drawable.background_filter,"time"))
-                }
-            }
+            createListFilter()
         }
-        var rvList = findViewById<RecyclerView>(R.id.rvListFilte)
-
-        viewAdapter = ViewItemFilteAdapter(listFilte,object:ClickInterface{
-            override fun setOnClick(pos: Int) {
-                position = pos
-                dialogFilte = DialogFilter(listFilte[pos].key,product_)
-                dialogFilte.show(supportFragmentManager,"aaa")
-            }
-        })
-        rvList.adapter = viewAdapter
-        rvList.layoutManager = LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL, false)
-
+        displayListFilter()
         rvProductFilter = findViewById<RecyclerView>(R.id.rvProductFilter)
         FilterProduct()
         var imgAdapter:ImageView = findViewById<ImageView>(R.id.adapter)
@@ -136,9 +109,61 @@ class ProductActivity : AppCompatActivity(), OnInputData {
         }
     }
 
+    private fun displayListFilter() {
+        var rvList = findViewById<RecyclerView>(R.id.rvListFilte)
+        viewAdapter = ViewItemFilteAdapter(listFilte,object:ClickInterface{
+            override fun setOnClick(pos: Int) {
+                position = pos
+                dialogFilte = DialogFilter(listFilte[pos].key,product_)
+                dialogFilte.show(supportFragmentManager,"aaa")
+            }
+        })
+        rvList.adapter = viewAdapter
+        rvList.layoutManager = LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL, false)
+    }
+
+    private fun createListFilter() {
+        when(category){
+            "electron" -> {
+                when(product_){
+                    "Điện thoại" -> {
+                        product_ = "telephone"
+                        listFilte.add(FilteItem("Điện thoại",R.drawable.outline_keyboard_arrow_down_24,R.drawable.background_button2_1,"electron"))
+                        listFilte.add(FilteItem("Hãng",R.drawable.baseline_add_24_1,R.drawable.background_filter,"brand"))
+                        listFilte.add(FilteItem("Dòng máy",R.drawable.baseline_add_24_1,R.drawable.background_filter,"series"))
+                        listFilte.add(FilteItem("Giá",R.drawable.baseline_add_24_1,R.drawable.background_filter,"price"))
+                        listFilte.add(FilteItem("Tình trạng",R.drawable.baseline_add_24_1,R.drawable.background_filter,"status"))
+                        listFilte.add(FilteItem("Bảo hành",R.drawable.baseline_add_24_1,R.drawable.background_filter,"warranty"))
+                        listFilte.add(FilteItem("Dung lượng",R.drawable.baseline_add_24_1,R.drawable.background_filter,"capacity"))
+                        listFilte.add(FilteItem("Màu sắc",R.drawable.baseline_add_24_1,R.drawable.background_filter,"color"))
+                        listFilte.add(FilteItem("Thời gian sử dụng",R.drawable.baseline_add_24_1,R.drawable.background_filter,"time"))
+                    }
+
+                    "Laptop" -> {
+                        product_="laptop"
+                        listFilte.add(FilteItem("Laptop",R.drawable.outline_keyboard_arrow_down_24,R.drawable.background_button2_1,"electron"))
+                        listFilte.add(FilteItem("Hãng",R.drawable.baseline_add_24_1,R.drawable.background_filter,"brand"))
+                        listFilte.add(FilteItem("Dòng máy",R.drawable.baseline_add_24_1,R.drawable.background_filter,"series"))
+                        listFilte.add(FilteItem("Giá",R.drawable.baseline_add_24_1,R.drawable.background_filter,"price"))
+                        listFilte.add(FilteItem("Tình trạng",R.drawable.baseline_add_24_1,R.drawable.background_filter,"status"))
+                        listFilte.add(FilteItem("Bảo hành",R.drawable.baseline_add_24_1,R.drawable.background_filter,"warranty"))
+                        listFilte.add(FilteItem("Kích cỡ màn hình",R.drawable.baseline_add_24_1,R.drawable.background_filter,"size"))
+                        listFilte.add(FilteItem("Bộ vi xử lí",R.drawable.baseline_add_24_1,R.drawable.background_filter,"handle"))
+                        listFilte.add(FilteItem("RAM",R.drawable.baseline_add_24_1,R.drawable.background_filter,"ram"))
+                        listFilte.add(FilteItem("Card màn hình",R.drawable.baseline_add_24_1,R.drawable.background_filter,"card"))
+                        listFilte.add(FilteItem("Ổ cứng",R.drawable.baseline_add_24_1,R.drawable.background_filter,"ssd"))
+                        listFilte.add(FilteItem("Màu sắc",R.drawable.baseline_add_24_1,R.drawable.background_filter,"color"))
+                        listFilte.add(FilteItem("Thời gian sử dụng",R.drawable.baseline_add_24_1,R.drawable.background_filter,"time"))
+                        listFilte.add(FilteItem("Vận chuyển giao nhận",R.drawable.baseline_add_24_1,R.drawable.background_filter,"ship"))
+                    }
+                }
+            }
+        }
+    }
+
     private fun FilterProduct() {
         listProductFilter.clear()
-        val dbRef = db.collection("products").document("electron").collection(product_)
+        val dbRef = db.collection("products").document(category).collection(product_)
         var query: Query = dbRef
         for((field,value) in mapFilter){
             query = query.whereEqualTo(field,value)
@@ -151,7 +176,8 @@ class ProductActivity : AppCompatActivity(), OnInputData {
                         val imageUrl = document.data?.get("picture") as MutableList<String>
                         var title = document.data?.get("title").toString()
                         var price = document.data?.get("price").toString()
-                        listProductFilter.add(ItemProduct(imageUrl[0],title,price,addressStr))
+                        var city  = document.data?.get("address").toString()
+                        listProductFilter.add(ItemProduct(imageUrl[0],title,price,city))
                     }
                     DisplayListProduct(listProductFilter)
                 }

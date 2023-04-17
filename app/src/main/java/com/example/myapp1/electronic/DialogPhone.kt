@@ -8,7 +8,6 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-import com.example.myapp1.OnInputData
 import com.example.myapp1.R
 import com.example.myapp1.home.ItemImageText
 import com.google.android.material.bottomsheet.BottomSheetBehavior

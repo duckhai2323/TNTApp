@@ -54,7 +54,7 @@
         android:layout_marginTop="2dp"
         android:id="@+id/nestedScrollView3"
         android:layout_width="match_parent"
-        android:layout_height="580dp"
+        android:layout_height="670dp"
         android:background="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

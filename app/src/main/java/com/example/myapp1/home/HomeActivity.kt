@@ -6,14 +6,13 @@ import android.os.Bundle
 import androidx.fragment.app.Fragment
 import com.example.myapp1.*
 import com.example.myapp1.electronic.DialogPhone
-import com.example.myapp1.electronic.DialogSelect
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 private val homeFragment = HomeFragment()
 private val profileFragment = ProfleFragment()
 private val electronicFragment = ElectronicFragment()
-class HomeActivity : AppCompatActivity(), OnInputData {
+class HomeActivity : AppCompatActivity(), OnInputData0 {
 
     private var dialogDSP: DialogPhone = DialogPhone()
     @SuppressLint("MissingInflatedId")

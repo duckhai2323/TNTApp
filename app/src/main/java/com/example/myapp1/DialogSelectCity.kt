@@ -16,7 +16,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 class DialogSelectCity : BottomSheetDialogFragment() {
     lateinit var bottomSheet:BottomSheetDialog
-    private var mOnInputData: OnInputData? = null
+    private var mOnInputData: OnInputData0? = null
 
     @SuppressLint("ResourceType", "MissingInflatedId")
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -44,6 +44,6 @@ class DialogSelectCity : BottomSheetDialogFragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        mOnInputData = context as? OnInputData
+        mOnInputData = context as? OnInputData0
     }
 }
