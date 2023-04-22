@@ -11,8 +11,8 @@ import com.example.myapp1.R
 import com.example.myapp1.Users
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.FieldValue.serverTimestamp
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
@@ -83,7 +83,7 @@ class SignupActivity : AppCompatActivity() {
                         auth.createUserWithEmailAndPassword(inputEmail,inputPassword)
                             .addOnCompleteListener(this){task->
                                 if(task.isSuccessful){
-                                    var user = Users(userName.text.toString(),"100100",edtFirst.text.toString()+edtLast.text.toString(),inputEmail,edtPhone.text.toString(),"null","null","null","null")
+                                    var user = Users(userName.text.toString(),"100100",edtFirst.text.toString()+edtLast.text.toString(),inputEmail,edtPhone.text.toString(),"null","null","null","null", FieldValue.serverTimestamp())
                                     db.collection("users").document(userName.text.toString()).set(user)
                                     Toast.makeText(this,"Tao tai khoan thanh cong",Toast.LENGTH_LONG)
                                     val intent_home = Intent(this,LoginActivity::class.java)

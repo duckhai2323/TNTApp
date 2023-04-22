@@ -78,4 +78,9 @@ Ghép nối âm thanh nổi và tự động: Những tai nghe này cung cấp c
 
     </string-array>
 
+    <string-array name="rangeSlider">
+        <item>0</item>
+        <item>30</item>
+    </string-array>
+
 </resources>

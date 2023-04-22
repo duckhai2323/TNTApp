@@ -43,7 +43,7 @@
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_marginStart="20dp"
-                android:src="@drawable/baseline_close_24"
+                android:src="@drawable/baseline_arrow_back_ios_24"
                 app:layout_constraintBottom_toBottomOf="@+id/textView48"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/textView48" />
@@ -68,7 +68,6 @@
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvCity"
-                android:layout_marginTop="15dp"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
 

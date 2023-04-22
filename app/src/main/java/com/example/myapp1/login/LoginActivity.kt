@@ -19,7 +19,9 @@ class LoginActivity : AppCompatActivity() {
         setContentView(R.layout.activity_login)
         addEvent()
         val edtEmail = findViewById<EditText>(R.id.edtEmail)
-        edtEmail.setText(edtEmail.text.toString()+"@gmail.com")
+        edtEmail.setText(edtEmail.text.toString()+"tranduckhai@gmail.com")
+        val edtPassword = findViewById<EditText>(R.id.edtPassword)
+        edtPassword.setText("12345678")
     }
 
     private fun addEvent() {

@@ -23,6 +23,7 @@ class DialogPhone : BottomSheetDialogFragment(){
     private var status:String?=null
     private var str:String? = null
     private var color:String?=null
+    private var address:String?=null
     lateinit var txtphanloai:TextView
     lateinit var txtNhaSanXuatMin:TextView
     lateinit var txtNhaSanXuat:TextView
@@ -47,6 +48,10 @@ class DialogPhone : BottomSheetDialogFragment(){
     lateinit var txtGiaMin:TextView
     lateinit var txtGia:TextView
     lateinit var edtGia:TextView
+
+    lateinit var txtDiaChiMin:TextView
+    lateinit var txtDiaChi:TextView
+    lateinit var edtDiaChi:TextView
     lateinit var bottomSheetDialog:BottomSheetDialog
 
     fun updateDate (data:String,obj:String) {
@@ -91,13 +96,19 @@ class DialogPhone : BottomSheetDialogFragment(){
             txtGia.text = price
             txtGia.visibility = View.VISIBLE
             edtGia.visibility = View.GONE
+        } else if(obj == "address") {
+            address = data
+            txtDiaChiMin.visibility = View.VISIBLE
+            txtDiaChi.text = address
+            txtDiaChi.visibility =View.VISIBLE
+            edtDiaChi.visibility = View.GONE
         }
     }
 
     @SuppressLint("MissingInflatedId")
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         bottomSheetDialog =  super.onCreateDialog(savedInstanceState) as BottomSheetDialog
-        var view:View = LayoutInflater.from(context).inflate(R.layout.layout_dspipad_phone,null)
+        var view:View = LayoutInflater.from(context).inflate(R.layout.layout_telephone,null)
         var phanloai: String? = arguments?.getString("phanloai")
         txtphanloai = view.findViewById(R.id.txtPL)
         txtphanloai.text = phanloai.toString()
@@ -125,6 +136,10 @@ class DialogPhone : BottomSheetDialogFragment(){
         txtGiaMin = view.findViewById(R.id.txtGiaMin)
         txtGia = view.findViewById(R.id.txtGia)
         edtGia = view.findViewById(R.id.edtGia)
+
+        txtDiaChiMin = view.findViewById(R.id.txtDiaChiMin)
+        txtDiaChi = view.findViewById(R.id.txtDiaChi)
+        edtDiaChi = view.findViewById(R.id.edtDiaChi)
 
         var selectBrand:LinearLayout = view.findViewById(R.id.selectBrand)
         selectBrand.setOnClickListener {
@@ -211,6 +226,15 @@ class DialogPhone : BottomSheetDialogFragment(){
             var listBrand: MutableList<ItemBrand> = mutableListOf()
             var listCapacity: MutableList<String> = mutableListOf()
             var dialogBrand: DialogSelect = DialogSelect(listBrand,listColor,listCapacity,"price")
+            fragmentManager?.let { it1 -> dialogBrand.show(it1, "aaaa") }
+        }
+
+        var selectAddress:LinearLayout = view.findViewById(R.id.selectAddress)
+        selectAddress.setOnClickListener {
+            var listColor:MutableList<ItemImageText> = mutableListOf()
+            var listBrand: MutableList<ItemBrand> = mutableListOf()
+            var listCapacity: MutableList<String> = mutableListOf()
+            var dialogBrand: DialogSelect = DialogSelect(listBrand,listColor,listCapacity,"address")
             fragmentManager?.let { it1 -> dialogBrand.show(it1, "aaaa") }
         }
 

@@ -16,12 +16,12 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
 var brand_:String?=null
+lateinit var category:String
+lateinit var product:String
 class ProductActivity : AppCompatActivity(), OnInputData1 {
     lateinit var addressStr:String
     lateinit var address:TextView
     lateinit var viewAdapter:ViewItemFilteAdapter
-    lateinit var category:String
-    lateinit var product_:String
     lateinit var rvProductFilter:RecyclerView
     var listFilte:MutableList<FilteItem> = mutableListOf()
     lateinit var dialogFilte:DialogFilter
@@ -57,8 +57,8 @@ class ProductActivity : AppCompatActivity(), OnInputData1 {
                     mapFilter.remove("series")
                 }
             } else if(key1 == category){
-                if(str != product_) {
-                    product_ = str
+                if(str != product) {
+                    product = str
                     mapFilter.clear()
                     mapFilter["address"] = addressStr
                     listFilte.clear()
@@ -86,11 +86,11 @@ class ProductActivity : AppCompatActivity(), OnInputData1 {
 
             var addressLLO: LinearLayout = findViewById<LinearLayout>(R.id.addressLLO)
             addressLLO.setOnClickListener {
-                dialogFilte = DialogFilter("address","aaa")
+                dialogFilte = DialogFilter("address")
                 dialogFilte.show(supportFragmentManager,"aaa")
             }
             category = bundle.getString("category").toString()
-            product_ = bundle.getString("product").toString()
+            product = bundle.getString("product").toString()
             createListFilter()
         }
         displayListFilter()
@@ -114,7 +114,7 @@ class ProductActivity : AppCompatActivity(), OnInputData1 {
         viewAdapter = ViewItemFilteAdapter(listFilte,object:ClickInterface{
             override fun setOnClick(pos: Int) {
                 position = pos
-                dialogFilte = DialogFilter(listFilte[pos].key,product_)
+                dialogFilte = DialogFilter(listFilte[pos].key)
                 dialogFilte.show(supportFragmentManager,"aaa")
             }
         })
@@ -125,9 +125,9 @@ class ProductActivity : AppCompatActivity(), OnInputData1 {
     private fun createListFilter() {
         when(category){
             "electron" -> {
-                when(product_){
+                when(product){
                     "Điện thoại" -> {
-                        product_ = "telephone"
+                        product = "telephone"
                         listFilte.add(FilteItem("Điện thoại",R.drawable.outline_keyboard_arrow_down_24,R.drawable.background_button2_1,"electron"))
                         listFilte.add(FilteItem("Hãng",R.drawable.baseline_add_24_1,R.drawable.background_filter,"brand"))
                         listFilte.add(FilteItem("Dòng máy",R.drawable.baseline_add_24_1,R.drawable.background_filter,"series"))
@@ -140,7 +140,7 @@ class ProductActivity : AppCompatActivity(), OnInputData1 {
                     }
 
                     "Laptop" -> {
-                        product_="laptop"
+                        product="laptop"
                         listFilte.add(FilteItem("Laptop",R.drawable.outline_keyboard_arrow_down_24,R.drawable.background_button2_1,"electron"))
                         listFilte.add(FilteItem("Hãng",R.drawable.baseline_add_24_1,R.drawable.background_filter,"brand"))
                         listFilte.add(FilteItem("Dòng máy",R.drawable.baseline_add_24_1,R.drawable.background_filter,"series"))
@@ -163,9 +163,12 @@ class ProductActivity : AppCompatActivity(), OnInputData1 {
 
     private fun FilterProduct() {
         listProductFilter.clear()
-        val dbRef = db.collection("products").document(category).collection(product_)
+        val dbRef = db.collection("products").document(category).collection(product)
         var query: Query = dbRef
         for((field,value) in mapFilter){
+            if(field == "price"){
+                continue
+            }
             query = query.whereEqualTo(field,value)
         }
         query
@@ -177,7 +180,27 @@ class ProductActivity : AppCompatActivity(), OnInputData1 {
                         var title = document.data?.get("title").toString()
                         var price = document.data?.get("price").toString()
                         var city  = document.data?.get("address").toString()
-                        listProductFilter.add(ItemProduct(imageUrl[0],title,price,city))
+
+                        if(mapFilter["price"]!=null) {
+                            val priceStr = mapFilter["price"].toString()
+                            val index:Int = priceStr.lastIndexOf("-")
+                            var fromPrice:Float
+                            if(priceStr[0] == '0'){
+                                fromPrice = 0F
+                            } else if(priceStr[3] == '.') {
+                                fromPrice = priceStr.substring(startIndex = 0, endIndex = 2).toFloat()/1000
+                            }
+                            else {
+                                 fromPrice = priceStr.substring(startIndex = 0, endIndex = 3).toFloat()
+                            }
+                            val toPrice = priceStr.substring(startIndex = (index+2), endIndex = (index+5)).toFloat()
+                            val priceProduct = price.substring(startIndex = 0, endIndex = 3).toFloat()
+                            if(priceProduct in fromPrice..toPrice) {
+                                listProductFilter.add(ItemProduct(imageUrl[0],title,price,city))
+                            }
+                        } else {
+                            listProductFilter.add(ItemProduct(imageUrl[0],title,price,city))
+                        }
                     }
                     DisplayListProduct(listProductFilter)
                 }
