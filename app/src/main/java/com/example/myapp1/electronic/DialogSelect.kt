@@ -21,7 +21,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
-class DialogSelect(var listBrand:MutableList<ItemBrand>, var listColor:MutableList<ItemImageText>, var listCapacity:MutableList<String>, var key:String): BottomSheetDialogFragment() {
+class DialogSelect(var key:String): BottomSheetDialogFragment() {
     private val db = Firebase.firestore
     lateinit var bottomSheet:BottomSheetDialog
     private var mOnInputData: OnInputData0? = null
@@ -29,42 +29,38 @@ class DialogSelect(var listBrand:MutableList<ItemBrand>, var listColor:MutableLi
     private var city:String = ""
     private var pant:String = ""
     private var ward:String = ""
+
+    private  var listBrand: MutableList<ItemBrand> = mutableListOf()
     @SuppressLint("MissingInflatedId")
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         bottomSheet =  super.onCreateDialog(savedInstanceState) as BottomSheetDialog
-        lateinit var view:View
         when(key) {
             "brand" -> {
-                view = LayoutInflater.from(context).inflate(R.layout.layout_selectform, null)
-                bottomSheet.setContentView(view)
-                var txtForm:TextView = view.findViewById(R.id.txtForm)
-                txtForm.text = "Chọn hãng"
-                var rvBrand: RecyclerView = view.findViewById(R.id.rvForm)
-                rvBrand.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-                rvBrand.adapter = ViewItemBrandAdapter(listBrand, object : ClickInterface {
-                    override fun setOnClick(pos: Int) {
-                        addEventBrand(listBrand[pos])
-                    }
-                })
-
-                var txtDismiss: ImageView = view.findViewById(R.id.txtDismissForm)
-                txtDismiss.setOnClickListener {
-                    bottomSheet.dismiss()
-                }
-
-                var txtCancle: TextView = view.findViewById(R.id.txtCancleForm)
-                txtCancle.setOnClickListener {
-                    bottomSheet.dismiss()
-                }
+                addEventBrand()
             }
 
             "color" -> {
-                view = LayoutInflater.from(context).inflate(R.layout.layout_selectform, null)
+                var view = LayoutInflater.from(context).inflate(R.layout.layout_selectform, null)
                 bottomSheet.setContentView(view)
                 var txtForm:TextView = view.findViewById(R.id.txtForm)
                 txtForm.text = "Chọn màu sắc"
                 var rvColor: RecyclerView = view.findViewById(R.id.rvForm)
                 rvColor.layoutManager = LinearLayoutManager(context,LinearLayoutManager.VERTICAL,false)
+
+                var listColor:MutableList<ItemImageText> = mutableListOf()
+                listColor.add(ItemImageText(R.color.gray,"Xám"))
+                listColor.add(ItemImageText(R.color.black,"Đen"))
+                listColor.add(ItemImageText(R.color.black1,"Đen bóng - JetBlack"))
+                listColor.add(ItemImageText(R.drawable.background_button1,"Trắng"))
+                listColor.add(ItemImageText(R.color.red,"Đỏ"))
+                listColor.add(ItemImageText(R.color.pink,"Hồng"))
+                listColor.add(ItemImageText(R.color.yellow,"Vàng"))
+                listColor.add(ItemImageText(R.color.silver,"Bạc"))
+                listColor.add(ItemImageText(R.color.textColor,"Tím"))
+                listColor.add(ItemImageText(R.color.gold,"Vàng Gold"))
+                listColor.add(ItemImageText(R.color.blue,"Xanh dương"))
+                listColor.add(ItemImageText(R.color.green,"Xanh lá"))
+
                 rvColor.adapter = ViewItemColorAdapter(listColor,object:ClickInterface{
                     override fun setOnClick(pos: Int) {
                         addEventColor(listColor[pos])
@@ -82,7 +78,7 @@ class DialogSelect(var listBrand:MutableList<ItemBrand>, var listColor:MutableLi
             }
 
             "status" -> {
-                view = LayoutInflater.from(context).inflate(R.layout.layout_selectstatus,null)
+                var view = LayoutInflater.from(context).inflate(R.layout.layout_selectstatus,null)
                 bottomSheet.setContentView(view)
                 var LLOMoi:LinearLayout = view.findViewById(R.id.LLOMoi)
                 var LLOChuaSua:LinearLayout = view.findViewById(R.id.LLOChuaSua)
@@ -111,12 +107,23 @@ class DialogSelect(var listBrand:MutableList<ItemBrand>, var listColor:MutableLi
             }
 
             "capacity" -> {
-                view = LayoutInflater.from(context).inflate(R.layout.layout_selectform,null)
+                var view = LayoutInflater.from(context).inflate(R.layout.layout_selectform,null)
                 bottomSheet.setContentView(view)
                 var txtForm:TextView = view.findViewById(R.id.txtForm)
                 txtForm.text = "Chọn dung lượng"
                 var txtDismissCapacity:ImageView = view.findViewById(R.id.txtDismissForm)
                 var rvCpacity:RecyclerView = view.findViewById(R.id.rvForm)
+
+                var listCapacity: MutableList<String> = mutableListOf()
+                listCapacity.add("< 8GB")
+                listCapacity.add("8GB")
+                listCapacity.add("16GB")
+                listCapacity.add("32GB")
+                listCapacity.add("64GB")
+                listCapacity.add("128GB")
+                listCapacity.add("256GB")
+                listCapacity.add("> 256GB")
+
                 rvCpacity.adapter = ViewItemAdapterString(listCapacity,object:ClickInterface{
                     override fun setOnClick(pos: Int) {
                         addEventCapacity(listCapacity[pos])
@@ -134,7 +141,7 @@ class DialogSelect(var listBrand:MutableList<ItemBrand>, var listColor:MutableLi
             }
 
             "warranty" -> {
-                view = LayoutInflater.from(context).inflate(R.layout.layout_warranty,null)
+                var view = LayoutInflater.from(context).inflate(R.layout.layout_warranty,null)
                 bottomSheet.setContentView(view)
                 var LLOConBaoHanh:LinearLayout = view.findViewById(R.id.LLOConBaoHanh)
                 var LLOHetBaoHanh:LinearLayout = view.findViewById(R.id.LLOHetBaoHanh)
@@ -160,7 +167,7 @@ class DialogSelect(var listBrand:MutableList<ItemBrand>, var listColor:MutableLi
             }
 
             "price" -> {
-                view = LayoutInflater.from(context).inflate(R.layout.layout_fill_in,null)
+                var view = LayoutInflater.from(context).inflate(R.layout.layout_fill_in,null)
                 bottomSheet.setContentView(view)
                 var edtPrice:EditText = view.findViewById(R.id.edtPrice)
                 var txtSave:TextView = view.findViewById(R.id.txtSave)
@@ -175,6 +182,47 @@ class DialogSelect(var listBrand:MutableList<ItemBrand>, var listColor:MutableLi
                 }
             }
 
+            "time" -> {
+                var view = LayoutInflater.from(context).inflate(R.layout.layout_selectform,null)
+                bottomSheet.setContentView(view)
+                var txtForm:TextView = view.findViewById(R.id.txtForm)
+                txtForm.text = "Thời gian sử dụng"
+                var txtDismissTime:ImageView = view.findViewById(R.id.txtDismissForm)
+                var listTime: MutableList<String> = mutableListOf()
+                var rvTime:RecyclerView = view.findViewById(R.id.rvForm)
+
+                listTime.add("< 1 tháng")
+                listTime.add("1 tháng")
+                listTime.add("2 tháng")
+                listTime.add("3 tháng")
+                listTime.add("4 tháng")
+                listTime.add("5 tháng")
+                listTime.add("6 tháng")
+                listTime.add("7 tháng")
+                listTime.add("8 tháng")
+                listTime.add("9 tháng")
+                listTime.add("10 tháng")
+                listTime.add("11 tháng")
+                listTime.add("12 tháng")
+                listTime.add("> 12 tháng")
+
+                rvTime.adapter = ViewItemAdapterString(listTime,object:ClickInterface{
+                    override fun setOnClick(pos: Int) {
+                        mOnInputData?.sendData(listTime[pos],key)
+                        bottomSheet.dismiss()
+                    }
+                })
+                rvTime.layoutManager = LinearLayoutManager(context,LinearLayoutManager.VERTICAL,false)
+                txtDismissTime.setOnClickListener{
+                    bottomSheet.dismiss()
+                }
+
+                var txtCancle: TextView = view.findViewById(R.id.txtCancleForm)
+                txtCancle.setOnClickListener {
+                    bottomSheet.dismiss()
+                }
+            }
+
             "address" -> {
                 addEventAdress(city, pant, ward)
             }
@@ -184,6 +232,8 @@ class DialogSelect(var listBrand:MutableList<ItemBrand>, var listColor:MutableLi
         bottomSheet . behavior . state = BottomSheetBehavior . STATE_EXPANDED
         return bottomSheet
     }
+
+
 
     @SuppressLint("MissingInflatedId")
     private fun addEventAdress(city:String, pant:String, ward:String) {
@@ -373,12 +423,54 @@ class DialogSelect(var listBrand:MutableList<ItemBrand>, var listColor:MutableLi
         bottomSheet.dismiss()
     }
 
+    private fun addEventBrand() {
+        listBrand.clear()
+        var view = LayoutInflater.from(context).inflate(R.layout.layout_selectform, null)
+        bottomSheet.setContentView(view)
+        var txtForm:TextView = view.findViewById(R.id.txtForm)
+        txtForm.text = "Chọn hãng"
+        var rvBrand: RecyclerView = view.findViewById(R.id.rvForm)
+        rvBrand.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+
+        val db = Firebase.firestore
+        db.collection("category").document("electron")
+            .collection("telephone")
+            .get()
+            .addOnSuccessListener {
+                if(!it.isEmpty) {
+                    for(document in it.documents)
+                    {
+                        val name = document.data?.get("name").toString()
+                        val imageUrl = document.data?.get("imageBrand").toString()
+                        listBrand.add(ItemBrand(name,imageUrl))
+                    }
+                    rvBrand.adapter = ViewItemBrandAdapter(listBrand, object : ClickInterface {
+                        override fun setOnClick(pos: Int) {
+                            addEventSeries(listBrand[pos])
+                        }
+                    })
+                }
+            }
+
+        var txtDismiss: ImageView = view.findViewById(R.id.txtDismissForm)
+        txtDismiss.setOnClickListener {
+            bottomSheet.dismiss()
+        }
+
+        var txtCancle: TextView = view.findViewById(R.id.txtCancleForm)
+        txtCancle.setOnClickListener {
+            bottomSheet.dismiss()
+        }
+    }
     @SuppressLint("MissingInflatedId")
-    private fun addEventBrand(itemBrand : ItemBrand) {
-        var view1 = LayoutInflater.from(context).inflate(R.layout.layout_selectseries,null)
+    private fun addEventSeries(itemBrand : ItemBrand) {
+        var view = LayoutInflater.from(context).inflate(R.layout.layout_selectform,null)
+        bottomSheet.setContentView(view)
+        var txtForm:TextView = view.findViewById(R.id.txtForm)
+        txtForm.text = "Chọn dòng máy"
         val dbRef = db.collection("category").document("electron").collection("telephone")
         var listSeries:MutableList<String> = mutableListOf()
-        var rvSeries:RecyclerView = view1.findViewById(R.id.rvSeries)
+        var rvSeries:RecyclerView = view.findViewById(R.id.rvForm)
         dbRef.whereEqualTo("name",itemBrand.name)
             .get()
             .addOnSuccessListener {it->
@@ -388,44 +480,21 @@ class DialogSelect(var listBrand:MutableList<ItemBrand>, var listColor:MutableLi
                     }
                     rvSeries.adapter = ViewItemAdapterString(listSeries,object:ClickInterface{
                         override fun setOnClick(pos: Int) {
-                            var brandStr:String = itemBrand.name + " - " + listSeries[pos]
-                            mOnInputData?.sendData(brandStr,key)
+                            mOnInputData?.sendData(itemBrand.name+" - "+listSeries[pos],key)
                             bottomSheet.dismiss()
                         }
                     })
                 }
             }
         rvSeries.layoutManager = LinearLayoutManager(context,LinearLayoutManager.VERTICAL,false)
-        bottomSheet.setContentView(view1)
-
-        var txtCancle: TextView = view1.findViewById(R.id.txtCancle)
-        txtCancle.setOnClickListener {
-            bottomSheet.dismiss()
+        var txtBackToBrand:ImageView = view.findViewById(R.id.txtDismissForm)
+        txtBackToBrand.setOnClickListener{
+            addEventBrand()
         }
 
-       var txtBackToBrand:ImageView = view1.findViewById(R.id.txtBackToBrand)
-        txtBackToBrand.setOnClickListener{
-            var view0:View = LayoutInflater.from(context).inflate(R.layout.layout_selectform,null)
-            var txtForm:TextView = view0.findViewById(R.id.txtForm)
-            txtForm.text = "Chọn hãng"
-            bottomSheet.setContentView(view0)
-            var rvBrand:RecyclerView = view0.findViewById(R.id.rvForm)
-            rvBrand.adapter = ViewItemBrandAdapter(listBrand,object:ClickInterface{
-                override fun setOnClick(pos: Int) {
-                    addEventBrand(listBrand[pos])
-                }
-            })
-            rvBrand.layoutManager = LinearLayoutManager(context,LinearLayoutManager.VERTICAL,false)
-
-            var txtDismiss:ImageView = view0.findViewById(R.id.txtDismissForm)
-            txtDismiss.setOnClickListener{
-                bottomSheet.dismiss()
-            }
-
-            var txtCancle: TextView = view0.findViewById(R.id.txtCancleForm)
-            txtCancle.setOnClickListener {
-                bottomSheet.dismiss()
-            }
+        var txtCancle: TextView = view.findViewById(R.id.txtCancleForm)
+        txtCancle.setOnClickListener {
+            bottomSheet.dismiss()
         }
     }
 

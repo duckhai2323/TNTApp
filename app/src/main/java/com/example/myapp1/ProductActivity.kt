@@ -15,7 +15,7 @@ import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
-var brand_:String?=null
+var brand_:String = ""
 lateinit var category:String
 lateinit var product:String
 class ProductActivity : AppCompatActivity(), OnInputData1 {
@@ -31,6 +31,7 @@ class ProductActivity : AppCompatActivity(), OnInputData1 {
     private val db = Firebase.firestore
     var check:Boolean = true
     override fun sendData(str: String, key1: String,key2:String) {
+        var index = position
         mapFilter[key1] = str
         listProductFilter.clear()
         if(key1 == "address") {
@@ -44,16 +45,16 @@ class ProductActivity : AppCompatActivity(), OnInputData1 {
                 item = FilteItem(str, R.drawable.baseline_add_24_1, R.drawable.background_filter, key1)
                 mapFilter.remove(key1)
             }
-            if(key1 == "brand"){
-                brand_ = str
-                if(mapFilter["series"]?.isEmpty() == false) {
+            if(key1 == "brand" ){
+                index = 1
+                if(listFilte[index].TextItem != brand_) {
                     var item1 = FilteItem(
                         "Dòng máy",
                         R.drawable.baseline_add_24_1,
                         R.drawable.background_filter,
                         "series"
                     )
-                    viewAdapter.updateData(item1, position + 1)
+                    viewAdapter.updateData(item1, index + 1)
                     mapFilter.remove("series")
                 }
             } else if(key1 == category){
@@ -66,13 +67,14 @@ class ProductActivity : AppCompatActivity(), OnInputData1 {
                     displayListFilter()
                 }
             }
-            viewAdapter.updateData(item, position)
+            viewAdapter.updateData(item, index)
         }
         FilterProduct()
     }
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
+        brand_ = ""
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_product)
         address = findViewById<TextView>(R.id.addressText)

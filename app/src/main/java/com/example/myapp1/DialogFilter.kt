@@ -33,10 +33,10 @@ class DialogFilter(val key:String):BottomSheetDialogFragment() {
     @SuppressLint("ResourceType")
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         bottomSheet =  super.onCreateDialog(savedInstanceState) as BottomSheetDialog
-        lateinit var view: View
         when(key) {
             "address" -> {
-                view = LayoutInflater.from(context).inflate(R.layout.layout_selectcity, null)
+                var view = LayoutInflater.from(context).inflate(R.layout.layout_selectcity, null)
+                bottomSheet.setContentView(view)
                 var list = resources.getStringArray(R.array.list_city)
                 var listCity:MutableList<String> = list.toMutableList()
                 var rvCity:RecyclerView = view.findViewById(R.id.rvCity)
@@ -55,7 +55,8 @@ class DialogFilter(val key:String):BottomSheetDialogFragment() {
             }
 
             "electron" -> {
-                view = LayoutInflater.from(context).inflate(R.layout.layout_danhmuc, null)
+                var view = LayoutInflater.from(context).inflate(R.layout.layout_danhmuc, null)
+                bottomSheet.setContentView(view)
                 var listDanhMuc:MutableList<String> = mutableListOf()
                 listDanhMuc.add("Điện thoại")
                 listDanhMuc.add("Laptop")
@@ -84,7 +85,8 @@ class DialogFilter(val key:String):BottomSheetDialogFragment() {
             }
 
             "brand" -> {
-                view = LayoutInflater.from(context).inflate(R.layout.layout_selectform ,null)
+                var view = LayoutInflater.from(context).inflate(R.layout.layout_selectform ,null)
+                bottomSheet.setContentView(view)
                 var txtForm:TextView = view.findViewById(R.id.txtForm)
                 txtForm.text = "Chọn hãng"
                 var rvBrand: RecyclerView = view.findViewById(R.id.rvForm)
@@ -103,6 +105,7 @@ class DialogFilter(val key:String):BottomSheetDialogFragment() {
                             }
                             rvBrand.adapter = ViewItemBrandAdapter(listBrand, object : ClickInterface {
                                 override fun setOnClick(pos: Int) {
+                                    brand_ = listBrand[pos].name
                                     mOnInputData?.sendData(listBrand[pos].name,key,"accept")
                                     bottomSheet.dismiss()
                                 }
@@ -115,17 +118,21 @@ class DialogFilter(val key:String):BottomSheetDialogFragment() {
                 }
                 var txtCancle: TextView = view.findViewById(R.id.txtCancleForm)
                 txtCancle.setOnClickListener {
+                    brand_ = ""
                     mOnInputData?.sendData("Hãng",key,"cancle")
                     bottomSheet.dismiss()
                 }
             }
 
             "series" -> {
-                if(brand_ != null) {
-                    view = LayoutInflater.from(context).inflate(R.layout.layout_selectseries,null)
+                if(brand_.isNotEmpty()) {
+                    var view = LayoutInflater.from(context).inflate(R.layout.layout_selectform,null)
+                    bottomSheet.setContentView(view)
+                    var txtForm:TextView = view.findViewById(R.id.txtForm)
+                    txtForm.text = "Chọn dòng máy"
                     val dbRef = db.collection("category").document(category).collection(product)
                     var listSeries:MutableList<String> = mutableListOf()
-                    var rvSeries:RecyclerView = view.findViewById(R.id.rvSeries)
+                    var rvSeries:RecyclerView = view.findViewById(R.id.rvForm)
                     dbRef.whereEqualTo("name", brand_)
                         .get()
                         .addOnSuccessListener {it->
@@ -142,15 +149,18 @@ class DialogFilter(val key:String):BottomSheetDialogFragment() {
                             }
                         }
                     rvSeries.layoutManager = LinearLayoutManager(context,LinearLayoutManager.VERTICAL,false)
-                    var txtBackToBrand:ImageView = view.findViewById(R.id.txtBackToBrand)
+                    var txtBackToBrand:ImageView = view.findViewById(R.id.txtDismissForm)
                     txtBackToBrand.setOnClickListener{
                         bottomSheet.dismiss()
                     }
-                    var txtCancle: TextView = view.findViewById(R.id.txtCancle)
+
+                    var txtCancle: TextView = view.findViewById(R.id.txtCancleForm)
                     txtCancle.setOnClickListener {
                         mOnInputData?.sendData("Dòng máy",key,"cancle")
                         bottomSheet.dismiss()
                     }
+                } else {
+                    addEventBrand()
                 }
             }
 
@@ -168,7 +178,8 @@ class DialogFilter(val key:String):BottomSheetDialogFragment() {
                 listColor.add(ItemImageText(R.color.gold,"Vàng Gold"))
                 listColor.add(ItemImageText(R.color.blue,"Xanh dương"))
                 listColor.add(ItemImageText(R.color.green,"Xanh lá"))
-                view = LayoutInflater.from(context).inflate(R.layout.layout_selectform, null)
+                var view = LayoutInflater.from(context).inflate(R.layout.layout_selectform, null)
+                bottomSheet.setContentView(view)
                 var txtForm:TextView = view.findViewById(R.id.txtForm)
                 txtForm.text = "Chọn màu sắc"
                 var rvColor: RecyclerView = view.findViewById(R.id.rvForm)
@@ -193,7 +204,8 @@ class DialogFilter(val key:String):BottomSheetDialogFragment() {
             }
 
             "status" -> {
-                view = LayoutInflater.from(context).inflate(R.layout.layout_selectstatus,null)
+                var view = LayoutInflater.from(context).inflate(R.layout.layout_selectstatus,null)
+                bottomSheet.setContentView(view)
                 var LLOMoi: LinearLayout = view.findViewById(R.id.LLOMoi)
                 var LLOChuaSua: LinearLayout = view.findViewById(R.id.LLOChuaSua)
                 var LLODaSua: LinearLayout = view.findViewById(R.id.LLODaSua)
@@ -221,8 +233,8 @@ class DialogFilter(val key:String):BottomSheetDialogFragment() {
             }
 
             "warranty" -> {
-                view = LayoutInflater.from(context).inflate(R.layout.layout_warranty,null)
-
+                var view = LayoutInflater.from(context).inflate(R.layout.layout_warranty,null)
+                bottomSheet.setContentView(view)
                 var LLOConBaoHanh:LinearLayout = view.findViewById(R.id.LLOConBaoHanh)
                 var LLOHetBaoHanh:LinearLayout = view.findViewById(R.id.LLOHetBaoHanh)
                 LLOConBaoHanh.setOnClickListener {
@@ -247,7 +259,8 @@ class DialogFilter(val key:String):BottomSheetDialogFragment() {
             }
 
             "capacity" -> {
-                view = LayoutInflater.from(context).inflate(R.layout.layout_selectform,null)
+                var view = LayoutInflater.from(context).inflate(R.layout.layout_selectform,null)
+                bottomSheet.setContentView(view)
                 var txtForm:TextView = view.findViewById(R.id.txtForm)
                 txtForm.text = "Chọn dung lượng"
                 var listCapacity: MutableList<String> = mutableListOf()
@@ -279,7 +292,8 @@ class DialogFilter(val key:String):BottomSheetDialogFragment() {
             }
 
             "size" -> {
-                view = LayoutInflater.from(context).inflate(R.layout.layout_selectform,null)
+                var view = LayoutInflater.from(context).inflate(R.layout.layout_selectform,null)
+                bottomSheet.setContentView(view)
                 var txtForm:TextView = view.findViewById(R.id.txtForm)
                 txtForm.text = "Kích cỡ màn hình"
                 var listSize:MutableList<String> = mutableListOf()
@@ -314,7 +328,8 @@ class DialogFilter(val key:String):BottomSheetDialogFragment() {
             }
 
             "ram" -> {
-                view = LayoutInflater.from(context).inflate(R.layout.layout_selectform,null)
+                var view = LayoutInflater.from(context).inflate(R.layout.layout_selectform,null)
+                bottomSheet.setContentView(view)
                 var txtForm:TextView = view.findViewById(R.id.txtForm)
                 txtForm.text = "Chọn RAM"
                 var listRam:MutableList<String> = mutableListOf()
@@ -348,7 +363,8 @@ class DialogFilter(val key:String):BottomSheetDialogFragment() {
             }
 
             "ssd" -> {
-                view = LayoutInflater.from(context).inflate(R.layout.layout_selectform,null)
+                var view = LayoutInflater.from(context).inflate(R.layout.layout_selectform,null)
+                bottomSheet.setContentView(view)
                 var txtForm:TextView = view.findViewById(R.id.txtForm)
                 txtForm.text = "Chọn Ổ cứng"
                 var listSSD:MutableList<String> = mutableListOf()
@@ -387,7 +403,8 @@ class DialogFilter(val key:String):BottomSheetDialogFragment() {
             }
 
             "card" -> {
-                view = LayoutInflater.from(context).inflate(R.layout.layout_selectform,null)
+                var view = LayoutInflater.from(context).inflate(R.layout.layout_selectform,null)
+                bottomSheet.setContentView(view)
                 var txtForm:TextView = view.findViewById(R.id.txtForm)
                 txtForm.text = "Chọn card màn hình"
                 var listCard:MutableList<String> = mutableListOf()
@@ -418,7 +435,8 @@ class DialogFilter(val key:String):BottomSheetDialogFragment() {
             }
 
             "ship" -> {
-                view = LayoutInflater.from(context).inflate(R.layout.layout_selectform,null)
+                var view = LayoutInflater.from(context).inflate(R.layout.layout_selectform,null)
+                bottomSheet.setContentView(view)
                 var txtForm:TextView = view.findViewById(R.id.txtForm)
                 txtForm.text = "Vận chuyển giao nhận"
                 var listShip:MutableList<String> = mutableListOf()
@@ -448,7 +466,8 @@ class DialogFilter(val key:String):BottomSheetDialogFragment() {
             }
 
             "handle" -> {
-                view = LayoutInflater.from(context).inflate(R.layout.layout_selectform,null)
+                var view = LayoutInflater.from(context).inflate(R.layout.layout_selectform,null)
+                bottomSheet.setContentView(view)
                 var txtForm:TextView = view.findViewById(R.id.txtForm)
                 txtForm.text = "Chọn bộ xử lí"
                 var listHandle:MutableList<String> = mutableListOf()
@@ -492,7 +511,8 @@ class DialogFilter(val key:String):BottomSheetDialogFragment() {
             }
 
             "price" -> {
-                view = LayoutInflater.from(context).inflate(R.layout.layout_selectprice,null)
+                var view = LayoutInflater.from(context).inflate(R.layout.layout_selectprice,null)
+                bottomSheet.setContentView(view)
                 var fromPrice:TextView = view.findViewById(R.id.fromPrice)
                 var toPrice:TextView = view.findViewById(R.id.toPrice)
                 var txtd1:TextView = view.findViewById(R.id.txtd1)
@@ -529,7 +549,8 @@ class DialogFilter(val key:String):BottomSheetDialogFragment() {
             }
 
             "time" -> {
-                view = LayoutInflater.from(context).inflate(R.layout.layout_selectform,null)
+                var view = LayoutInflater.from(context).inflate(R.layout.layout_selectform,null)
+                bottomSheet.setContentView(view)
                 var txtForm:TextView = view.findViewById(R.id.txtForm)
                 txtForm.text = "Thời gian đã sử dụng"
                 var listTime:MutableList<String> = mutableListOf()
@@ -570,17 +591,58 @@ class DialogFilter(val key:String):BottomSheetDialogFragment() {
             }
         }
         bottomSheet.behavior.state = BottomSheetBehavior.STATE_EXPANDED
-        bottomSheet.setContentView(view)
         return bottomSheet
     }
 
-    /*@SuppressLint("MissingInflatedId")
-   private fun addEventBrandPhone(itemBrand : ItemBrand) {
-       var view1 = LayoutInflater.from(context).inflate(R.layout.layout_selectseries,null)
-       val dbRef = db.collection("category").document("electron").collection("telephone")
+    private fun addEventBrand() {
+        listBrand.clear()
+        var view = LayoutInflater.from(context).inflate(R.layout.layout_selectform ,null)
+        bottomSheet.setContentView(view)
+        var txtForm:TextView = view.findViewById(R.id.txtForm)
+        txtForm.text = "Chọn hãng"
+        var rvBrand: RecyclerView = view.findViewById(R.id.rvForm)
+        rvBrand.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+        val db = Firebase.firestore
+        db.collection("category").document(category)
+            .collection(product)
+            .get()
+            .addOnSuccessListener {
+                if(!it.isEmpty) {
+                    for(document in it.documents)
+                    {
+                        val name = document.data?.get("name").toString()
+                        val imageUrl = document.data?.get("imageBrand").toString()
+                        listBrand.add(ItemBrand(name,imageUrl))
+                    }
+                    rvBrand.adapter = ViewItemBrandAdapter(listBrand, object : ClickInterface {
+                        override fun setOnClick(pos: Int) {
+                            brand_ = listBrand[pos].name
+                            mOnInputData?.sendData(listBrand[pos].name,"brand","accept")
+                            addEventSeries(listBrand[pos].name)
+                        }
+                    })
+                }
+            }
+        var txtDismiss: ImageView = view.findViewById(R.id.txtDismissForm)
+        txtDismiss.setOnClickListener {
+            brand_ = ""
+            mOnInputData?.sendData("Hãng","brand","cancle")
+            bottomSheet.dismiss()
+        }
+        var txtCancle: TextView = view.findViewById(R.id.txtCancleForm)
+        txtCancle.visibility = View.GONE
+    }
+
+    @SuppressLint("MissingInflatedId")
+   private fun addEventSeries(brand:String) {
+        var view = LayoutInflater.from(context).inflate(R.layout.layout_selectform,null)
+        bottomSheet.setContentView(view)
+        var txtForm:TextView = view.findViewById(R.id.txtForm)
+        txtForm.text = "Chọn dòng máy"
+       val dbRef = db.collection("category").document(category).collection(product)
        var listSeries:MutableList<String> = mutableListOf()
-       var rvSeries:RecyclerView = view1.findViewById(R.id.rvSeries)
-       dbRef.whereEqualTo("name",itemBrand.name)
+       var rvSeries:RecyclerView = view.findViewById(R.id.rvForm)
+       dbRef.whereEqualTo("name",brand)
            .get()
            .addOnSuccessListener {it->
                if(!it.isEmpty) {
@@ -589,32 +651,26 @@ class DialogFilter(val key:String):BottomSheetDialogFragment() {
                    }
                    rvSeries.adapter = ViewItemAdapterString(listSeries,object:ClickInterface{
                        override fun setOnClick(pos: Int) {
-                           mOnInputData?.sendData(listSeries[pos],"series")
+                           mOnInputData?.sendData(listSeries[pos],"series","accept")
                            bottomSheet.dismiss()
                        }
                    })
                }
            }
        rvSeries.layoutManager = LinearLayoutManager(context,LinearLayoutManager.VERTICAL,false)
-       bottomSheet.setContentView(view1)
-       var txtBackToBrand:ImageView = view1.findViewById(R.id.txtBackToBrand)
+       var txtBackToBrand:ImageView = view.findViewById(R.id.txtDismissForm)
        txtBackToBrand.setOnClickListener{
-           var view0:View = LayoutInflater.from(context).inflate(R.layout.layout_selectbrand,null)
-           bottomSheet.setContentView(view0)
-           var rvBrand:RecyclerView = view0.findViewById(R.id.rvBrand)
-           rvBrand.adapter = ViewItemBrandAdapter(listBrand,object:ClickInterface{
-               override fun setOnClick(pos: Int) {
-                   mOnInputData?.sendData(listBrand[pos].name,key)
-                   addEventBrandPhone(listBrand[pos])
-               }
-           })
-           rvBrand.layoutManager = LinearLayoutManager(context,LinearLayoutManager.VERTICAL,false)
-           var txtDismiss:ImageView = view0.findViewById(R.id.txtDismiss)
-           txtDismiss.setOnClickListener{
-               bottomSheet.dismiss()
-           }
+           addEventBrand()
        }
-   }*/
+
+        var txtCancle: TextView = view.findViewById(R.id.txtCancleForm)
+        txtCancle.setOnClickListener {
+            brand_ = ""
+            mOnInputData?.sendData("Hãng","brand","cancle")
+            mOnInputData?.sendData("Dòng máy",key,"cancle")
+            bottomSheet.dismiss()
+        }
+   }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)

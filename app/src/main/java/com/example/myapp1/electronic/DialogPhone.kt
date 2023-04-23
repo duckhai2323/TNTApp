@@ -17,13 +17,6 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
 class DialogPhone : BottomSheetDialogFragment(){
-    private var price:String?=null
-    private var warranty:String?=null
-    private var capacity:String?=null
-    private var status:String?=null
-    private var str:String? = null
-    private var color:String?=null
-    private var address:String?=null
     lateinit var txtphanloai:TextView
     lateinit var txtNhaSanXuatMin:TextView
     lateinit var txtNhaSanXuat:TextView
@@ -49,59 +42,72 @@ class DialogPhone : BottomSheetDialogFragment(){
     lateinit var txtGia:TextView
     lateinit var edtGia:TextView
 
+    lateinit var txtThoiGianSDMin:TextView
+    lateinit var txtThoiGianSD:TextView
+    lateinit var edtThoiGianSD:TextView
+
     lateinit var txtDiaChiMin:TextView
     lateinit var txtDiaChi:TextView
     lateinit var edtDiaChi:TextView
     lateinit var bottomSheetDialog:BottomSheetDialog
 
-    fun updateDate (data:String,obj:String) {
-        if(obj == "brand") {
-            str = data
-            txtNhaSanXuatMin.visibility = View.VISIBLE
-            txtNhaSanXuat.text = str
-            txtNhaSanXuat.visibility = View.VISIBLE
-            edtNhaSanXuat.visibility = View.GONE
-        }
-        else if(obj == "color") {
-            color = data
-            txtMauSacMin.visibility = View.VISIBLE
-            txtMauSac.text = color
-            txtMauSac.visibility = View.VISIBLE
-            edtMauSac.visibility = View.GONE
-        }
-        else if(obj == "status") {
-            status = data
-            txtTinhTrangMin.visibility = View.VISIBLE
-            txtTinhTrang.text = status
-            txtTinhTrang.visibility = View.VISIBLE
-            edtTinhTrang.visibility = View.GONE
-        }
-        else if(obj == "capacity") {
-            capacity = data
-            txtDungLuongMin.visibility = View.VISIBLE
-            txtDungLuong.text = capacity
-            txtDungLuong.visibility = View.VISIBLE
-            edtDungLuong.visibility = View.GONE
-        }
-        else if(obj == "warranty"){
-            warranty = data
-            txtBaoHanhMin.visibility = View.VISIBLE
-            txtBaoHanh.text = warranty
-            txtBaoHanh.visibility = View.VISIBLE
-            edtBaoHanh.visibility = View.GONE
-        }
-        else if(obj == "price"){
-            price = data
-            txtGiaMin.visibility = View.VISIBLE
-            txtGia.text = price
-            txtGia.visibility = View.VISIBLE
-            edtGia.visibility = View.GONE
-        } else if(obj == "address") {
-            address = data
-            txtDiaChiMin.visibility = View.VISIBLE
-            txtDiaChi.text = address
-            txtDiaChi.visibility =View.VISIBLE
-            edtDiaChi.visibility = View.GONE
+    fun updateDate (data:String,key:String) {
+        when(key) {
+            "brand" -> {
+                txtNhaSanXuatMin.visibility = View.VISIBLE
+                txtNhaSanXuat.text = data
+                txtNhaSanXuat.visibility = View.VISIBLE
+                edtNhaSanXuat.visibility = View.GONE
+            }
+
+            "color" -> {
+                txtMauSacMin.visibility = View.VISIBLE
+                txtMauSac.text = data
+                txtMauSac.visibility = View.VISIBLE
+                edtMauSac.visibility = View.GONE
+            }
+
+            "status" -> {
+                txtTinhTrangMin.visibility = View.VISIBLE
+                txtTinhTrang.text = data
+                txtTinhTrang.visibility = View.VISIBLE
+                edtTinhTrang.visibility = View.GONE
+            }
+
+            "capacity" -> {
+                txtDungLuongMin.visibility = View.VISIBLE
+                txtDungLuong.text = data
+                txtDungLuong.visibility = View.VISIBLE
+                edtDungLuong.visibility = View.GONE
+            }
+
+            "warranty" -> {
+                txtBaoHanhMin.visibility = View.VISIBLE
+                txtBaoHanh.text = data
+                txtBaoHanh.visibility = View.VISIBLE
+                edtBaoHanh.visibility = View.GONE
+            }
+
+            "price" -> {
+                txtGiaMin.visibility = View.VISIBLE
+                txtGia.text = data
+                txtGia.visibility = View.VISIBLE
+                edtGia.visibility = View.GONE
+            }
+
+            "time" -> {
+                txtThoiGianSDMin.visibility = View.VISIBLE
+                txtThoiGianSD.text = data
+                txtThoiGianSD.visibility =View.VISIBLE
+                edtThoiGianSD.visibility = View.GONE
+            }
+
+            "address" -> {
+                txtDiaChiMin.visibility = View.VISIBLE
+                txtDiaChi.text = data
+                txtDiaChi.visibility =View.VISIBLE
+                edtDiaChi.visibility = View.GONE
+            }
         }
     }
 
@@ -137,104 +143,59 @@ class DialogPhone : BottomSheetDialogFragment(){
         txtGia = view.findViewById(R.id.txtGia)
         edtGia = view.findViewById(R.id.edtGia)
 
+        txtThoiGianSDMin = view.findViewById(R.id.txtThoiGianDaSDMin)
+        txtThoiGianSD = view.findViewById(R.id.txtThoiGianDaSD)
+        edtThoiGianSD = view.findViewById(R.id.edtThoiGianDaSD)
+
         txtDiaChiMin = view.findViewById(R.id.txtDiaChiMin)
         txtDiaChi = view.findViewById(R.id.txtDiaChi)
         edtDiaChi = view.findViewById(R.id.edtDiaChi)
 
         var selectBrand:LinearLayout = view.findViewById(R.id.selectBrand)
         selectBrand.setOnClickListener {
-            var listColor:MutableList<ItemImageText> = mutableListOf()
-            var listBrand: MutableList<ItemBrand> = mutableListOf()
-            var listCapacity: MutableList<String> = mutableListOf()
-            val db = Firebase.firestore
-            db.collection("category").document("electron")
-                .collection("telephone")
-                .get()
-                .addOnSuccessListener {
-                    if(!it.isEmpty) {
-                        for(document in it.documents)
-                        {
-                            val name = document.data?.get("name").toString()
-                            val imageUrl = document.data?.get("imageBrand").toString()
-                            listBrand.add(ItemBrand(name,imageUrl))
-                        }
-                        var dialogBrand: DialogSelect = DialogSelect(listBrand,listColor,listCapacity,"brand")
-                        fragmentManager?.let { it1 -> dialogBrand.show(it1, "aaaa") }
-                    }
-                }
+            var dialogBrand: DialogSelect = DialogSelect("brand")
+            fragmentManager?.let { it1 -> dialogBrand.show(it1, "aaaa") }
         }
 
         var selectColor:LinearLayout = view.findViewById(R.id.selectColor)
         selectColor.setOnClickListener {
-            var listColor:MutableList<ItemImageText> = mutableListOf()
-            var listBrand: MutableList<ItemBrand> = mutableListOf()
-            var listCapacity: MutableList<String> = mutableListOf()
-            listColor.add(ItemImageText(R.color.gray,"Xám"))
-            listColor.add(ItemImageText(R.color.black,"Đen"))
-            listColor.add(ItemImageText(R.color.black1,"Đen bóng - JetBlack"))
-            listColor.add(ItemImageText(R.drawable.background_button1,"Trắng"))
-            listColor.add(ItemImageText(R.color.red,"Đỏ"))
-            listColor.add(ItemImageText(R.color.pink,"Hồng"))
-            listColor.add(ItemImageText(R.color.yellow,"Vàng"))
-            listColor.add(ItemImageText(R.color.silver,"Bạc"))
-            listColor.add(ItemImageText(R.color.textColor,"Tím"))
-            listColor.add(ItemImageText(R.color.gold,"Vàng Gold"))
-            listColor.add(ItemImageText(R.color.blue,"Xanh dương"))
-            listColor.add(ItemImageText(R.color.green,"Xanh lá"))
-            var dialogBrand: DialogSelect = DialogSelect(listBrand,listColor,listCapacity,"color")
+            var dialogBrand: DialogSelect = DialogSelect("color")
             fragmentManager?.let { it1 -> dialogBrand.show(it1, "aaaa") }
         }
 
         var selectStatus:LinearLayout = view.findViewById(R.id.selectStatus)
         selectStatus.setOnClickListener {
-            var listColor:MutableList<ItemImageText> = mutableListOf()
-            var listBrand: MutableList<ItemBrand> = mutableListOf()
-            var listCapacity: MutableList<String> = mutableListOf()
-            var dialogBrand: DialogSelect = DialogSelect(listBrand,listColor,listCapacity,"status")
+            var dialogBrand: DialogSelect = DialogSelect("status")
             fragmentManager?.let { it1 -> dialogBrand.show(it1, "aaaa") }
         }
 
         var selectCapacity:LinearLayout = view.findViewById(R.id.selectCapacity)
         selectCapacity.setOnClickListener {
-            var listColor:MutableList<ItemImageText> = mutableListOf()
-            var listBrand: MutableList<ItemBrand> = mutableListOf()
-            var listCapacity: MutableList<String> = mutableListOf()
-            listCapacity.add("< 8GB")
-            listCapacity.add("8GB")
-            listCapacity.add("16GB")
-            listCapacity.add("32GB")
-            listCapacity.add("64GB")
-            listCapacity.add("128GB")
-            listCapacity.add("256GB")
-            listCapacity.add("> 256GB")
-            var dialogBrand: DialogSelect = DialogSelect(listBrand,listColor,listCapacity,"capacity")
+            var dialogBrand: DialogSelect = DialogSelect("capacity")
             fragmentManager?.let { it1 -> dialogBrand.show(it1, "aaaa") }
         }
 
         var selectWarranty:LinearLayout = view.findViewById(R.id.selectWarranty)
         selectWarranty.setOnClickListener {
-            var listColor:MutableList<ItemImageText> = mutableListOf()
-            var listBrand: MutableList<ItemBrand> = mutableListOf()
-            var listCapacity: MutableList<String> = mutableListOf()
-            var dialogBrand: DialogSelect = DialogSelect(listBrand,listColor,listCapacity,"warranty")
+            var dialogBrand: DialogSelect = DialogSelect("warranty")
             fragmentManager?.let { it1 -> dialogBrand.show(it1, "aaaa") }
         }
 
         var selectPrice:LinearLayout = view.findViewById(R.id.selectPrice)
         selectPrice.setOnClickListener {
-            var listColor:MutableList<ItemImageText> = mutableListOf()
-            var listBrand: MutableList<ItemBrand> = mutableListOf()
-            var listCapacity: MutableList<String> = mutableListOf()
-            var dialogBrand: DialogSelect = DialogSelect(listBrand,listColor,listCapacity,"price")
+            var dialogBrand: DialogSelect = DialogSelect("price")
             fragmentManager?.let { it1 -> dialogBrand.show(it1, "aaaa") }
         }
 
         var selectAddress:LinearLayout = view.findViewById(R.id.selectAddress)
         selectAddress.setOnClickListener {
-            var listColor:MutableList<ItemImageText> = mutableListOf()
-            var listBrand: MutableList<ItemBrand> = mutableListOf()
-            var listCapacity: MutableList<String> = mutableListOf()
-            var dialogBrand: DialogSelect = DialogSelect(listBrand,listColor,listCapacity,"address")
+            var dialogBrand: DialogSelect = DialogSelect("address")
+            fragmentManager?.let { it1 -> dialogBrand.show(it1, "aaaa") }
+        }
+
+        var selectTime:LinearLayout = view.findViewById(R.id.selectTime)
+        selectTime.setOnClickListener{
+            var dialogBrand: DialogSelect = DialogSelect("time")
             fragmentManager?.let { it1 -> dialogBrand.show(it1, "aaaa") }
         }
 

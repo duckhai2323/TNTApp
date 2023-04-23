@@ -343,6 +343,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id = "@+id/selectTime"
                 android:layout_width="match_parent"
                 android:layout_height="55dp"
                 android:layout_marginLeft="10dp"
@@ -363,7 +364,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
                         android:layout_marginTop="5dp"
-                        android:text="Nhà sản xuất"
+                        android:text="Thời gian đã sử dụng *"
                         android:textColor="#777777"
                         android:textSize="15dp"
                         android:textStyle="bold"
