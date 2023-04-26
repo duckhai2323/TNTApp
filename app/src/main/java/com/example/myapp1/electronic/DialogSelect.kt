@@ -13,6 +13,11 @@ import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapp1.*
+import com.example.myapp1.api.ApiService
+import com.example.myapp1.api.DiaGioiHanhChinhVN
+import com.example.myapp1.api.District
+import com.example.myapp1.api.FetchData
+import com.example.myapp1.api.Ward
 import com.example.myapp1.home.ClickInterface
 import com.example.myapp1.home.ItemImageText
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -22,6 +27,15 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
 class DialogSelect(var key:String): BottomSheetDialogFragment() {
+
+    var fetDataApi:FetchData = FetchData()
+    var listCity:MutableList<DiaGioiHanhChinhVN> =
+        fetDataApi.fetchData()
+    lateinit var listDistrict: MutableList<District>
+    lateinit var listWard:MutableList<Ward>
+    var indexCity:Int = 0
+    var indexDistrict:Int = 0
+
     private val db = Firebase.firestore
     lateinit var bottomSheet:BottomSheetDialog
     private var mOnInputData: OnInputData0? = null
@@ -29,6 +43,8 @@ class DialogSelect(var key:String): BottomSheetDialogFragment() {
     private var city:String = ""
     private var pant:String = ""
     private var ward:String = ""
+
+    lateinit var api:ApiService
 
     private  var listBrand: MutableList<ItemBrand> = mutableListOf()
     @SuppressLint("MissingInflatedId")
@@ -291,12 +307,11 @@ class DialogSelect(var key:String): BottomSheetDialogFragment() {
         selectCity.setOnClickListener {
             addEventCity()
         }
-
         selectPant.setOnClickListener{
             if(city.isEmpty()) {
                 addEventCity()
             } else {
-                addEventPant(city)
+                addEventPant()
             }
         }
 
@@ -304,9 +319,9 @@ class DialogSelect(var key:String): BottomSheetDialogFragment() {
             if (city.isEmpty()) {
                 addEventCity()
             } else if(pant.isEmpty()){
-                addEventPant(city)
+                addEventPant()
             } else {
-                addEventWard(city, pant)
+                addEventWard()
             }
         }
 
@@ -315,100 +330,99 @@ class DialogSelect(var key:String): BottomSheetDialogFragment() {
             mOnInputData?.sendData(ward + ", " + pant + ", " + city,key)
             bottomSheet.dismiss()
         }
+
+        var dismiss:ImageView = view.findViewById(R.id.txtDismissForm)
+        dismiss.setOnClickListener{
+            bottomSheet.dismiss()
+        }
     }
 
     private fun addEventCity() {
         var view:View = LayoutInflater.from(context).inflate(R.layout.layout_selectcity,null)
         bottomSheet.setContentView(view)
         var txtDismissCity:ImageView = view.findViewById(R.id.txtDismissCity)
-        var list = resources.getStringArray(R.array.list_city)
-        var listCity:MutableList<String> = list.toMutableList()
         var rvCity:RecyclerView = view.findViewById(R.id.rvCity)
-        rvCity.adapter = ViewItemAdapterString(listCity,object:ClickInterface{
+        listCity =fetDataApi.fetchData()
+        var listCityName:MutableList<String> = mutableListOf()
+        for(i in listCity) {
+            listCityName.add(i.Name)
+        }
+        rvCity.adapter = ViewItemAdapterString(listCityName,object:ClickInterface {
             override fun setOnClick(pos: Int) {
-                if(listCity[pos]!=city) {
+                indexCity = pos
+                if (listCityName[pos] != city) {
                     pant = ""
                     ward = ""
                 }
-                city = listCity[pos]
-                addEventPant(city)
+                city = listCityName[pos]
+                addEventPant()
             }
         })
+
         rvCity.layoutManager = LinearLayoutManager(context,LinearLayoutManager.VERTICAL,false)
         txtDismissCity.setOnClickListener{
+
             addEventAdress(city, pant, ward)
         }
     }
 
-    private fun addEventPant(city:String) {
+    private fun addEventPant() {
         var view:View = LayoutInflater.from(context).inflate(R.layout.layout_selectform,null)
         bottomSheet.setContentView(view)
         var txtForm:TextView = view.findViewById(R.id.txtForm)
         txtForm.text = "Chọn quận, huyện, thị xã"
-        var rvCity:RecyclerView = view.findViewById(R.id.rvForm)
+        var rvPant:RecyclerView = view.findViewById(R.id.rvForm)
+        listDistrict = listCity[indexCity].Districts
         var listPant:MutableList<String> = mutableListOf()
-        val dbRef = db.collection("city")
-            .document(city)
-            .get()
-            .addOnSuccessListener{
-                if(it.exists()) {
-                    listPant = it.data?.get("array") as MutableList<String>
+        listDistrict = listCity[indexCity].Districts
+        for(i in listDistrict) {
+            listPant.add(i.Name)
+        }
+        rvPant.adapter = ViewItemAdapterString(listPant,object:ClickInterface{
+            override fun setOnClick(pos1: Int) {
+                indexDistrict = pos1
+                if (listPant[pos1] != pant) {
+                    ward = ""
                 }
-                rvCity.adapter = ViewItemAdapterString(listPant,object:ClickInterface{
-                    override fun setOnClick(pos: Int) {
-                        if(listPant[pos]!=pant) {
-                            ward = ""
-                        }
-                        pant = listPant[pos]
-                        addEventWard(city,listPant[pos])
-                    }
-                })
-                rvCity.layoutManager = LinearLayoutManager(context,LinearLayoutManager.VERTICAL,false)
+                pant = listPant[pos1]
+                addEventWard()
             }
+        })
+        rvPant.layoutManager = LinearLayoutManager(context,LinearLayoutManager.VERTICAL,false)
         var txtDismissPant:ImageView = view.findViewById(R.id.txtDismissForm)
         txtDismissPant.setOnClickListener{
             addEventCity()
         }
 
         var txtCancle: TextView = view.findViewById(R.id.txtCancleForm)
-        txtCancle.setOnClickListener {
-            addEventAdress(city, pant, ward)
-        }
+        txtCancle.visibility = View.GONE
     }
 
-    private fun addEventWard(city:String,pant: String) {
+    private fun addEventWard() {
         var view:View = LayoutInflater.from(context).inflate(R.layout.layout_selectform,null)
         bottomSheet.setContentView(view)
         var txtForm:TextView = view.findViewById(R.id.txtForm)
         txtForm.text = "Chọn phường, xã, thị trấn"
-        var rvCity:RecyclerView = view.findViewById(R.id.rvForm)
-        var listWard:MutableList<String> = mutableListOf()
-        val dbRef = db.collection("city")
-            .document(city)
-            .collection("ward")
-            .document(pant)
-            .get()
-            .addOnSuccessListener{
-                if(it.exists()) {
-                    listWard = it.data?.get("array") as MutableList<String>
-                }
-                rvCity.adapter = ViewItemAdapterString(listWard,object:ClickInterface{
-                    override fun setOnClick(pos: Int) {
-                        ward = listWard[pos]
-                        addEventAdress(city, pant, ward)
-                    }
-                })
-                rvCity.layoutManager = LinearLayoutManager(context,LinearLayoutManager.VERTICAL,false)
+        var rvWard:RecyclerView = view.findViewById(R.id.rvForm)
+        listWard = listDistrict[indexDistrict].Wards
+        var list:MutableList<String> = mutableListOf()
+        for(i in listWard) {
+            list.add(i.Name)
+        }
+        rvWard.adapter = ViewItemAdapterString(list,object:ClickInterface{
+            override fun setOnClick(pos: Int) {
+                ward = list[pos]
+                addEventAdress(city, pant, ward)
             }
+        })
+        rvWard.layoutManager = LinearLayoutManager(context,LinearLayoutManager.VERTICAL,false)
         var txtDismissPant:ImageView = view.findViewById(R.id.txtDismissForm)
         txtDismissPant.setOnClickListener{
-            addEventPant(city)
+            addEventPant()
         }
 
         var txtCancle: TextView = view.findViewById(R.id.txtCancleForm)
-        txtCancle.setOnClickListener {
-            addEventAdress(city, pant, ward)
-        }
+        txtCancle.visibility = View.GONE
     }
 
     private fun addEventCapacity(s: String) {

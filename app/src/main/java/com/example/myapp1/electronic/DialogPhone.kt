@@ -205,6 +205,7 @@ class DialogPhone : BottomSheetDialogFragment(){
         }
         bottomSheetDialog.setContentView(view)
         bottomSheetDialog.behavior.state = BottomSheetBehavior.STATE_EXPANDED
+        bottomSheetDialog.setCancelable(false)
         return bottomSheetDialog
     }
 }

@@ -746,6 +746,8 @@
                         android:layout_marginLeft="10dp"
                         android:gravity="left|center"
                         android:text=""
+                        android:ellipsize="end"
+                        android:singleLine="true"
                         android:textColor="@color/black"
                         android:textSize="17dp"
                         android:visibility="gone" />
