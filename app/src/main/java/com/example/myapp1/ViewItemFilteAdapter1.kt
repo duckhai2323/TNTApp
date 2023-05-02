@@ -1,16 +1,13 @@
 package com.example.myapp1
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapp1.home.ClickInterface
 
-class ViewItemFilteAdapter(private val itemList:MutableList<FilteItem>,val onClik:ClickInterface):RecyclerView.Adapter<FilteItemViewHolder> () {
-    private lateinit var filteItemView:FilteItemViewHolder
+class ViewItemFilteAdapter1(private val itemList:MutableList<FilteItem>, val onClik:ClickInterface):RecyclerView.Adapter<FilteItemViewHolder> () {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FilteItemViewHolder {
-        val view =  LayoutInflater.from(parent.context).inflate(R.layout.layout_itemfilte,parent,false)
-        filteItemView = FilteItemViewHolder(view)
+        val view =  LayoutInflater.from(parent.context).inflate(R.layout.layout_itemfillter1,parent,false)
         return FilteItemViewHolder(view)
     }
 

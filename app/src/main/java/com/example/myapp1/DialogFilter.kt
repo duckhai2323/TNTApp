@@ -34,7 +34,7 @@ class DialogFilter(val key:String):BottomSheetDialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         bottomSheet =  super.onCreateDialog(savedInstanceState) as BottomSheetDialog
         when(key) {
-            "address" -> {
+            "city" -> {
                 var view = LayoutInflater.from(context).inflate(R.layout.layout_selectcity, null)
                 bottomSheet.setContentView(view)
                 var list = resources.getStringArray(R.array.list_city)
