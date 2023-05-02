@@ -6,8 +6,9 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapp1.R
+import com.squareup.picasso.Picasso
 
-class ViewPageDetailAdapter(private val list:MutableList<Int>) : RecyclerView.Adapter<ViewPageDetailAdapter.ItemViewHolder>() {
+class ViewPageDetailAdapter(private val list:MutableList<String>) : RecyclerView.Adapter<ViewPageDetailAdapter.ItemViewHolder>() {
     inner class ItemViewHolder(itemView: View): RecyclerView.ViewHolder(itemView)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
@@ -18,7 +19,7 @@ class ViewPageDetailAdapter(private val list:MutableList<Int>) : RecyclerView.Ad
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
         holder.itemView.apply {
             val imgDetail = findViewById<ImageView>(R.id.imgDetail)
-            imgDetail.setImageResource(list[position])
+            Picasso.get().load(list[position]).into(imgDetail)
         }
     }
 

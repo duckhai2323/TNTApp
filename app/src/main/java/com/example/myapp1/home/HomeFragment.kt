@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.example.myapp1.ElectronicFragment
 import com.example.myapp1.R
+import com.example.myapp1.ViewItemElecAdapter
 import com.example.myapp1.detail.DetailActivity
 import com.example.myapp1.home.adapter.ViewItemAdapter
 import com.example.myapp1.home.adapter.ViewItemAdapter0
@@ -49,18 +50,22 @@ class HomeFragment : Fragment() {
         //DisplaySuggest0()
         val rvGoiYChuDe:RecyclerView = view.findViewById(R.id.rvGoiYChuDe)
         var listItemGoiY0:MutableList<ItemImageText> = mutableListOf()
-        listItemGoiY0.add(ItemImageText(R.drawable.chude1,"Thời Trang"))
-        listItemGoiY0.add(ItemImageText(R.drawable.chude2,"Điện Thoại"))
-        listItemGoiY0.add(ItemImageText(R.drawable.chude3,"Điện Tử"))
-        listItemGoiY0.add(ItemImageText(R.drawable.chude2,"Đồ Chơi"))
-        listItemGoiY0.add(ItemImageText(R.drawable.chude1,"Thời Trang"))
-        listItemGoiY0.add(ItemImageText(R.drawable.chude3,"Điện Tử"))
+        listItemGoiY0.add(ItemImageText(R.drawable.nhatot,"Bất động sản"))
+        listItemGoiY0.add(ItemImageText(R.drawable.myphamtot,"Thực phẩm, Mỹ phẩm"))
+        listItemGoiY0.add(ItemImageText(R.drawable.xetot,"Xe cộ"))
+        listItemGoiY0.add(ItemImageText(R.drawable.tulanhtot,"Điện lạnh"))
+        listItemGoiY0.add(ItemImageText(R.drawable.dienthoaitot,"Đồ điện tử"))
+        listItemGoiY0.add(ItemImageText(R.drawable.thoitrangtot,"Thời trang"))
+        listItemGoiY0.add(ItemImageText(R.drawable.noithattot,"Nội thất"))
+        listItemGoiY0.add(ItemImageText(R.drawable.vanphongphamtot,"Văn phòng phẩm"))
+        listItemGoiY0.add(ItemImageText(R.drawable.giaitritot,"Giải trí, Thể thao, Sở thích"))
+        listItemGoiY0.add(ItemImageText(R.drawable.mevabetot,"Mẹ và bé"))
         rvGoiYChuDe.adapter = ViewItemAdapter0(listItemGoiY0,object:ClickInterface{
             override fun setOnClick(pos: Int) {
                 mActivityHome.getFragment("electron")
             }
         })
-        rvGoiYChuDe.layoutManager= LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL,false)
+        rvGoiYChuDe.layoutManager= GridLayoutManager(context, 2, GridLayoutManager.HORIZONTAL, false)
 
         //DisplaySuggest1()
         val rvGoiY:RecyclerView = view.findViewById(R.id.rvGoiY)
@@ -77,12 +82,12 @@ class HomeFragment : Fragment() {
         //DisplayProduct1()
         val rvProduct:RecyclerView = view.findViewById(R.id.rvProduct)
         val listProduct1:MutableList<ItemProduct> = mutableListOf()
-        listProduct1.add((ItemProduct(resources.getString(R.string.linkImage),"[Mã ELAP500K giảm 8% đơn 500K] Apple AirPods ...","đ28.000.000","Đã bán 10.6k")))
-        listProduct1.add((ItemProduct(resources.getString(R.string.linkImage),"[Mã ELAP500K giảm 8% đơn 500K] Apple AirPods ...","đ28.000.000","Đã bán 10.6k")))
-        listProduct1.add((ItemProduct(resources.getString(R.string.linkImage),"[Mã ELAP500K giảm 8% đơn 500K] Apple AirPods ...","đ28.000.000","Đã bán 10.6k")))
-        listProduct1.add((ItemProduct(resources.getString(R.string.linkImage),"[Mã ELAP500K giảm 8% đơn 500K] Apple AirPods ...","đ28.000.000","Đã bán 10.6k")))
-        listProduct1.add((ItemProduct(resources.getString(R.string.linkImage),"[Mã ELAP500K giảm 8% đơn 500K] Apple AirPods ...","đ28.000.000","Đã bán 10.6k")))
-        listProduct1.add((ItemProduct(resources.getString(R.string.linkImage),"[Mã ELAP500K giảm 8% đơn 500K] Apple AirPods ...","đ28.000.000","Đã bán 10.6k")))
+        listProduct1.add((ItemProduct("",resources.getString(R.string.linkImage),"[Mã ELAP500K giảm 8% đơn 500K] Apple AirPods ...","đ28.000.000","Đã bán 10.6k")))
+        listProduct1.add((ItemProduct("",resources.getString(R.string.linkImage),"[Mã ELAP500K giảm 8% đơn 500K] Apple AirPods ...","đ28.000.000","Đã bán 10.6k")))
+        listProduct1.add((ItemProduct("",resources.getString(R.string.linkImage),"[Mã ELAP500K giảm 8% đơn 500K] Apple AirPods ...","đ28.000.000","Đã bán 10.6k")))
+        listProduct1.add((ItemProduct("",resources.getString(R.string.linkImage),"[Mã ELAP500K giảm 8% đơn 500K] Apple AirPods ...","đ28.000.000","Đã bán 10.6k")))
+        listProduct1.add((ItemProduct("",resources.getString(R.string.linkImage),"[Mã ELAP500K giảm 8% đơn 500K] Apple AirPods ...","đ28.000.000","Đã bán 10.6k")))
+        listProduct1.add((ItemProduct("",resources.getString(R.string.linkImage),"[Mã ELAP500K giảm 8% đơn 500K] Apple AirPods ...","đ28.000.000","Đã bán 10.6k")))
 
         rvProduct.adapter = ViewProductAdapter(listProduct1,object : ClickInterface {
             override fun setOnClick(pos: Int) {

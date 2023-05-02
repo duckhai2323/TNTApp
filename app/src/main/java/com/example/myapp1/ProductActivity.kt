@@ -1,15 +1,20 @@
 package com.example.myapp1
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.myapp1.detail.DetailActivity
 import com.example.myapp1.home.ClickInterface
+import com.example.myapp1.home.HomeActivity
 import com.example.myapp1.home.ItemProduct
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
@@ -19,24 +24,27 @@ var brand_:String = ""
 lateinit var category:String
 lateinit var product:String
 class ProductActivity : AppCompatActivity(), OnInputData1 {
-    lateinit var addressStr:String
-    lateinit var address:TextView
-    lateinit var viewAdapter:ViewItemFilteAdapter
+    lateinit var cityStr:String
+    lateinit var city:TextView
+    lateinit var viewAdapter:ViewItemFilteAdapter1
     lateinit var rvProductFilter:RecyclerView
     var listFilte:MutableList<FilteItem> = mutableListOf()
+    var listFilteProduct:MutableList<ItemFiltte> = mutableListOf()
     lateinit var dialogFilte:DialogFilter
+    lateinit var dialogFilteProduct:DialogFilterProduct
     var listProductFilter = mutableListOf<ItemProduct>()
     var mapFilter = mutableMapOf<String,String>()
     var position:Int = 0
     private val db = Firebase.firestore
+    private lateinit var id:String
     var check:Boolean = true
     override fun sendData(str: String, key1: String,key2:String) {
         var index = position
         mapFilter[key1] = str
         listProductFilter.clear()
-        if(key1 == "address") {
-            address.text = str
-            addressStr = str
+        if(key1 == "city") {
+            city.text = str
+            cityStr = str
         } else {
             var item:FilteItem
             if(key2 == "accept") {
@@ -61,7 +69,7 @@ class ProductActivity : AppCompatActivity(), OnInputData1 {
                 if(str != product) {
                     product = str
                     mapFilter.clear()
-                    mapFilter["address"] = addressStr
+                    mapFilter["city"] = cityStr
                     listFilte.clear()
                     createListFilter()
                     displayListFilter()
@@ -77,18 +85,18 @@ class ProductActivity : AppCompatActivity(), OnInputData1 {
         brand_ = ""
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_product)
-        address = findViewById<TextView>(R.id.addressText)
+        city = findViewById<TextView>(R.id.cityText)
         val i = intent
         val bundle = i.extras
 
         if(bundle!=null) {
-            address.text = bundle.getString("city")
-            addressStr = address.text.toString()
-            mapFilter["address"] = addressStr
+            city.text = bundle.getString("city")
+            cityStr = city.text.toString()
+            mapFilter["city"] = cityStr
 
-            var addressLLO: LinearLayout = findViewById<LinearLayout>(R.id.addressLLO)
-            addressLLO.setOnClickListener {
-                dialogFilte = DialogFilter("address")
+            var cityLLO: LinearLayout = findViewById<LinearLayout>(R.id.cityLLO)
+            cityLLO.setOnClickListener {
+                dialogFilte = DialogFilter("city")
                 dialogFilte.show(supportFragmentManager,"aaa")
             }
             category = bundle.getString("category").toString()
@@ -96,6 +104,11 @@ class ProductActivity : AppCompatActivity(), OnInputData1 {
             createListFilter()
         }
         displayListFilter()
+        var loc = findViewById<LinearLayout>(R.id.loc)
+        loc.setOnClickListener{
+            dialogFilteProduct = DialogFilterProduct(listFilteProduct)
+            dialogFilteProduct.show(supportFragmentManager,"aaa")
+        }
         rvProductFilter = findViewById<RecyclerView>(R.id.rvProductFilter)
         FilterProduct()
         var imgAdapter:ImageView = findViewById<ImageView>(R.id.adapter)
@@ -113,7 +126,7 @@ class ProductActivity : AppCompatActivity(), OnInputData1 {
 
     private fun displayListFilter() {
         var rvList = findViewById<RecyclerView>(R.id.rvListFilte)
-        viewAdapter = ViewItemFilteAdapter(listFilte,object:ClickInterface{
+        viewAdapter = ViewItemFilteAdapter1(listFilte,object:ClickInterface{
             override fun setOnClick(pos: Int) {
                 position = pos
                 dialogFilte = DialogFilter(listFilte[pos].key)
@@ -139,6 +152,7 @@ class ProductActivity : AppCompatActivity(), OnInputData1 {
                         listFilte.add(FilteItem("Dung lượng",R.drawable.baseline_add_24_1,R.drawable.background_filter,"capacity"))
                         listFilte.add(FilteItem("Màu sắc",R.drawable.baseline_add_24_1,R.drawable.background_filter,"color"))
                         listFilte.add(FilteItem("Thời gian sử dụng",R.drawable.baseline_add_24_1,R.drawable.background_filter,"time"))
+
                     }
 
                     "Laptop" -> {
@@ -161,6 +175,10 @@ class ProductActivity : AppCompatActivity(), OnInputData1 {
                 }
             }
         }
+        for(i in listFilte){
+            listFilteProduct.add(ItemFiltte(i.TextItem,"chưa lọc",
+                ContextCompat.getColor(this,R.color.textFilter),i.key))
+        }
     }
 
     private fun FilterProduct() {
@@ -181,7 +199,8 @@ class ProductActivity : AppCompatActivity(), OnInputData1 {
                         val imageUrl = document.data?.get("picture") as MutableList<String>
                         var title = document.data?.get("title").toString()
                         var price = document.data?.get("price").toString()
-                        var city  = document.data?.get("address").toString()
+                        var city  = document.data?.get("city").toString()
+                        var  idProduct = document.data?.get("id").toString()
 
                         if(mapFilter["price"]!=null) {
                             val priceStr = mapFilter["price"].toString()
@@ -198,10 +217,10 @@ class ProductActivity : AppCompatActivity(), OnInputData1 {
                             val toPrice = priceStr.substring(startIndex = (index+2), endIndex = (index+5)).toFloat()
                             val priceProduct = price.substring(startIndex = 0, endIndex = 3).toFloat()
                             if(priceProduct in fromPrice..toPrice) {
-                                listProductFilter.add(ItemProduct(imageUrl[0],title,price,city))
+                                listProductFilter.add(ItemProduct(idProduct,imageUrl[0],title,price,city))
                             }
                         } else {
-                            listProductFilter.add(ItemProduct(imageUrl[0],title,price,city))
+                            listProductFilter.add(ItemProduct(idProduct,imageUrl[0],title,price,city))
                         }
                     }
                     DisplayListProduct(listProductFilter)
@@ -212,7 +231,9 @@ class ProductActivity : AppCompatActivity(), OnInputData1 {
     private fun DisplayListProduct(listProductFilter: MutableList<ItemProduct>) {
         rvProductFilter.adapter = ViewItemProduct2Adapter(listProductFilter,object:ClickInterface{
             override fun setOnClick(pos: Int) {
-
+                val i1 = Intent(this@ProductActivity, DetailActivity::class.java)
+                i1.putExtra("id",listProductFilter[pos].id)
+                startActivity(i1)
             }
         })
         rvProductFilter.layoutManager = GridLayoutManager(

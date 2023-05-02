@@ -43,7 +43,6 @@ class BottomSheetDialogDSP(var dialogDSP: DialogPhone): BottomSheetDialogFragmen
         displayBatDongSan(view)
         displayXeCo(view)
         displayDoDienTu(view)
-        displayThuCung(view)
         displayTuLanh(view)
         displayNoiThat(view)
         displayThoiTrang(view)
@@ -173,42 +172,6 @@ class BottomSheetDialogDSP(var dialogDSP: DialogPhone): BottomSheetDialogFragmen
             listDanhMuc.add("Tủ lạnh")
             listDanhMuc.add("Điều hòa, Máy lạnh")
             listDanhMuc.add("Máy giặt")
-            var rvGiaiTri:RecyclerView = view1.findViewById(R.id.rvDanhMuc)
-            rvGiaiTri.adapter = ViewItemAdapterString(listDanhMuc, object:ClickInterface{
-                override fun setOnClick(pos: Int) {
-
-                }
-            })
-            rvGiaiTri.layoutManager = LinearLayoutManager(context,
-                LinearLayoutManager.VERTICAL,false)
-
-            var txtBackToDanhMuc:ImageView = view1.findViewById(R.id.txtBackToDanhMuc)
-            txtBackToDanhMuc.setOnClickListener {
-                var view2:View = LayoutInflater.from(context).inflate(R.layout.layout_bottomsheetdangsp1,null)
-                bottomSheetDialog.setContentView(view2)
-                var txtBack:ImageView = view2.findViewById(R.id.imgBack)
-                txtBack.setOnClickListener{
-                    bottomSheetDialog.dismiss()
-                }
-                addEvent(view2)
-            }
-        }
-    }
-
-    @SuppressLint("MissingInflatedId")
-    private fun displayThuCung(view: View) {
-        thucung = view.findViewById(R.id.thucung)
-        thucung.setOnClickListener{
-            var view1:View = LayoutInflater.from(context).inflate(R.layout.layout_danhmuc,null)
-            bottomSheetDialog.setContentView(view1)
-
-            var listDanhMuc:MutableList<String> = mutableListOf()
-            listDanhMuc.add("Gà")
-            listDanhMuc.add("Chó")
-            listDanhMuc.add("Chim")
-            listDanhMuc.add("Mèo")
-            listDanhMuc.add("Thú cưng khác")
-            listDanhMuc.add("Phụ kiện, thức ăn, Dịch vụ")
             var rvGiaiTri:RecyclerView = view1.findViewById(R.id.rvDanhMuc)
             rvGiaiTri.adapter = ViewItemAdapterString(listDanhMuc, object:ClickInterface{
                 override fun setOnClick(pos: Int) {

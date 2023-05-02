@@ -26,8 +26,8 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingBottom="10dp"
-                android:background="#FFFFFF">
+                android:background="#FFFFFF"
+                android:paddingBottom="10dp">
 
                 <androidx.viewpager2.widget.ViewPager2
                     android:id="@+id/vpDetail"
@@ -55,7 +55,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/vpDetail" />
 
                 <TextView
-                    android:id="@+id/textView6"
+                    android:id="@+id/txtTitle"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
@@ -73,24 +73,34 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
-                    android:layout_marginTop="15dp"
+                    android:layout_marginTop="10dp"
                     android:text="đ259.0000"
                     android:textColor="#ee4d2d"
                     android:textSize="18dp"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textView6" />
+                    app:layout_constraintTop_toBottomOf="@+id/txtTitle" />
+
+                <ImageView
+                    android:id="@+id/imageView32"
+                    android:layout_width="30dp"
+                    android:layout_height="35dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="4dp"
+                    android:src="@drawable/ic_outline_location_on_24"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/txtTime" />
 
                 <TextView
-                    android:id="@+id/textView18"
+                    android:id="@+id/txtAddress"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Đã bán được 1 "
+                    android:layout_marginStart="5dp"
+                    android:text="Xã Thiện Phiến, huyện Tiên Lữ, tỉnh Hưng Yên"
                     android:textColor="@color/black"
                     android:textSize="15dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginTop="20dp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/txtPrice0" />
+                    app:layout_constraintBottom_toBottomOf="@+id/imageView32"
+                    app:layout_constraintStart_toEndOf="@+id/imageView32"
+                    app:layout_constraintTop_toTopOf="@+id/imageView32" />
 
                 <ImageView
                     android:id="@+id/btnReturn"
@@ -115,14 +125,14 @@
                     expandableTextView:srcCompat="@drawable/ic_outline_shopping_cart_24" />
 
                 <TextView
-                    android:id="@+id/txtPrice0"
+                    android:id="@+id/txtTime"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="đ300.000"
-                    android:textColor="#777777"
-                    android:textSize="14dp"
                     android:layout_marginLeft="10dp"
                     android:layout_marginTop="5dp"
+                    android:text="1 tuần trước"
+                    android:textColor="#777777"
+                    android:textSize="14dp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/txtPrice1" />
 
@@ -258,6 +268,45 @@
                     app:layout_constraintStart_toEndOf="@+id/textView23" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_marginTop="12dp"
+                android:background="@color/white"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/textView6"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="15dp"
+                    android:text="Các sản phẩm của Im Yoon-ah"
+                    android:textColor="@color/black"
+                    android:textSize="17dp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/tuongtu"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textView6" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:layout_marginTop="1dp"
+                android:background="@color/white"
+                android:gravity="center"
+                android:text="Xem thêm"
+                android:textColor="#DD2C00"
+                android:textSize="15dp" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
