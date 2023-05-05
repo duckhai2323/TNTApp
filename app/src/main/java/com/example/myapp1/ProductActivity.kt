@@ -183,7 +183,8 @@ class ProductActivity : AppCompatActivity(), OnInputData1 {
 
     private fun FilterProduct() {
         listProductFilter.clear()
-        val dbRef = db.collection("products").document(category).collection(product)
+        val strCategory:String = "$category/$product"
+        val dbRef = db.collection("products").whereEqualTo("category",strCategory)
         var query: Query = dbRef
         for((field,value) in mapFilter){
             if(field == "price"){

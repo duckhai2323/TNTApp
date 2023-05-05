@@ -12,6 +12,8 @@ class Users(
     var birth:String,
     var bio:String,
     var image:String,
-    var timestamp: FieldValue
+    var timestamp: FieldValue,
+    var dangban:MutableList<String>,
+    var daban:MutableList<String>
 ) {
 }

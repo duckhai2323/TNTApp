@@ -4,8 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.text.SpannableString
-import android.text.style.StrikethroughSpan
 import android.view.View
 import android.view.animation.OvershootInterpolator
 import android.widget.ImageView
@@ -18,6 +16,7 @@ import androidx.viewpager2.widget.ViewPager2
 import at.blogc.android.views.ExpandableTextView
 import com.example.myapp1.ClientActivity
 import com.example.myapp1.R
+import com.example.myapp1.ViewItemProdcut1Adapter
 import com.example.myapp1.category
 import com.example.myapp1.home.ClickInterface
 import com.example.myapp1.home.HomeActivity
@@ -28,6 +27,7 @@ import com.example.myapp1.product
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.squareup.picasso.Picasso
 import me.relex.circleindicator.CircleIndicator3
 
 class DetailActivity : AppCompatActivity() {
@@ -39,28 +39,28 @@ class DetailActivity : AppCompatActivity() {
         setContentView(R.layout.activity_detail)
         val i = intent
         id = i.getStringExtra("id").toString()
-        print(id)
         addEvent()
 
         val btnReturn = findViewById<ImageView>(R.id.btnReturn)
         btnReturn.setOnClickListener{
-            val i = Intent(this,HomeActivity::class.java)
-            startActivity(i)
+            onBackPressed()
         }
     }
 
     private fun addEvent() {
         DisplayImg()
+        DisplayClientProduct()
         DisplayMota()
+        DisplayClient()
         DisplayProduct()
         DisplayDialog()
-        StartClient()
     }
 
-    private fun StartClient() {
+    private fun StartClient(clientName:String) {
         val lotCilent = findViewById<ConstraintLayout>(R.id.txtXemTrangCN)
         lotCilent.setOnClickListener {
             val i = Intent(this, ClientActivity::class.java)
+            i.putExtra("clientProfile",clientName)
             startActivity(i)
         }
     }
@@ -95,10 +95,51 @@ class DetailActivity : AppCompatActivity() {
         )
     }
 
+    private fun DisplayClient() {
+        var imgProfile = findViewById<ImageView>(R.id.imgProfile)
+        var txtProfile = findViewById<TextView>(R.id.txtProfile)
+        var txtDangBan = findViewById<TextView>(R.id.txtDangBan)
+        var txtDaBan = findViewById<TextView>(R.id.txtBanXong)
+        var txtClientProduct = findViewById<TextView>(R.id.txtClientProduct)
+        db.collection("products")
+            .document(id)
+            .get()
+            .addOnSuccessListener {
+                if(it.exists()) {
+                    val client = it.data?.get("username").toString()
+                    db.collection("users").document(client)
+                        .get()
+                        .addOnSuccessListener {
+                            if(it.exists()) {
+                                val ImageUrl = it.data?.get("imageProfile").toString()
+                                Picasso.get().load(ImageUrl).into(imgProfile)
+                                txtProfile.text = it.data?.get("fullName").toString()
+                                txtClientProduct.text = "Các sản phẩm của " + it.data?.get("fullName").toString()
+                                val DangBanList = it.data?.get("dangban") as MutableList<String>
+                                txtDangBan.text = "Đang bán: "+ DangBanList.size.toString() + " sản phẩm"
+                                val DaBanList = it.data?.get("daban") as MutableList<String>
+                                txtDaBan.text = "Đã bán: " + DaBanList.size.toString() + " sản phẩm"
+                            }
+                        }
+                    StartClient(client)
+                }
+            }
+    }
+
     private fun DisplayMota() {
-        val expandableTextView = findViewById<ExpandableTextView>(R.id.expContent_View)
+        val expandableTextView = findViewById<ExpandableTextView>(R.id.txtDescription)
         val txtRead = findViewById<TextView>(R.id.txtRead)
-        expandableTextView.setInterpolator(OvershootInterpolator())
+        db.collection("products")
+            .document(id)
+            .get()
+            .addOnSuccessListener {
+                if(it.exists()) {
+                    val description = it.data?.get("description").toString()
+                    val fomartString = description?.replace("\\n","\n")
+                    expandableTextView.text = fomartString
+                    expandableTextView.setInterpolator(OvershootInterpolator())
+                }
+            }
         txtRead.setOnClickListener{
             if(expandableTextView.isExpanded) {
                 expandableTextView.collapse()
@@ -111,6 +152,40 @@ class DetailActivity : AppCompatActivity() {
 
     }
 
+    private fun DisplayClientProduct() {
+        var rvTuongtu = findViewById<RecyclerView>(R.id.tuongtu)
+        var listTuongTu:MutableList<ItemProduct> = mutableListOf()
+        db.collection("products")
+            .document(id)
+            .get().addOnSuccessListener {
+                if(it.exists()) {
+                    val client = it.data?.get("username").toString()
+                    db.collection("products").whereEqualTo("username", client)
+                        .get()
+                        .addOnSuccessListener { it1->
+                            if(!it1.isEmpty) {
+                                for(document in it1.documents) {
+                                    val imageUrl = document.data?.get("picture") as MutableList<String>
+                                    var title = document.data?.get("title").toString()
+                                    var price = document.data?.get("price").toString()
+                                    var city  = document.data?.get("city").toString()
+                                    var  idProduct = document.data?.get("id").toString()
+                                    if(idProduct!=id) {
+                                        listTuongTu.add(ItemProduct(idProduct,imageUrl[0],title,price,city))
+                                    }
+                                }
+                                rvTuongtu.adapter = ViewItemProdcut1Adapter(listTuongTu,object:ClickInterface {
+                                    override fun setOnClick(pos: Int) {
+
+                                    }
+                                })
+                                rvTuongtu.layoutManager = LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false)
+                            }
+                        }
+                    }
+               }
+           }
+
     private fun DisplayImg() {
         val vpDetail = findViewById<ViewPager2>(R.id.vpDetail)
         val rvDetail = findViewById<RecyclerView>(R.id.rvDetail)
@@ -119,8 +194,7 @@ class DetailActivity : AppCompatActivity() {
         var txtTime = findViewById<TextView>(R.id.txtTime)
         var txtPrice = findViewById<TextView>(R.id.txtPrice1)
         var txtAddress = findViewById<TextView>(R.id.txtAddress)
-        db.collection("products").document(category)
-            .collection(product)
+        db.collection("products")
             .document(id)
             .get()
             .addOnSuccessListener {

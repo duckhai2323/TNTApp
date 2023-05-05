@@ -83,7 +83,9 @@ class SignupActivity : AppCompatActivity() {
                         auth.createUserWithEmailAndPassword(inputEmail,inputPassword)
                             .addOnCompleteListener(this){task->
                                 if(task.isSuccessful){
-                                    var user = Users(userName.text.toString(),"100100",edtFirst.text.toString()+edtLast.text.toString(),inputEmail,edtPhone.text.toString(),"null","null","null","null", FieldValue.serverTimestamp())
+                                    var dangban:MutableList<String> = mutableListOf()
+                                    var daban:MutableList<String> = mutableListOf()
+                                    var user = Users(userName.text.toString(),"100100",edtFirst.text.toString()+edtLast.text.toString(),inputEmail,edtPhone.text.toString(),"null","null","null","null", FieldValue.serverTimestamp(),dangban,daban)
                                     db.collection("users").document(userName.text.toString()).set(user)
                                     Toast.makeText(this,"Tao tai khoan thanh cong",Toast.LENGTH_LONG)
                                     val intent_home = Intent(this,LoginActivity::class.java)

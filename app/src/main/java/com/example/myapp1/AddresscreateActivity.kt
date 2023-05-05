@@ -27,7 +27,6 @@ class AddresscreateActivity : AppCompatActivity() {
         var txtVanPhong = findViewById<TextView>(R.id.txtVanPhong)
         var database: DatabaseReference = FirebaseDatabase.getInstance().reference
         txtHoanThanh.setOnClickListener{
-            val i = Intent(this,UpdateaddressActivity::class.java)
             if(txtHovaTen.text.toString().isEmpty() || txtDiaChi.text.toString().isEmpty()||txtSonha.text.toString().isEmpty() || txtSodienThoai.text.toString().isEmpty()){
                 Toast.makeText(this,"Nhap day du thong tin",Toast.LENGTH_LONG).show()
             } else if(txtSodienThoai.text.toString().length != 10) {
@@ -41,7 +40,7 @@ class AddresscreateActivity : AppCompatActivity() {
                 txtSodienThoai.setText("")
                 txtSonha.setText("")
                 txtDiaChi.setText("")
-                startActivity(i)
+                onBackPressed()
             }
         }
     }
