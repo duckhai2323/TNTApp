@@ -91,7 +91,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/txtTime" />
 
                 <TextView
-                    android:id="@+id/txtAddress"
+                    android:id="@+id/txtClientAddress"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="5dp"
@@ -302,6 +302,7 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <TextView
+                android:id="@+id/txtMoreProduct"
                 android:layout_width="match_parent"
                 android:layout_height="35dp"
                 android:layout_marginTop="1dp"

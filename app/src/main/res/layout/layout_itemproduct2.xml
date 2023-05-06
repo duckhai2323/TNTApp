@@ -64,6 +64,8 @@
                 android:layout_height="20dp"
                 android:src="@drawable/ic_outline_location_on_24"/>
             <TextView
+                android:lines="1"
+                android:ellipsize="end"
                 android:id="@+id/address"
                 android:layout_width="wrap_content"
                 android:layout_height="20dp"

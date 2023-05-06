@@ -68,6 +68,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="20dp"
                     android:gravity="center"
+                    android:lines="1"
+                    android:ellipsize="end"
                     android:textColor="#777777"
                     android:text="Thành phố Hưng yên"/>
             </LinearLayout>

@@ -2,12 +2,14 @@ package com.example.myapp1.detail
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.view.animation.OvershootInterpolator
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.annotation.RequiresApi
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -16,15 +18,14 @@ import androidx.viewpager2.widget.ViewPager2
 import at.blogc.android.views.ExpandableTextView
 import com.example.myapp1.ClientActivity
 import com.example.myapp1.R
+import com.example.myapp1.TimeCount
 import com.example.myapp1.ViewItemProdcut1Adapter
-import com.example.myapp1.category
+import com.example.myapp1.ViewItemProduct2Adapter
 import com.example.myapp1.home.ClickInterface
-import com.example.myapp1.home.HomeActivity
 import com.example.myapp1.home.ItemProduct
 import com.example.myapp1.home.adapter.ViewItemAdapter1
-import com.example.myapp1.home.adapter.ViewProductAdapter
-import com.example.myapp1.product
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.firebase.Timestamp
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.squareup.picasso.Picasso
@@ -33,6 +34,7 @@ import me.relex.circleindicator.CircleIndicator3
 class DetailActivity : AppCompatActivity() {
     lateinit var id:String
     private val db = Firebase.firestore
+    @RequiresApi(Build.VERSION_CODES.O)
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,6 +49,7 @@ class DetailActivity : AppCompatActivity() {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun addEvent() {
         DisplayImg()
         DisplayClientProduct()
@@ -75,24 +78,48 @@ class DetailActivity : AppCompatActivity() {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun DisplayProduct() {
         val rvProduct = findViewById<RecyclerView>(R.id.rvProductDetail)
         val listProduct1:MutableList<ItemProduct> = mutableListOf()
-        listProduct1.add((ItemProduct("",resources.getString(R.string.linkImage),"[Mã ELAP500K giảm 8% đơn 500K] Apple AirPods ...","đ28.000.000","Đã bán 10.6k")))
-        listProduct1.add((ItemProduct("",resources.getString(R.string.linkImage),"[Mã ELAP500K giảm 8% đơn 500K] Apple AirPods ...","đ28.000.000","Đã bán 10.6k")))
-        listProduct1.add((ItemProduct("",resources.getString(R.string.linkImage),"[Mã ELAP500K giảm 8% đơn 500K] Apple AirPods ...","đ28.000.000","Đã bán 10.6k")))
-        listProduct1.add((ItemProduct("",resources.getString(R.string.linkImage),"[Mã ELAP500K giảm 8% đơn 500K] Apple AirPods ...","đ28.000.000","Đã bán 10.6k")))
-        listProduct1.add((ItemProduct("",resources.getString(R.string.linkImage),"[Mã ELAP500K giảm 8% đơn 500K] Apple AirPods ...","đ28.000.000","Đã bán 10.6k")))
-        listProduct1.add((ItemProduct("",resources.getString(R.string.linkImage),"[Mã ELAP500K giảm 8% đơn 500K] Apple AirPods ...","đ28.000.000","Đã bán 10.6k")))
-
-        rvProduct.adapter = ViewProductAdapter(listProduct1,object : ClickInterface {
-            override fun setOnClick(pos: Int) {
-
+        db.collection("products").document(id)
+            .get()
+            .addOnSuccessListener {
+                if(it.exists()) {
+                    val strCategory = it.data?.get("category").toString()
+                    db.collection("products").whereEqualTo("category",strCategory)
+                        .get()
+                        .addOnSuccessListener { it1->
+                            if(!it1.isEmpty){
+                                for(document in it1.documents){
+                                    val imageUrl = document.data?.get("picture") as MutableList<String>
+                                    var title = document.data?.get("title").toString()
+                                    var price = document.data?.get("price").toString()
+                                    var city  = document.data?.get("city").toString()
+                                    var  idProduct = document.data?.get("id").toString()
+                                    val timestamp = document.getTimestamp("timestamp")
+                                    var mTimeCount = timestamp?.let { it1 -> TimeCount(it1) }
+                                    val txtTimeCount = mTimeCount?.timeCount()
+                                    city = "$city . $txtTimeCount"
+                                    if(idProduct!=id) {
+                                        listProduct1.add(ItemProduct(idProduct,imageUrl[0],title,price,city))
+                                    }
+                                }
+                                rvProduct.adapter = ViewItemProduct2Adapter(listProduct1,object : ClickInterface {
+                                    override fun setOnClick(pos: Int) {
+                                        val i1 = Intent(this@DetailActivity, DetailActivity::class.java)
+                                        i1.putExtra("id",listProduct1[pos].id)
+                                        startActivity(i1)
+                                    }
+                                })
+                                rvProduct.layoutManager = GridLayoutManager(
+                                    this,2
+                                )
+                            }
+                        }
+                }
             }
-        })
-        rvProduct.layoutManager = GridLayoutManager(
-            this,2
-        )
+
     }
 
     private fun DisplayClient() {
@@ -114,7 +141,7 @@ class DetailActivity : AppCompatActivity() {
                                 val ImageUrl = it.data?.get("imageProfile").toString()
                                 Picasso.get().load(ImageUrl).into(imgProfile)
                                 txtProfile.text = it.data?.get("fullName").toString()
-                                txtClientProduct.text = "Các sản phẩm của " + it.data?.get("fullName").toString()
+                                txtClientProduct.text = "Các sản phẩm khác của " + it.data?.get("fullName").toString()
                                 val DangBanList = it.data?.get("dangban") as MutableList<String>
                                 txtDangBan.text = "Đang bán: "+ DangBanList.size.toString() + " sản phẩm"
                                 val DaBanList = it.data?.get("daban") as MutableList<String>
@@ -152,9 +179,11 @@ class DetailActivity : AppCompatActivity() {
 
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun DisplayClientProduct() {
         var rvTuongtu = findViewById<RecyclerView>(R.id.tuongtu)
         var listTuongTu:MutableList<ItemProduct> = mutableListOf()
+        var txtMore = findViewById<TextView>(R.id.txtMoreProduct)
         db.collection("products")
             .document(id)
             .get().addOnSuccessListener {
@@ -170,22 +199,34 @@ class DetailActivity : AppCompatActivity() {
                                     var price = document.data?.get("price").toString()
                                     var city  = document.data?.get("city").toString()
                                     var  idProduct = document.data?.get("id").toString()
+                                    val timestamp = document.getTimestamp("timestamp")
+                                    var mTimeCount = timestamp?.let { it1 -> TimeCount(it1) }
+                                    val txtTimeCount = mTimeCount?.timeCount()
+                                    city = "$city . $txtTimeCount"
                                     if(idProduct!=id) {
                                         listTuongTu.add(ItemProduct(idProduct,imageUrl[0],title,price,city))
                                     }
                                 }
                                 rvTuongtu.adapter = ViewItemProdcut1Adapter(listTuongTu,object:ClickInterface {
                                     override fun setOnClick(pos: Int) {
-
+                                        val i1 = Intent(this@DetailActivity, DetailActivity::class.java)
+                                        i1.putExtra("id",listTuongTu[pos].id)
+                                        startActivity(i1)
                                     }
                                 })
                                 rvTuongtu.layoutManager = LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false)
+                                if(listTuongTu.size >= 5 ) {
+                                    txtMore.visibility = View.VISIBLE
+                                } else {
+                                    txtMore.visibility = View.GONE
+                                }
                             }
                         }
                     }
                }
            }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun DisplayImg() {
         val vpDetail = findViewById<ViewPager2>(R.id.vpDetail)
         val rvDetail = findViewById<RecyclerView>(R.id.rvDetail)
@@ -193,7 +234,7 @@ class DetailActivity : AppCompatActivity() {
         var txtTitle = findViewById<TextView>(R.id.txtTitle)
         var txtTime = findViewById<TextView>(R.id.txtTime)
         var txtPrice = findViewById<TextView>(R.id.txtPrice1)
-        var txtAddress = findViewById<TextView>(R.id.txtAddress)
+        var txtAddress = findViewById<TextView>(R.id.txtClientAddress)
         db.collection("products")
             .document(id)
             .get()
@@ -210,6 +251,9 @@ class DetailActivity : AppCompatActivity() {
                     txtTitle.text = it.data?.get("title").toString()
                     txtPrice.text = it.data?.get("price").toString()
                     txtAddress.text = it.data?.get("address").toString()
+                    val timestamp:Timestamp? = it.getTimestamp("timestamp")
+                    val mTimeCount = timestamp?.let { it1 -> TimeCount(it1) }
+                    txtTime.text = mTimeCount?.timeCount()
                 }
             }
     }

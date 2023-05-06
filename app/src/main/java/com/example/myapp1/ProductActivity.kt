@@ -2,11 +2,13 @@ package com.example.myapp1
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.annotation.RequiresApi
 import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.GridLayoutManager
@@ -38,7 +40,8 @@ class ProductActivity : AppCompatActivity(), OnInputData1 {
     private val db = Firebase.firestore
     private lateinit var id:String
     var check:Boolean = true
-    override fun sendData(str: String, key1: String,key2:String) {
+    @RequiresApi(Build.VERSION_CODES.O)
+    override fun sendData(str: String, key1: String, key2:String) {
         var index = position
         mapFilter[key1] = str
         listProductFilter.clear()
@@ -80,11 +83,17 @@ class ProductActivity : AppCompatActivity(), OnInputData1 {
         FilterProduct()
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         brand_ = ""
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_product)
+
+        var backFragmentHome = findViewById<ImageView>(R.id.backFragmentHome)
+        backFragmentHome.setOnClickListener{
+            onBackPressed()
+        }
         city = findViewById<TextView>(R.id.cityText)
         val i = intent
         val bundle = i.extras
@@ -92,8 +101,9 @@ class ProductActivity : AppCompatActivity(), OnInputData1 {
         if(bundle!=null) {
             city.text = bundle.getString("city")
             cityStr = city.text.toString()
-            mapFilter["city"] = cityStr
-
+            if(cityStr!="Toàn quốc") {
+                mapFilter["city"] = cityStr
+            }
             var cityLLO: LinearLayout = findViewById<LinearLayout>(R.id.cityLLO)
             cityLLO.setOnClickListener {
                 dialogFilte = DialogFilter("city")
@@ -114,7 +124,13 @@ class ProductActivity : AppCompatActivity(), OnInputData1 {
         var imgAdapter:ImageView = findViewById<ImageView>(R.id.adapter)
         imgAdapter.setOnClickListener{
             if(check) {
-                rvProductFilter.adapter = ViewItemAdapterTin(listProductFilter)
+                rvProductFilter.adapter = ViewItemAdapterTin(listProductFilter,object:ClickInterface{
+                    override fun setOnClick(pos: Int) {
+                        val i1 = Intent(this@ProductActivity, DetailActivity::class.java)
+                        i1.putExtra("id",listProductFilter[pos].id)
+                        startActivity(i1)
+                    }
+                })
                 rvProductFilter.layoutManager = LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false)
                 check = false
             } else {
@@ -181,6 +197,7 @@ class ProductActivity : AppCompatActivity(), OnInputData1 {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun FilterProduct() {
         listProductFilter.clear()
         val strCategory:String = "$category/$product"
@@ -202,6 +219,10 @@ class ProductActivity : AppCompatActivity(), OnInputData1 {
                         var price = document.data?.get("price").toString()
                         var city  = document.data?.get("city").toString()
                         var  idProduct = document.data?.get("id").toString()
+                        val timestamp = document.getTimestamp("timestamp")
+                        var mTimeCount = timestamp?.let { it1 -> TimeCount(it1) }
+                        val txtTimeCount = mTimeCount?.timeCount()
+                        city = "$city . $txtTimeCount"
 
                         if(mapFilter["price"]!=null) {
                             val priceStr = mapFilter["price"].toString()
