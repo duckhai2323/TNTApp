@@ -6,10 +6,11 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.myapp1.home.ClickInterface
 import com.example.myapp1.home.ItemProduct
 import com.squareup.picasso.Picasso
 
-class ViewItemAdapterTin(private val listTin:MutableList<ItemProduct>) : RecyclerView.Adapter<ViewItemAdapterTin.ItemViewHolder>(){
+class ViewItemAdapterTin(private val listTin:MutableList<ItemProduct>,val onClick:ClickInterface) : RecyclerView.Adapter<ViewItemAdapterTin.ItemViewHolder>(){
     inner class ItemViewHolder(itemView: View):RecyclerView.ViewHolder(itemView)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
@@ -28,6 +29,10 @@ class ViewItemAdapterTin(private val listTin:MutableList<ItemProduct>) : Recycle
             infor.text = listTin[position].txtInfor
             price.text = listTin[position].txtPrice1
             status.text = listTin[position].txtStatus1
+
+            holder.itemView.setOnClickListener{
+                onClick.setOnClick(position)
+            }
         }
     }
 

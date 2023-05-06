@@ -16,7 +16,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:id="@+id/textView48"
+            android:id="@+id/txtName1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
@@ -36,9 +36,9 @@
             android:layout_height="30dp"
             android:layout_marginStart="20dp"
             android:src="@drawable/return_aroww"
-            app:layout_constraintBottom_toBottomOf="@+id/textView48"
+            app:layout_constraintBottom_toBottomOf="@+id/txtName1"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/textView48" />
+            app:layout_constraintTop_toTopOf="@+id/txtName1" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.core.widget.NestedScrollView
@@ -72,6 +72,7 @@
                     app:layout_constraintTop_toTopOf="parent">
 
                     <ImageView
+                        android:id="@+id/imageClient"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:scaleType="centerCrop"
@@ -80,7 +81,7 @@
                 </androidx.cardview.widget.CardView>
 
                 <TextView
-                    android:id="@+id/txtUpdate"
+                    android:id="@+id/txtAccount"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="140dp"
@@ -102,12 +103,12 @@
                     android:text="Thành viên"
                     android:textColor="@color/textColor"
                     android:textSize="16dp"
-                    app:layout_constraintEnd_toEndOf="@+id/txtUpdate"
-                    app:layout_constraintStart_toStartOf="@+id/txtUpdate"
-                    app:layout_constraintTop_toBottomOf="@+id/txtUpdate" />
+                    app:layout_constraintEnd_toEndOf="@+id/txtAccount"
+                    app:layout_constraintStart_toStartOf="@+id/txtAccount"
+                    app:layout_constraintTop_toBottomOf="@+id/txtAccount" />
 
                 <TextView
-                    android:id="@+id/textView58"
+                    android:id="@+id/txtDangBan1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="115dp"
@@ -120,7 +121,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/textView54" />
 
                 <TextView
-                    android:id="@+id/textView59"
+                    android:id="@+id/txtDaBan1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="15dp"
@@ -128,9 +129,9 @@
                     android:textColor="@color/white"
                     android:textSize="15dp"
                     android:textStyle="bold"
-                    app:layout_constraintBottom_toBottomOf="@+id/textView58"
-                    app:layout_constraintStart_toEndOf="@+id/textView58"
-                    app:layout_constraintTop_toTopOf="@+id/textView58" />
+                    app:layout_constraintBottom_toBottomOf="@+id/txtDangBan1"
+                    app:layout_constraintStart_toEndOf="@+id/txtDangBan1"
+                    app:layout_constraintTop_toTopOf="@+id/txtDangBan1" />
 
                 <ImageView
                     android:id="@+id/imageView27"
@@ -197,6 +198,7 @@
                     android:textSize="17dp" />
 
                 <TextView
+                    android:id="@+id/clientName"
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
                     android:layout_marginLeft="10dp"
@@ -227,6 +229,7 @@
                     android:textSize="17dp" />
 
                 <TextView
+                    android:id="@+id/txtBirth"
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
                     android:layout_marginLeft="10dp"
@@ -257,11 +260,14 @@
                     android:textSize="17dp" />
 
                 <TextView
+                    android:id="@+id/txtClientAddress"
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
                     android:layout_marginLeft="10dp"
                     android:gravity="left|center"
                     android:text="329 duong Cau Giay"
+                    android:lines="1"
+                    android:ellipsize="end"
                     android:textColor="@color/black"
                     android:textSize="17dp" />
             </LinearLayout>
@@ -287,6 +293,7 @@
                     android:textSize="17dp" />
 
                 <TextView
+                    android:id="@+id/txtTelephone"
                     android:layout_width="wrap_content"
                     android:layout_height="40dp"
                     android:layout_marginLeft="10dp"
@@ -296,7 +303,7 @@
                     android:textSize="17dp" />
 
                 <TextView
-                    android:id="@+id/textView62"
+                    android:id="@+id/txtDisplayNumber"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
@@ -326,6 +333,7 @@
                     android:textSize="17dp" />
 
                 <TextView
+                    android:id="@+id/clientEmail"
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
                     android:layout_marginLeft="10dp"
@@ -353,6 +361,7 @@
                     android:textStyle="bold" />
 
                 <TextView
+                    android:id="@+id/txtTin1"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_marginLeft="5dp"
@@ -413,6 +422,7 @@
                     android:textStyle="bold" />
 
                 <TextView
+                    android:id="@+id/txtTin2"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_marginLeft="5dp"
