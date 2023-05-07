@@ -2,7 +2,6 @@ package com.example.myapp1.home
 
 import android.annotation.SuppressLint
 import android.app.Activity.RESULT_OK
-import android.app.VoiceInteractor.PickOptionRequest
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -17,13 +16,10 @@ import android.widget.TextView
 import androidx.cardview.widget.CardView
 import com.example.myapp1.R
 import com.example.myapp1.UpdateprofileActivity
-import com.example.myapp1.username
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import com.squareup.picasso.Picasso
-import kotlinx.coroutines.flow.combineTransform
-import java.net.URI
 
 class ProfleFragment : Fragment() {
     private lateinit var imageView: ImageView
@@ -43,7 +39,7 @@ class ProfleFragment : Fragment() {
         val email = arguments?.getString("Email")
         val txtUpdate: LinearLayout = view.findViewById(R.id.txtCaiDatTK)
         var txtUserName: TextView = view.findViewById(R.id.txtUserName)
-        var cardProfile:CardView = view.findViewById(R.id.cardProfile)
+        var cardProfile:CardView = view.findViewById(R.id.cardUser)
         imageView = view.findViewById(R.id.imgProfile)
 
         val db = Firebase.firestore

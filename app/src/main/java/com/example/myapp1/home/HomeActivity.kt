@@ -12,6 +12,8 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 private val homeFragment = HomeFragment()
 private val profileFragment = ProfleFragment()
 private val electronicFragment = ElectronicFragment()
+private val chatFragment = ChatFragment()
+var email:String?=null
 class HomeActivity : AppCompatActivity(), OnInputData0 {
 
     private var dialogDSP: DialogPhone = DialogPhone()
@@ -21,7 +23,7 @@ class HomeActivity : AppCompatActivity(), OnInputData0 {
         setContentView(R.layout.activity_home)
 
         val i = intent
-        val email = i.getStringExtra("Email")
+        email = i.getStringExtra("Email")
         val bundel = Bundle()
         bundel.putString("Email",email)
         profileFragment.arguments = bundel
@@ -33,6 +35,7 @@ class HomeActivity : AppCompatActivity(), OnInputData0 {
             when (it.itemId) {
                R.id.home->replaceFragment(homeFragment)
                 R.id.profile->replaceFragment(profileFragment)
+                R.id.chat->replaceFragment(chatFragment)
                 else ->replaceFragment(homeFragment)
             }
             true

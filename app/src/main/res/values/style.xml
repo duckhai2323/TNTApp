@@ -3,4 +3,9 @@
     <style name="floating" parent="Widget.Design.FloatingActionButton">
         <item name="android:foreground">@drawable/float_navigation</item>
     </style>
+
+    <style name="MyPopupMenu" parent="Widget.AppCompat.PopupMenu">
+        <item name="android:itemBackground">@color/white</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
 </resources>

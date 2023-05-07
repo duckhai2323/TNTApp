@@ -8,7 +8,7 @@ Không thấm nước và có thể sạc lại: Những chiếc tai nghe chốn
 Có thể điều chỉnh và kéo dài: Bạn có thể chuyển đổi các chế độ theo yêu cầu, bao gồm chế độ chơi, chế độ chơi nhạc và chế độ cuộc gọi, để làm cho cuộc sống của bạn thanh lịch và thú vị.
 Ghép nối âm thanh nổi và tự động: Những tai nghe này cung cấp cho bạn hiệu ứng âm thanh thấp và do chip V5.0, chúng có thể tự động ghép nối với thiết bị của bạn.
     </string>
-    <string name = "linkImage">https://firebasestorage.googleapis.com/v0/b/myapp1-30229.appspot.com/o/product%2Felectron%2Fphone%2FApple%2F0%2Ffe3ce684d341cb13e30c9fc5defe29bd-2821052870180951074.jpg?alt=media;token=a930d896-d94f-49a6-bc30-35a8f45958de</string>
+    <string name="linkImage">https://firebasestorage.googleapis.com/v0/b/myapp1-30229.appspot.com/o/product%2Felectron%2Fphone%2FApple%2F0%2Ffe3ce684d341cb13e30c9fc5defe29bd-2821052870180951074.jpg?alt=media;token=a930d896-d94f-49a6-bc30-35a8f45958de</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
     <string-array name="list_city">

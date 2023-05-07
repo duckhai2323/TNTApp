@@ -57,6 +57,14 @@ class DetailActivity : AppCompatActivity() {
         DisplayClient()
         DisplayProduct()
         DisplayDialog()
+        Chat()
+    }
+
+
+    private fun Chat() {
+        var chatButton = findViewById<ImageView>(R.id.imgChat)
+        chatButton.setOnClickListener{
+        }
     }
 
     private fun StartClient(clientName:String) {

@@ -1,5 +1,6 @@
 package com.example.myapp1.home
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -7,10 +8,12 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
+import com.example.myapp1.Cart0Activity
 import com.example.myapp1.ElectronicFragment
 import com.example.myapp1.R
 import com.example.myapp1.ViewItemElecAdapter
@@ -27,6 +30,7 @@ class HomeFragment : Fragment() {
         super.onCreate(savedInstanceState)
     }
 
+    @SuppressLint("MissingInflatedId")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -98,6 +102,12 @@ class HomeFragment : Fragment() {
         rvProduct.layoutManager = GridLayoutManager(
             context,2
         )
+
+        var imgCart:ImageView = view.findViewById(R.id.imgCartHome)
+        imgCart.setOnClickListener{
+            val i = Intent(context,Cart0Activity::class.java)
+            startActivity(i)
+        }
         return view
     }
 

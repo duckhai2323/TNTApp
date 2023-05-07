@@ -100,13 +100,15 @@ class ClientActivity : AppCompatActivity() {
         var rvBanthanhcong = findViewById<RecyclerView>(R.id.rvBanthanhcong)
         if(listTinCompelete.size > 3) {
             var listTinComplete1:MutableList<String> = mutableListOf()
-            val xemtatca = findViewById<LinearLayout>(R.id.xemtatca1)
+            val xemtatca = findViewById<LinearLayout>(R.id.xemtatca2)
             xemtatca.visibility = View.VISIBLE
             listTinComplete1.add(listTinCompelete[0])
             listTinComplete1.add(listTinCompelete[1])
             listTinComplete1.add(listTinCompelete[2])
             rvBanthanhcong.adapter = ViewItemAdapterTin1(listTinComplete1)
         } else {
+            val xemtatca = findViewById<LinearLayout>(R.id.xemtatca2)
+            xemtatca.visibility = View.GONE
             rvBanthanhcong.adapter = ViewItemAdapterTin1(listTinCompelete)
         }
         rvBanthanhcong.layoutManager = LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false)

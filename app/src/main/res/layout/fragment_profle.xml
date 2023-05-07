@@ -154,7 +154,7 @@
                     app:layout_constraintTop_toTopOf="@+id/txtDangBan1" />
 
                 <androidx.cardview.widget.CardView
-                    android:id="@+id/cardProfile"
+                    android:id="@+id/cardUser"
                     android:layout_width="85dp"
                     android:layout_height="85dp"
                     android:layout_marginLeft="20dp"
