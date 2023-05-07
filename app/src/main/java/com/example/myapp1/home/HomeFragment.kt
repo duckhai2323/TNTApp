@@ -13,10 +13,8 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
-import com.example.myapp1.Cart0Activity
-import com.example.myapp1.ElectronicFragment
+import com.example.myapp1.CartActivity
 import com.example.myapp1.R
-import com.example.myapp1.ViewItemElecAdapter
 import com.example.myapp1.detail.DetailActivity
 import com.example.myapp1.home.adapter.ViewItemAdapter
 import com.example.myapp1.home.adapter.ViewItemAdapter0
@@ -54,16 +52,16 @@ class HomeFragment : Fragment() {
         //DisplaySuggest0()
         val rvGoiYChuDe:RecyclerView = view.findViewById(R.id.rvGoiYChuDe)
         var listItemGoiY0:MutableList<ItemImageText> = mutableListOf()
-        listItemGoiY0.add(ItemImageText(R.drawable.nhatot,"Bất động sản"))
-        listItemGoiY0.add(ItemImageText(R.drawable.myphamtot,"Thực phẩm, Mỹ phẩm"))
-        listItemGoiY0.add(ItemImageText(R.drawable.xetot,"Xe cộ"))
-        listItemGoiY0.add(ItemImageText(R.drawable.tulanhtot,"Điện lạnh"))
-        listItemGoiY0.add(ItemImageText(R.drawable.dienthoaitot,"Đồ điện tử"))
-        listItemGoiY0.add(ItemImageText(R.drawable.thoitrangtot,"Thời trang"))
-        listItemGoiY0.add(ItemImageText(R.drawable.noithattot,"Nội thất"))
-        listItemGoiY0.add(ItemImageText(R.drawable.vanphongphamtot,"Văn phòng phẩm"))
-        listItemGoiY0.add(ItemImageText(R.drawable.giaitritot,"Giải trí, Thể thao, Sở thích"))
-        listItemGoiY0.add(ItemImageText(R.drawable.mevabetot,"Mẹ và bé"))
+        listItemGoiY0.add(ItemImageText(R.drawable.nhatot,"Bất động sản",""))
+        listItemGoiY0.add(ItemImageText(R.drawable.myphamtot,"Thực phẩm, Mỹ phẩm",""))
+        listItemGoiY0.add(ItemImageText(R.drawable.xetot,"Xe cộ",""))
+        listItemGoiY0.add(ItemImageText(R.drawable.tulanhtot,"Điện lạnh",""))
+        listItemGoiY0.add(ItemImageText(R.drawable.dienthoaitot,"Đồ điện tử",""))
+        listItemGoiY0.add(ItemImageText(R.drawable.thoitrangtot,"Thời trang",""))
+        listItemGoiY0.add(ItemImageText(R.drawable.noithattot,"Nội thất",""))
+        listItemGoiY0.add(ItemImageText(R.drawable.vanphongphamtot,"Văn phòng phẩm",""))
+        listItemGoiY0.add(ItemImageText(R.drawable.giaitritot,"Giải trí, Thể thao, Sở thích",""))
+        listItemGoiY0.add(ItemImageText(R.drawable.mevabetot,"Mẹ và bé",""))
         rvGoiYChuDe.adapter = ViewItemAdapter0(listItemGoiY0,object:ClickInterface{
             override fun setOnClick(pos: Int) {
                 mActivityHome.getFragment("electron")
@@ -105,7 +103,7 @@ class HomeFragment : Fragment() {
 
         var imgCart:ImageView = view.findViewById(R.id.imgCartHome)
         imgCart.setOnClickListener{
-            val i = Intent(context,Cart0Activity::class.java)
+            val i = Intent(context,CartActivity::class.java)
             startActivity(i)
         }
         return view

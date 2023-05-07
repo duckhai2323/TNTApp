@@ -9,6 +9,7 @@ import android.view.View
 import android.view.animation.OvershootInterpolator
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.GridLayoutManager
@@ -16,6 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import at.blogc.android.views.ExpandableTextView
+import com.example.myapp1.CartActivity
 import com.example.myapp1.ClientActivity
 import com.example.myapp1.R
 import com.example.myapp1.TimeCount
@@ -24,6 +26,7 @@ import com.example.myapp1.ViewItemProduct2Adapter
 import com.example.myapp1.home.ClickInterface
 import com.example.myapp1.home.ItemProduct
 import com.example.myapp1.home.adapter.ViewItemAdapter1
+import com.example.myapp1.home.email
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.ktx.firestore
@@ -58,6 +61,52 @@ class DetailActivity : AppCompatActivity() {
         DisplayProduct()
         DisplayDialog()
         Chat()
+        AddToCart()
+        DisplayCart()
+    }
+
+    private fun DisplayCart() {
+        var imgCart = findViewById<ImageView>(R.id.imgCartDetail)
+        imgCart.setOnClickListener{
+            val i = Intent(this@DetailActivity, CartActivity::class.java)
+            startActivity(i)
+        }
+    }
+
+    private fun AddToCart() {
+        var imgAddToCart = findViewById<ImageView>(R.id.imgAddToCart)
+        var listID:MutableList<String> = mutableListOf()
+        var updates:Map<String,Any>
+        var client:String
+        imgAddToCart.setOnClickListener{
+            db.collection("users").whereEqualTo("email",email)
+                .get()
+                .addOnSuccessListener {
+                    if(!it.isEmpty){
+                        for(document in it.documents) {
+                            client = document.data?.get("username").toString()
+                            listID = document.data?.get("cart") as MutableList<String>
+                            if(checkAlikeList(listID)) {
+                                Toast.makeText(this,"Sản phẩm đã có trong giỏ hàng",Toast.LENGTH_SHORT).show()
+                            } else {
+                                listID.add(id)
+                                updates = hashMapOf("cart" to listID)
+                                db.collection("users").document(client).update(updates)
+                                Toast.makeText(this,"Sản phẩm đã được thêm vào giỏ hàng",Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                    }
+                }
+        }
+    }
+
+    private fun checkAlikeList(listID: MutableList<String>): Boolean {
+        for(i in listID) {
+            if(i == id) {
+                return true
+            }
+        }
+        return false
     }
 
 

@@ -157,8 +157,7 @@ class ProductActivity : AppCompatActivity(), OnInputData1 {
         when(category){
             "electron" -> {
                 when(product){
-                    "Điện thoại" -> {
-                        product = "telephone"
+                    "telephone" -> {
                         listFilte.add(FilteItem("Điện thoại",R.drawable.outline_keyboard_arrow_down_24,R.drawable.background_button2_1,"electron"))
                         listFilte.add(FilteItem("Hãng",R.drawable.baseline_add_24_1,R.drawable.background_filter,"brand"))
                         listFilte.add(FilteItem("Dòng máy",R.drawable.baseline_add_24_1,R.drawable.background_filter,"series"))
@@ -171,8 +170,7 @@ class ProductActivity : AppCompatActivity(), OnInputData1 {
 
                     }
 
-                    "Laptop" -> {
-                        product="laptop"
+                    "laptop" -> {
                         listFilte.add(FilteItem("Laptop",R.drawable.outline_keyboard_arrow_down_24,R.drawable.background_button2_1,"electron"))
                         listFilte.add(FilteItem("Hãng",R.drawable.baseline_add_24_1,R.drawable.background_filter,"brand"))
                         listFilte.add(FilteItem("Dòng máy",R.drawable.baseline_add_24_1,R.drawable.background_filter,"series"))

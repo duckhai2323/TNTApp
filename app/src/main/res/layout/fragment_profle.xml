@@ -31,7 +31,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
-            android:id="@+id/imageView19"
+            android:id="@+id/backFromCart"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_marginStart="20dp"

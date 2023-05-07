@@ -3,21 +3,32 @@ package com.example.myapp1
 import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
+import android.os.Bundle
 import android.view.ContextThemeWrapper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.PopupMenu
 import android.widget.TextView
 import android.widget.Toast
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapp1.detail.DetailActivity
 import com.example.myapp1.home.ItemProduct
+import com.example.myapp1.home.email
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import com.squareup.picasso.Picasso
 
 class ViewItemCartAdapter(var listProduct:MutableList<ItemCart>,var context:Context):RecyclerView.Adapter<ViewItemCartAdapter.ItemViewHolder>() {
+    private val db = Firebase.firestore
+    var listID:MutableList<String> = mutableListOf()
+    lateinit var updates:Map<String,Any>
+    lateinit var client:String
+    lateinit var id_:String
     inner class ItemViewHolder(itemView:View):RecyclerView.ViewHolder(itemView)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
@@ -46,8 +57,30 @@ class ViewItemCartAdapter(var listProduct:MutableList<ItemCart>,var context:Cont
                 popupMenus.inflate(R.menu.menu1)
                 popupMenus.setOnMenuItemClickListener {
                     when(it.itemId){
+                        R.id.product->{
+                            val intent1 = Intent(context, ProductActivity::class.java)
+                            db.collection("products").document(listProduct[position].id)
+                                .get()
+                                .addOnSuccessListener { it1->
+                                    if(it1.exists()) {
+                                        var str = it1.data?.get("category").toString()
+                                        val index = str.lastIndexOf("/")
+                                        val category = str.substring(startIndex = 0, endIndex = index)
+                                        val product = str.substring(startIndex = (index+1))
+                                        val bundle = Bundle()
+                                        bundle.putString("category",category)
+                                        bundle.putString("city","Toàn quốc")
+                                        bundle.putString("product",product)
+                                        intent1.putExtras(bundle)
+                                        context.startActivity(intent1)
+                                    }
+                                }
+                            true
+                        }
+
                         R.id.delete->{
                             /**set delete*/
+                            id_ = listProduct[position].id
                             AlertDialog.Builder(context)
                                 .setTitle("Delete")
                                 .setIcon(R.drawable.baseline_warning_amber_24)
@@ -56,6 +89,7 @@ class ViewItemCartAdapter(var listProduct:MutableList<ItemCart>,var context:Cont
                                         dialog,_->
                                     listProduct.removeAt(position)
                                     notifyDataSetChanged()
+                                    updateData()
                                     Toast.makeText(context,"Deleted this Information", Toast.LENGTH_SHORT).show()
                                     dialog.dismiss()
                                 }
@@ -79,12 +113,36 @@ class ViewItemCartAdapter(var listProduct:MutableList<ItemCart>,var context:Cont
                     .invoke(menu,true)
             }
 
-            holder.itemView.setOnClickListener{
+            var constrantProduct = findViewById<ConstraintLayout>(R.id.constrantProduct)
+            constrantProduct.setOnClickListener{
                 val i1 = Intent(context, DetailActivity::class.java)
                 i1.putExtra("id",listProduct[position].id)
                 context.startActivity(i1)
             }
+
+            var linearUser = findViewById<LinearLayout>(R.id.linearUser)
+            linearUser.setOnClickListener{
+                val i = Intent(context, ClientActivity::class.java)
+                i.putExtra("clientProfile",listProduct[position].client)
+                context.startActivity(i)
+            }
         }
+    }
+
+    private fun updateData() {
+        db.collection("users").whereEqualTo("email",email)
+            .get()
+            .addOnSuccessListener {
+                if(!it.isEmpty){
+                    for(document in it.documents) {
+                        client = document.data?.get("username").toString()
+                        listID = document.data?.get("cart") as MutableList<String>
+                        listID.remove(id_)
+                        updates = hashMapOf("cart" to listID)
+                        db.collection("users").document(client).update(updates)
+                    }
+                }
+            }
     }
 
     override fun getItemCount(): Int {
