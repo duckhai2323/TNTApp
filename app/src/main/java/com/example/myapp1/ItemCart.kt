@@ -6,6 +6,7 @@ class ItemCart(
     var imageProduct:String,
     var txtInfor:String,
     var txtPrice1:String,
-    var txtStatus1:String
+    var txtStatus1:String,
+    var check:Boolean
 ) {
 }

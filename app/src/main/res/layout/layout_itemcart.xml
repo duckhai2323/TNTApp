@@ -58,6 +58,7 @@
                 android:background="@color/white">
 
                 <CheckBox
+                    android:id="@+id/checkbox"
                     android:layout_width="35dp"
                     android:layout_height="35dp"
                     android:layout_marginLeft="10dp"

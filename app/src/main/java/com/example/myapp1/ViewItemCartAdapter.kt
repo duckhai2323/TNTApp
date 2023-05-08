@@ -8,6 +8,7 @@ import android.view.ContextThemeWrapper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.CheckBox
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.PopupMenu
@@ -17,13 +18,14 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapp1.detail.DetailActivity
+import com.example.myapp1.home.ClickInterface
 import com.example.myapp1.home.ItemProduct
 import com.example.myapp1.home.email
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.squareup.picasso.Picasso
 
-class ViewItemCartAdapter(var listProduct:MutableList<ItemCart>,var context:Context):RecyclerView.Adapter<ViewItemCartAdapter.ItemViewHolder>() {
+class ViewItemCartAdapter(var listProduct:MutableList<ItemCart>,var context:Context,val onclick:ClickInterface):RecyclerView.Adapter<ViewItemCartAdapter.ItemViewHolder>() {
     private val db = Firebase.firestore
     var listID:MutableList<String> = mutableListOf()
     lateinit var updates:Map<String,Any>
@@ -43,12 +45,14 @@ class ViewItemCartAdapter(var listProduct:MutableList<ItemCart>,var context:Cont
             var infor = findViewById<TextView>(R.id.txtInfoTin)
             var price = findViewById<TextView>(R.id.txtPriceTin)
             var status = findViewById<TextView>(R.id.txtStatusTin)
+            var checkbox = findViewById<CheckBox>(R.id.checkbox)
 
             client.text = listProduct[position].client
             Picasso.get().load(listProduct[position].imageProduct).into(imageTin)
             infor.text = listProduct[position].txtInfor
             price.text = listProduct[position].txtPrice1
             status.text = listProduct[position].txtStatus1
+            checkbox.isChecked = listProduct[position].check
 
             var imgMore = findViewById<ImageView>(R.id.more)
             imgMore.setOnClickListener{ it ->
@@ -89,6 +93,7 @@ class ViewItemCartAdapter(var listProduct:MutableList<ItemCart>,var context:Cont
                                         dialog,_->
                                     listProduct.removeAt(position)
                                     notifyDataSetChanged()
+                                    onclick.setOnClick(position)
                                     updateData()
                                     Toast.makeText(context,"Deleted this Information", Toast.LENGTH_SHORT).show()
                                     dialog.dismiss()
@@ -125,6 +130,12 @@ class ViewItemCartAdapter(var listProduct:MutableList<ItemCart>,var context:Cont
                 val i = Intent(context, ClientActivity::class.java)
                 i.putExtra("clientProfile",listProduct[position].client)
                 context.startActivity(i)
+            }
+
+            checkbox.setOnClickListener{
+                listProduct[position].check = !listProduct[position].check
+                notifyDataSetChanged()
+                onclick.setOnClick(position)
             }
         }
     }
