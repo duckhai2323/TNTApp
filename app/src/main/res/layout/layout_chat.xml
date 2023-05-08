@@ -11,13 +11,15 @@
         android:text="Hung"
         android:textSize="30sp"
         android:textStyle="bold"
-        android:layout_marginLeft="10dp" />
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="5dp" />
     
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@color/white"
-        android:layout_below="@id/txt_name" />
+        android:layout_below="@id/txt_name"
+        android:layout_marginTop="5dp" />
 
 
 </RelativeLayout>
