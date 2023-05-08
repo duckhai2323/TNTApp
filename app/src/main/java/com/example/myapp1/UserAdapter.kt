@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class UserAdapter(val context: Context, val userList: ArrayList<String>):
+class UserAdapter(val context: Context, val userList: ArrayList<ItemUserChat>):
     RecyclerView.Adapter<UserAdapter.UserViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserViewHolder {
@@ -20,7 +20,7 @@ class UserAdapter(val context: Context, val userList: ArrayList<String>):
     }
 
     override fun onBindViewHolder(holder: UserViewHolder, position: Int) {
-        holder.textname.text = userList[position]
+        holder.textname.text = userList[position].userName
 
     }
 
