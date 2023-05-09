@@ -26,6 +26,7 @@ class ChatFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val view:View =  inflater.inflate(R.layout.fragment_chat, container, false)
+        val email = arguments?.getString("Email")
         mAuth = FirebaseAuth.getInstance()
         userList = ArrayList()
         userRecyclerView = view.findViewById(R.id.userRecyclerView)
@@ -33,10 +34,11 @@ class ChatFragment : Fragment() {
             .addOnSuccessListener { result ->
                 userList.clear()
                 for (document in result) {
-                        val mUserName = document.data?.get("username").toString()
-                        userList.add(ItemUserChat("","",mUserName,"",""))
+                    val mUserName = document.data?.get("username").toString()
+                    val mEmail = document.data?.get("email").toString()
+                    userList.add(ItemUserChat("","",mUserName,"","",mEmail))
                 }
-                adapter = context?.let { UserAdapter(it, userList) }!!
+                adapter = context?.let { UserAdapter(it, userList, email) }!!
                 userRecyclerView.adapter = adapter
                 userRecyclerView.layoutManager = LinearLayoutManager(context,LinearLayoutManager.VERTICAL,false)
             }

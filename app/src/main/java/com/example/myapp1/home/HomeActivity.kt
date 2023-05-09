@@ -27,6 +27,7 @@ class HomeActivity : AppCompatActivity(), OnInputData0 {
         val bundel = Bundle()
         bundel.putString("Email",email)
         profileFragment.arguments = bundel
+        chatFragment.arguments = bundel
 
         val navigation = findViewById<BottomNavigationView>(R.id.bottomnavigation)
         navigation.background = null
