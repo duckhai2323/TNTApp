@@ -3,7 +3,6 @@ package com.example.myapp1
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
@@ -18,7 +17,7 @@ class ViewItemAdapterAddress (private val listAddress: MutableList<Address>):Rec
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
         holder.itemView.apply {
             var txtName = findViewById<TextView>(R.id.txtName1)
-            var txtnumberPhonex = findViewById<TextView>(R.id.txtnumberPhonex)
+            var txtnumberPhonex = findViewById<TextView>(R.id.txtnumberPhone)
             var txtInfor = findViewById<TextView>(R.id.txtInfor1)
 
             txtName.text = listAddress[position].name
