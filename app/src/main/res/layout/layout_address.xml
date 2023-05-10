@@ -49,7 +49,7 @@
                     android:textSize="25dp" />
 
                 <TextView
-                    android:id="@+id/txtnumberPhonex"
+                    android:id="@+id/txtnumberPhone"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="(+84) 846 620 668"

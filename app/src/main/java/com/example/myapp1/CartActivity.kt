@@ -1,5 +1,6 @@
 package com.example.myapp1
 
+import android.content.Intent
 import android.media.Image
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
@@ -42,6 +43,11 @@ class CartActivity : AppCompatActivity() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun DisplayListCart() {
+
+        var quantity_:Int = 0
+        var money_:Long = 0
+
+        var listIsChecked:MutableList<String> = mutableListOf()
         var order = findViewById<LinearLayout>(R.id.order)
         var money = findViewById<TextView>(R.id.money)
         var quantity = findViewById<TextView>(R.id.quantity)
@@ -73,10 +79,12 @@ class CartActivity : AppCompatActivity() {
                             }
                             val adapter_ = ViewItemCartAdapter(listProduct,this,object:ClickInterface{
                                 override fun setOnClick(pos: Int) {
-                                    var quantity_:Int = 0
-                                    var money_:Long = 0
+                                    quantity_ = 0
+                                    money_ = 0
+                                    listIsChecked.clear()
                                     for(i in listProduct){
                                         if(i.check) {
+                                            listIsChecked.add(i.id)
                                             val priceStr = i.txtPrice1.substring(0,i.txtPrice1.length-1)
                                             val priceLong = priceStr.replace(".","").toLong()
                                             money_ += priceLong
@@ -93,6 +101,13 @@ class CartActivity : AppCompatActivity() {
                                     money.text = "$formattedResult đ"
                                 }
                             })
+                            quantity.setOnClickListener{
+                                val i = Intent(this@CartActivity,PayActivity::class.java)
+                                i.putExtra("listIsChecked",listIsChecked.toTypedArray())
+                                i.putExtra("quantity",quantity_)
+                                i.putExtra("price",money_)
+                                startActivity(i)
+                            }
                             rvListCart.adapter = adapter_
                             rvListCart.layoutManager = LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false)
                        }
