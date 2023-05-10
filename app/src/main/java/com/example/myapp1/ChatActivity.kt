@@ -10,7 +10,9 @@ import android.widget.ImageView
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import com.google.firebase.ktx.Firebase
 
 class ChatActivity : AppCompatActivity() {
@@ -43,8 +45,9 @@ class ChatActivity : AppCompatActivity() {
         messageList = ArrayList()
         messageAdapter = MessageAdapter(this, messageList, senderEmail)
 
-        db.collection("chats").document(senderRoom!!).collection("messages").
-            addSnapshotListener { result, e ->
+        db.collection("chats").document(senderRoom!!).collection("messages")
+            .orderBy("timestamp", Query.Direction.ASCENDING)
+            .addSnapshotListener { result, e ->
                 if (e != null) {
                     Log.w(TAG, "Listen failed.", e)
                     return@addSnapshotListener
@@ -54,7 +57,7 @@ class ChatActivity : AppCompatActivity() {
                     val message = document.data?.get("message").toString()
                     val senderMail = document.data?.get("senderEmail").toString()
                     val receiverMail = document.data?.get("receiverEmail").toString()
-                    messageList.add(Message(message, senderMail, receiverMail))
+                    messageList.add(Message(message, senderMail, receiverMail, FieldValue.serverTimestamp()))
                 }
                 messageAdapter.notifyDataSetChanged()
                 messageRecyclerView.layoutManager = LinearLayoutManager(this)
@@ -63,7 +66,7 @@ class ChatActivity : AppCompatActivity() {
 
         sendButton.setOnClickListener {
             val message = messageBox.text.toString()
-            val messageObject = Message(message, senderEmail, receiverEmail)
+            val messageObject = Message(message, senderEmail, receiverEmail, FieldValue.serverTimestamp())
             db.collection("chats").document(senderRoom!!).collection("messages")
                 .add(messageObject).addOnSuccessListener {
                     db.collection("chats").document(receiverRoom!!).collection("messages")

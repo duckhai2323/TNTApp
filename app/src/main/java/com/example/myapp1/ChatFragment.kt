@@ -1,7 +1,9 @@
 package com.example.myapp1
 
 import android.annotation.SuppressLint
+import android.content.ContentValues.TAG
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -19,6 +21,7 @@ class ChatFragment : Fragment() {
     private lateinit var adapter: UserAdapter
     private lateinit var mAuth: FirebaseAuth
     private val mDbRef = FirebaseFirestore.getInstance()
+    private var senderRoom: String? = null
     @SuppressLint("MissingInflatedId")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -36,6 +39,8 @@ class ChatFragment : Fragment() {
                 for (document in result) {
                     val mUserName = document.data?.get("username").toString()
                     val mEmail = document.data?.get("email").toString()
+                    senderRoom = mEmail + email
+                    val docRef = mDbRef.collection("chats").document(senderRoom!!)
                     userList.add(ItemUserChat("","",mUserName,"","",mEmail))
                 }
                 adapter = context?.let { UserAdapter(it, userList, email) }!!
@@ -45,6 +50,7 @@ class ChatFragment : Fragment() {
             .addOnFailureListener {
                 Toast.makeText(context,"Chưa có người nhắn tin", Toast.LENGTH_LONG)
             }
+
         return view
     }
 
