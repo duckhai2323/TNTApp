@@ -10,7 +10,6 @@ import com.google.firebase.database.*
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import org.w3c.dom.Text
-lateinit var username:String
 class UpdateprofileActivity : AppCompatActivity() {
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,9 +36,6 @@ class UpdateprofileActivity : AppCompatActivity() {
                         numberPhone = "********" + numberPhone?.substring(8)
                         txtname.text = fullName
                         txtUser.text = userName
-                        if (userName != null) {
-                            username = userName
-                        }
                         txtEmail.text = str
                         txtNumberPhone.text = numberPhone
                     }

@@ -8,25 +8,37 @@ import com.example.myapp1.*
 import com.example.myapp1.electronic.DialogPhone
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 
 private val homeFragment = HomeFragment()
 private val profileFragment = ProfleFragment()
 private val electronicFragment = ElectronicFragment()
 private val chatFragment = ChatFragment()
-var email:String?=null
+private val productManagerFragment = ProductManagerFragment()
+lateinit var username:String
 class HomeActivity : AppCompatActivity(), OnInputData0 {
 
     private var dialogDSP: DialogPhone = DialogPhone()
+    val db = Firebase.firestore
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
 
         val i = intent
-        email = i.getStringExtra("Email")
+        var email = i.getStringExtra("Email")
+        db.collection("users").whereEqualTo("email", email)
+            .get()
+            .addOnSuccessListener {
+                if(!it.isEmpty){
+                    for(document in it.documents) {
+                        username = document.data?.get("username").toString()
+                    }
+                }
+            }
         val bundel = Bundle()
         bundel.putString("Email",email)
-        profileFragment.arguments = bundel
         chatFragment.arguments = bundel
 
         val navigation = findViewById<BottomNavigationView>(R.id.bottomnavigation)
@@ -36,6 +48,7 @@ class HomeActivity : AppCompatActivity(), OnInputData0 {
             when (it.itemId) {
                R.id.home->replaceFragment(homeFragment)
                 R.id.profile->replaceFragment(profileFragment)
+                R.id.productManager->replaceFragment(productManagerFragment)
                 R.id.chat->replaceFragment(chatFragment)
                 else ->replaceFragment(homeFragment)
             }

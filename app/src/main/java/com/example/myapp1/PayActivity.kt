@@ -1,5 +1,6 @@
 package com.example.myapp1
 
+import android.content.Intent
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -7,7 +8,7 @@ import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.myapp1.home.email
+import com.example.myapp1.home.username
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import java.text.NumberFormat
@@ -34,6 +35,45 @@ class PayActivity : AppCompatActivity() {
         DisplayInfor()
         DisplayProduct()
         Order()
+        StartBill()
+    }
+
+    private fun StartBill() {
+        var txtOrder = findViewById<TextView>(R.id.txtOrder)
+        txtOrder.setOnClickListener{
+           for(id in listId) {
+               db.collection("products").document(id).update("display","false")
+               db.collection("products").document(id)
+                   .get()
+                   .addOnSuccessListener {
+                       if(it.exists()) {
+                           val seller = it.data?.get("username").toString()
+                           val waitConfirm:Map<String,String> = mapOf(
+                               "seller" to seller,
+                               "receiver" to username,
+                               "id" to id
+                           )
+                           val ref = db.collection("WaitConfirm")
+                           ref.document(ref.document().id).set(waitConfirm)
+                               .addOnSuccessListener {  }
+                               .addOnFailureListener{ }
+                       }
+                   }
+           }
+            db.collection("users").document(username)
+                .get()
+                .addOnSuccessListener {
+                    if(it.exists()) {
+                        val listCart = it.data?.get("cart")  as MutableList<String>
+                        for(id in listId) {
+                            listCart.remove(id)
+                        }
+                        db.collection("users").document(username).update("cart",listCart)
+                    }
+                }
+            val i = Intent(this@PayActivity,BillActivity::class.java)
+            startActivity(i)
+        }
     }
 
     private fun DisplayInfor() {
@@ -41,16 +81,14 @@ class PayActivity : AppCompatActivity() {
         var txtName = findViewById<TextView>(R.id.txtName)
         var txtNumberPhone = findViewById<TextView>(R.id.txtNumberPhone)
         var txtInfor = findViewById<TextView>(R.id.txtInfor)
-        db.collection("users").whereEqualTo("email", email)
+        db.collection("users").document(com.example.myapp1.home.username)
             .get()
             .addOnSuccessListener {
-                if(!it.isEmpty){
-                    for(document in it.documents) {
-                        val addressMap:Map<String,String> = document.data?.get("address") as Map<String, String>
-                        txtName.text = addressMap["name"].toString()
-                        txtNumberPhone.text = addressMap["numberPhoneX"].toString()
-                        txtInfor.text = addressMap["addressInfor"].toString()
-                    }
+                if(it.exists()) {
+                    val addressMap:Map<String,String> = it.data?.get("address") as Map<String, String>
+                    txtName.text = addressMap["name"].toString()
+                    txtNumberPhone.text = addressMap["numberPhoneX"].toString()
+                    txtInfor.text = addressMap["addressInfor"].toString()
                 }
             }
     }

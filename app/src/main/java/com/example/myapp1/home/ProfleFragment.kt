@@ -14,13 +14,13 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.cardview.widget.CardView
+import com.example.myapp1.BillActivity
 import com.example.myapp1.R
 import com.example.myapp1.UpdateprofileActivity
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import com.squareup.picasso.Picasso
-
 class ProfleFragment : Fragment() {
     private lateinit var imageView: ImageView
     private lateinit var img: Uri
@@ -36,23 +36,21 @@ class ProfleFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_profle, container, false)
-        val email = arguments?.getString("Email")
         val txtUpdate: LinearLayout = view.findViewById(R.id.txtCaiDatTK)
         var txtUserName: TextView = view.findViewById(R.id.txtUserName)
         var cardProfile:CardView = view.findViewById(R.id.cardUser)
+        var lloDonMua:LinearLayout = view.findViewById(R.id.lloDonMua)
         imageView = view.findViewById(R.id.imgProfile)
 
         val db = Firebase.firestore
         val storage = Firebase.storage
-        db.collection("users").whereEqualTo("email", email)
+        db.collection("users").document(username)
             .get()
             .addOnSuccessListener {
-                if (!it.isEmpty) {
-                    for (document in it.documents) {
-                        txtUserName.text = document.data?.get("username").toString()
-                        val imgStr = document.data?.get("imageProfile").toString()
-                        Picasso.get().load(imgStr).into(imageView)
-                    }
+                if(it.exists()) {
+                    txtUserName.text = username
+                    val imgStr = it.data?.get("imageProfile").toString()
+                    Picasso.get().load(imgStr).into(imageView)
                 }
             }
 
@@ -62,11 +60,11 @@ class ProfleFragment : Fragment() {
 
         var txtMember:TextView = view.findViewById(R.id.txtMember)
         txtMember.setOnClickListener{
-            val reference = storage.reference.child("users").child(txtUserName.text.toString())
+            val reference = storage.reference.child("users").child(username)
             reference.putFile(img).addOnCompleteListener{
                 if(it.isSuccessful){
                     reference.downloadUrl.addOnSuccessListener {task ->
-                        val userRef = db.collection("users").document(txtUserName.text.toString())
+                        val userRef = db.collection("users").document(username)
                         userRef.update("imageProfile",task.toString()).addOnCompleteListener{
                         }
                     }
@@ -75,7 +73,11 @@ class ProfleFragment : Fragment() {
         }
         txtUpdate.setOnClickListener {
             val i = Intent(requireContext(), UpdateprofileActivity::class.java)
-            i.putExtra("Email", email)
+            startActivity(i)
+        }
+
+        lloDonMua.setOnClickListener{
+            val i = Intent(context, BillActivity::class.java)
             startActivity(i)
         }
         return view

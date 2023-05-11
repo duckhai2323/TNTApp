@@ -26,7 +26,7 @@ import com.example.myapp1.ViewItemProduct2Adapter
 import com.example.myapp1.home.ClickInterface
 import com.example.myapp1.home.ItemProduct
 import com.example.myapp1.home.adapter.ViewItemAdapter1
-import com.example.myapp1.home.email
+import com.example.myapp1.home.username
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.ktx.firestore
@@ -79,21 +79,19 @@ class DetailActivity : AppCompatActivity() {
         var updates:Map<String,Any>
         var client:String
         imgAddToCart.setOnClickListener{
-            db.collection("users").whereEqualTo("email",email)
+            db.collection("users").document(username)
                 .get()
                 .addOnSuccessListener {
-                    if(!it.isEmpty){
-                        for(document in it.documents) {
-                            client = document.data?.get("username").toString()
-                            listID = document.data?.get("cart") as MutableList<String>
-                            if(checkAlikeList(listID)) {
-                                Toast.makeText(this,"Sản phẩm đã có trong giỏ hàng",Toast.LENGTH_SHORT).show()
-                            } else {
-                                listID.add(id)
-                                updates = hashMapOf("cart" to listID)
-                                db.collection("users").document(client).update(updates)
-                                Toast.makeText(this,"Sản phẩm đã được thêm vào giỏ hàng",Toast.LENGTH_SHORT).show()
-                            }
+                    if(it.exists()) {
+                        client = it.data?.get("username").toString()
+                        listID = it.data?.get("cart") as MutableList<String>
+                        if(checkAlikeList(listID)) {
+                            Toast.makeText(this,"Sản phẩm đã có trong giỏ hàng",Toast.LENGTH_SHORT).show()
+                        } else {
+                            listID.add(id)
+                            updates = hashMapOf("cart" to listID)
+                            db.collection("users").document(client).update(updates)
+                            Toast.makeText(this,"Sản phẩm đã được thêm vào giỏ hàng",Toast.LENGTH_SHORT).show()
                         }
                     }
                 }

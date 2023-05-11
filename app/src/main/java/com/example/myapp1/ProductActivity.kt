@@ -89,7 +89,7 @@ class ProductActivity : AppCompatActivity(), OnInputData1 {
         brand_ = ""
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_product)
-
+        mapFilter["display"] ="true"
         var backFragmentHome = findViewById<ImageView>(R.id.backFragmentHome)
         backFragmentHome.setOnClickListener{
             onBackPressed()

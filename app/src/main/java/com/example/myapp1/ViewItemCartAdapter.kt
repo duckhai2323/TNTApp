@@ -15,12 +15,10 @@ import android.widget.PopupMenu
 import android.widget.TextView
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapp1.detail.DetailActivity
 import com.example.myapp1.home.ClickInterface
-import com.example.myapp1.home.ItemProduct
-import com.example.myapp1.home.email
+import com.example.myapp1.home.username
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.squareup.picasso.Picasso
@@ -141,17 +139,14 @@ class ViewItemCartAdapter(var listProduct:MutableList<ItemCart>,var context:Cont
     }
 
     private fun updateData() {
-        db.collection("users").whereEqualTo("email",email)
+        db.collection("users").document(username)
             .get()
             .addOnSuccessListener {
-                if(!it.isEmpty){
-                    for(document in it.documents) {
-                        client = document.data?.get("username").toString()
-                        listID = document.data?.get("cart") as MutableList<String>
-                        listID.remove(id_)
-                        updates = hashMapOf("cart" to listID)
-                        db.collection("users").document(client).update(updates)
-                    }
+                if(it.exists()){
+                    listID = it.data?.get("cart") as MutableList<String>
+                    listID.remove(id_)
+                    updates = hashMapOf("cart" to listID)
+                    db.collection("users").document(username).update(updates)
                 }
             }
     }
