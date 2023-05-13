@@ -2,15 +2,19 @@ package com.example.myapp1
 
 import android.annotation.SuppressLint
 import android.content.ContentValues.TAG
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.myapp1.home.HomeActivity
+import com.example.myapp1.home.HomeFragment
 import com.example.myapp1.home.username
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -22,6 +26,7 @@ class ChatFragment : Fragment() {
     private lateinit var userList: ArrayList<ItemUserChat>
     private lateinit var adapter: UserAdapter
     private lateinit var mAuth: FirebaseAuth
+    private lateinit var backButton: ImageView
     private var data: Boolean? = false
     private val mDbRef = FirebaseFirestore.getInstance()
     private var senderRoom: String? = null
@@ -35,6 +40,7 @@ class ChatFragment : Fragment() {
         val email = arguments?.getString("Email")
         mAuth = FirebaseAuth.getInstance()
         userList = ArrayList()
+        backButton = view.findViewById(R.id.backFromChat)
         userRecyclerView = view.findViewById(R.id.userRecyclerView)
 //        mDbRef.collection("users").get()
 //            .addOnSuccessListener { result ->
@@ -81,6 +87,13 @@ class ChatFragment : Fragment() {
                 userRecyclerView.adapter = adapter
                 userRecyclerView.layoutManager = LinearLayoutManager(context,LinearLayoutManager.VERTICAL,false)
             }
+
+        backButton.setOnClickListener {
+            val fragment = HomeFragment()
+            val transaction = fragmentManager?.beginTransaction()
+            transaction!!.replace(R.id.frameLayout, fragment)
+            transaction!!.commit()
+        }
 
 
         return view

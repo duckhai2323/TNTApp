@@ -17,12 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import at.blogc.android.views.ExpandableTextView
-import com.example.myapp1.CartActivity
-import com.example.myapp1.ClientActivity
-import com.example.myapp1.R
-import com.example.myapp1.TimeCount
-import com.example.myapp1.ViewItemProdcut1Adapter
-import com.example.myapp1.ViewItemProduct2Adapter
+import com.example.myapp1.*
 import com.example.myapp1.home.ClickInterface
 import com.example.myapp1.home.ItemProduct
 import com.example.myapp1.home.adapter.ViewItemAdapter1
@@ -111,6 +106,17 @@ class DetailActivity : AppCompatActivity() {
     private fun Chat() {
         var chatButton = findViewById<ImageView>(R.id.imgChat)
         chatButton.setOnClickListener{
+            db.collection("products").document(id)
+                .get().addOnSuccessListener {
+                    if (it.exists()) {
+                        val name = it.data?.get("username").toString()
+                        val intent = Intent(this, ChatActivity::class.java)
+                        intent.putExtra("name", name)
+                        intent.putExtra("email", "")
+                        intent.putExtra("currentEmail", "")
+                        startActivity(intent)
+                    }
+                }
         }
     }
 
