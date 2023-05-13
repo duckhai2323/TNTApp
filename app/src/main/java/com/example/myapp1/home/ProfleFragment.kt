@@ -21,7 +21,9 @@ import com.example.myapp1.CartActivity
 import com.example.myapp1.ProductManagerFragment
 import com.example.myapp1.R
 import com.example.myapp1.UpdateprofileActivity
+import com.example.myapp1.login.LoginActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
@@ -46,7 +48,7 @@ class ProfleFragment : Fragment() {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_profle, container, false)
         imageView = view.findViewById(R.id.imgProfile)
-
+        var mAuth = FirebaseAuth.getInstance()
         var setting:ImageView = view.findViewById(R.id.setting)
         setting.setOnClickListener{
             val i = Intent(requireContext(), UpdateprofileActivity::class.java)
@@ -64,6 +66,12 @@ class ProfleFragment : Fragment() {
             mActivityHome.replaceFragment(chatFragment)
             val bottomNavigationView = requireActivity().findViewById<BottomNavigationView>(R.id.bottomnavigation)
             bottomNavigationView.selectedItemId = R.id.chat
+        }
+        var logOut:TextView = view.findViewById(R.id.txtDangXuat)
+        logOut.setOnClickListener {
+            mAuth.signOut()
+            val i2 = Intent(requireContext(), LoginActivity::class.java)
+            startActivity(i2)
         }
         addEvent()
         return view
