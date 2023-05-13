@@ -6,8 +6,7 @@ import com.google.firebase.firestore.FieldValue
 
 class Message (
     var message:String,
-    var senderEmail:String?,
-    var receiverEmail:String?,
-    var timestamp: FieldValue
+    var senderName:String?,
+    var receiverName:String?
 ) {
 }

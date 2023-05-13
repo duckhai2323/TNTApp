@@ -11,8 +11,10 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.myapp1.home.username
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 
 class ChatFragment : Fragment() {
 
@@ -20,6 +22,7 @@ class ChatFragment : Fragment() {
     private lateinit var userList: ArrayList<ItemUserChat>
     private lateinit var adapter: UserAdapter
     private lateinit var mAuth: FirebaseAuth
+    private var data: Boolean? = false
     private val mDbRef = FirebaseFirestore.getInstance()
     private var senderRoom: String? = null
     @SuppressLint("MissingInflatedId")
@@ -33,23 +36,52 @@ class ChatFragment : Fragment() {
         mAuth = FirebaseAuth.getInstance()
         userList = ArrayList()
         userRecyclerView = view.findViewById(R.id.userRecyclerView)
-        mDbRef.collection("users").get()
-            .addOnSuccessListener { result ->
+//        mDbRef.collection("users").get()
+//            .addOnSuccessListener { result ->
+//                userList.clear()
+//                for (document in result) {
+//                    val mUserName = document.data?.get("username").toString()
+//                    val mEmail = document.data?.get("email").toString()
+//                    senderRoom = mEmail + email
+//                    userList.add(ItemUserChat("", "", mUserName,"","", mEmail))
+//                }
+//                adapter = context?.let { UserAdapter(it, userList, email) }!!
+//                userRecyclerView.adapter = adapter
+//                userRecyclerView.layoutManager = LinearLayoutManager(context,LinearLayoutManager.VERTICAL,false)
+//            }
+//            .addOnFailureListener {
+//                Toast.makeText(context,"Chưa có người nhắn tin", Toast.LENGTH_LONG)
+//            }
+        mDbRef.collection("chats")
+            .orderBy("timeStamp", Query.Direction.DESCENDING)
+            .addSnapshotListener { result, e ->
                 userList.clear()
-                for (document in result) {
-                    val mUserName = document.data?.get("username").toString()
-                    val mEmail = document.data?.get("email").toString()
-                    senderRoom = mEmail + email
-                    val docRef = mDbRef.collection("chats").document(senderRoom!!)
-                    userList.add(ItemUserChat("","",mUserName,"","",mEmail))
+                for (document in result!!) {
+                    val message = document.data?.get("message").toString()
+                    val senderName = document.data?.get("senderName").toString()
+                    val receiverName = document.data?.get("receiverName").toString()
+                    val date = document.data?.get("timeStamp")
+                    if (senderName == username || receiverName == username) {
+                        var flag = false
+                        for (i: ItemUserChat in userList) {
+                            if (senderName == username && i.userName == receiverName) {
+                                flag = true
+                            }
+                            if (receiverName == username && i.userName == senderName) {
+                                flag = true
+                            }
+                        }
+                        if (!flag) {
+                            if (senderName == username) userList.add(ItemUserChat("", "", receiverName, date.toString(), message, ""))
+                            else userList.add(ItemUserChat("", "", senderName, date.toString(), message, ""))
+                        }
+                    }
                 }
                 adapter = context?.let { UserAdapter(it, userList, email) }!!
                 userRecyclerView.adapter = adapter
                 userRecyclerView.layoutManager = LinearLayoutManager(context,LinearLayoutManager.VERTICAL,false)
             }
-            .addOnFailureListener {
-                Toast.makeText(context,"Chưa có người nhắn tin", Toast.LENGTH_LONG)
-            }
+
 
         return view
     }

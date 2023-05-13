@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
+import com.example.myapp1.home.username
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuth.*
 
@@ -26,7 +27,7 @@ class MessageAdapter(val context: Context, val messageList: ArrayList<Message>, 
 
     override fun getItemViewType(position: Int): Int {
         val currentMessage = messageList[position]
-        if (currentEmail == currentMessage.senderEmail) {
+        if (username == currentMessage.senderName) {
             return item_sent
             print(item_sent)
         } else {

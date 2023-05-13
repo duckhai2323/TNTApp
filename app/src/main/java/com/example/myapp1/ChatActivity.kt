@@ -10,6 +10,7 @@ import android.widget.ImageView
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.myapp1.home.username
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
@@ -22,6 +23,7 @@ class ChatActivity : AppCompatActivity() {
     private lateinit var sendButton: ImageView
     private lateinit var messageAdapter: MessageAdapter
     private lateinit var messageList: ArrayList<Message>
+    private lateinit var chatRoom: ChatRoom
 
     var receiverRoom: String? = null
     var senderRoom: String? = null
@@ -35,8 +37,8 @@ class ChatActivity : AppCompatActivity() {
         val senderEmail = intent.getStringExtra("currentEmail")
         val db = FirebaseFirestore.getInstance()
 
-        senderRoom = receiverEmail + senderEmail
-        receiverRoom = senderEmail + receiverEmail
+        senderRoom = name + " " + username
+        receiverRoom = username + " " + name
         supportActionBar?.title = name
 
         messageRecyclerView = findViewById(R.id.chatRecyclerView)
@@ -45,8 +47,8 @@ class ChatActivity : AppCompatActivity() {
         messageList = ArrayList()
         messageAdapter = MessageAdapter(this, messageList, senderEmail)
 
-        db.collection("chats").document(senderRoom!!).collection("messages")
-            .orderBy("timestamp", Query.Direction.ASCENDING)
+        db.collection("chats")
+            .orderBy("timeStamp", Query.Direction.ASCENDING)
             .addSnapshotListener { result, e ->
                 if (e != null) {
                     Log.w(TAG, "Listen failed.", e)
@@ -55,9 +57,12 @@ class ChatActivity : AppCompatActivity() {
                 messageList.clear()
                 for (document in result!!) {
                     val message = document.data?.get("message").toString()
-                    val senderMail = document.data?.get("senderEmail").toString()
-                    val receiverMail = document.data?.get("receiverEmail").toString()
-                    messageList.add(Message(message, senderMail, receiverMail, FieldValue.serverTimestamp()))
+                    val senderName = document.data?.get("senderName").toString()
+                    val receiverName = document.data?.get("receiverName").toString()
+                    val date = document.data?.get("timeStamp")
+                    if ((senderName == username && receiverName == name) || (receiverName == username && senderName == name)) {
+                        messageList.add(Message(message, senderName, receiverName))
+                    }
                 }
                 messageAdapter.notifyDataSetChanged()
                 messageRecyclerView.layoutManager = LinearLayoutManager(this)
@@ -66,14 +71,15 @@ class ChatActivity : AppCompatActivity() {
 
         sendButton.setOnClickListener {
             val message = messageBox.text.toString()
-            val messageObject = Message(message, senderEmail, receiverEmail, FieldValue.serverTimestamp())
-            db.collection("chats").document(senderRoom!!).collection("messages")
-                .add(messageObject).addOnSuccessListener {
-                    db.collection("chats").document(receiverRoom!!).collection("messages")
-                        .add(messageObject)
-                }.addOnFailureListener {
-
-                }
+            val chatRoomObject1 = ChatRoom("100100", username, name, message, FieldValue.serverTimestamp())
+//            db.collection("chats").document(senderRoom!!).collection("messages")
+//                .add(messageObject).addOnSuccessListener {
+//                    db.collection("chats").document(receiverRoom!!).collection("messages")
+//                        .add(messageObject)
+//                }.addOnFailureListener {
+//
+//                }
+            db.collection("chats").add(chatRoomObject1)
             messageBox.setText("")
 
         }

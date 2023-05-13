@@ -17,6 +17,10 @@ import androidx.cardview.widget.CardView
 import com.example.myapp1.BillActivity
 import com.example.myapp1.R
 import com.example.myapp1.UpdateprofileActivity
+import com.example.myapp1.login.LoginActivity
+import com.example.myapp1.login.SignupActivity
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
@@ -40,8 +44,9 @@ class ProfleFragment : Fragment() {
         var txtUserName: TextView = view.findViewById(R.id.txtUserName)
         var cardProfile:CardView = view.findViewById(R.id.cardUser)
         var lloDonMua:LinearLayout = view.findViewById(R.id.lloDonMua)
+        var txtDangXuat: TextView = view.findViewById(R.id.txtDangXuat)
         imageView = view.findViewById(R.id.imgProfile)
-
+        var mAuth = FirebaseAuth.getInstance()
         val db = Firebase.firestore
         val storage = Firebase.storage
         db.collection("users").document(username)
@@ -79,6 +84,11 @@ class ProfleFragment : Fragment() {
         lloDonMua.setOnClickListener{
             val i = Intent(context, BillActivity::class.java)
             startActivity(i)
+        }
+        txtDangXuat.setOnClickListener {
+            mAuth.signOut()
+            val i2 = Intent(context, LoginActivity::class.java)
+            startActivity(i2)
         }
         return view
     }
