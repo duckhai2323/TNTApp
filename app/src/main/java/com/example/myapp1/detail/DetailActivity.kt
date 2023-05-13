@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.view.View
 import android.view.animation.OvershootInterpolator
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
@@ -17,7 +18,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import at.blogc.android.views.ExpandableTextView
-import com.example.myapp1.*
+import com.example.myapp1.CartActivity
+import com.example.myapp1.ChatActivity
+import com.example.myapp1.ClientActivity
+import com.example.myapp1.R
+import com.example.myapp1.TimeCount
+import com.example.myapp1.ViewItemAdapterTin
+import com.example.myapp1.ViewItemProdcut1Adapter
+import com.example.myapp1.ViewItemProduct2Adapter
 import com.example.myapp1.home.ClickInterface
 import com.example.myapp1.home.ItemProduct
 import com.example.myapp1.home.adapter.ViewItemAdapter1
@@ -106,17 +114,20 @@ class DetailActivity : AppCompatActivity() {
     private fun Chat() {
         var chatButton = findViewById<ImageView>(R.id.imgChat)
         chatButton.setOnClickListener{
-            db.collection("products").document(id)
-                .get().addOnSuccessListener {
-                    if (it.exists()) {
-                        val name = it.data?.get("username").toString()
-                        val intent = Intent(this, ChatActivity::class.java)
-                        intent.putExtra("name", name)
-                        intent.putExtra("email", "")
-                        intent.putExtra("currentEmail", "")
-                        startActivity(intent)
+            var chatButton = findViewById<ImageView>(R.id.imgChat)
+            chatButton.setOnClickListener{
+                db.collection("products").document(id)
+                    .get().addOnSuccessListener {
+                        if (it.exists()) {
+                            val name = it.data?.get("username").toString()
+                            val intent = Intent(this@DetailActivity, ChatActivity::class.java)
+                            intent.putExtra("name", name)
+                            intent.putExtra("email", "")
+                            intent.putExtra("currentEmail", "")
+                            startActivity(intent)
+                        }
                     }
-                }
+            }
         }
     }
 
@@ -148,11 +159,11 @@ class DetailActivity : AppCompatActivity() {
             .addOnSuccessListener {
                 if(it.exists()) {
                     val strCategory = it.data?.get("category").toString()
-                    db.collection("products").whereEqualTo("category",strCategory)
-                        .get()
-                        .addOnSuccessListener { it1->
-                            if(!it1.isEmpty){
-                                for(document in it1.documents){
+                    db.collection("products").whereEqualTo("category",strCategory).whereEqualTo("display","true")
+                        .addSnapshotListener{ result,e->
+                            if(result != null){
+                                listProduct1.clear()
+                                for(document in result!!){
                                     val imageUrl = document.data?.get("picture") as MutableList<String>
                                     var title = document.data?.get("title").toString()
                                     var price = document.data?.get("price").toString()
@@ -250,11 +261,11 @@ class DetailActivity : AppCompatActivity() {
             .get().addOnSuccessListener {
                 if(it.exists()) {
                     val client = it.data?.get("username").toString()
-                    db.collection("products").whereEqualTo("username", client)
-                        .get()
-                        .addOnSuccessListener { it1->
-                            if(!it1.isEmpty) {
-                                for(document in it1.documents) {
+                    db.collection("products").whereEqualTo("username", client).whereEqualTo("display","true")
+                        .addSnapshotListener{ result,e->
+                            if(result != null) {
+                                listTuongTu.clear()
+                                for(document in result!!) {
                                     val imageUrl = document.data?.get("picture") as MutableList<String>
                                     var title = document.data?.get("title").toString()
                                     var price = document.data?.get("price").toString()
@@ -268,18 +279,30 @@ class DetailActivity : AppCompatActivity() {
                                         listTuongTu.add(ItemProduct(idProduct,imageUrl[0],title,price,city))
                                     }
                                 }
-                                rvTuongtu.adapter = ViewItemProdcut1Adapter(listTuongTu,object:ClickInterface {
-                                    override fun setOnClick(pos: Int) {
-                                        val i1 = Intent(this@DetailActivity, DetailActivity::class.java)
-                                        i1.putExtra("id",listTuongTu[pos].id)
-                                        startActivity(i1)
-                                    }
-                                })
                                 rvTuongtu.layoutManager = LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false)
-                                if(listTuongTu.size >= 5 ) {
+
+                                if(listTuongTu.size > 3) {
+                                    var listTin1:MutableList<ItemProduct> = mutableListOf()
                                     txtMore.visibility = View.VISIBLE
+                                    listTin1.add(listTuongTu[0])
+                                    listTin1.add(listTuongTu[1])
+                                    listTin1.add(listTuongTu[2])
+                                    rvTuongtu.adapter = ViewItemProdcut1Adapter(listTin1,object:ClickInterface{
+                                        override fun setOnClick(pos: Int) {
+                                            val i1 = Intent(this@DetailActivity, DetailActivity::class.java)
+                                            i1.putExtra("id",listTuongTu[pos].id)
+                                            startActivity(i1)
+                                        }
+                                    })
                                 } else {
                                     txtMore.visibility = View.GONE
+                                    rvTuongtu.adapter = ViewItemProdcut1Adapter(listTuongTu,object:ClickInterface{
+                                        override fun setOnClick(pos: Int) {
+                                            val i1 = Intent(this@DetailActivity, DetailActivity::class.java)
+                                            i1.putExtra("id",listTuongTu[pos].id)
+                                            startActivity(i1)
+                                        }
+                                    })
                                 }
                             }
                         }

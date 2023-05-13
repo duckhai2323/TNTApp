@@ -28,7 +28,7 @@ class ShipedFragment1 : Fragment() {
         var listOrder:MutableList<ItemBill1> = mutableListOf()
         db.collection("Shipped").whereEqualTo("receiver", username)
             .addSnapshotListener{result,e->
-                listOrder.clear()
+                val newOrderList = mutableListOf<ItemBill1>()
                 for(document in result!!){
                     val id = document.data?.get("id").toString()
                     db.collection("products").document(id)
@@ -45,8 +45,10 @@ class ShipedFragment1 : Fragment() {
                                 var mTimeCount = timestamp?.let { it1 -> TimeCount(it1) }
                                 val txtTimeCount = mTimeCount?.timeCount()
                                 city = "$city . $txtTimeCount"
-                                listOrder.add(ItemBill1(idProduct,client,imageUrl[0],title,price,city,"Giao dịch thành công"))
+                                newOrderList.add(ItemBill1(idProduct,client,imageUrl[0],title,price,city,"Giao dịch thành công"))
                             }
+                            listOrder.clear()
+                            listOrder.addAll(newOrderList)
                             rvShipped.adapter = ViewItemBill1Adapter(listOrder,R.drawable.background_button3,object:ClickInterface{
                                 override fun setOnClick(pos: Int) {
                                 }

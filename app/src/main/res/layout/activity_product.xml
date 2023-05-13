@@ -18,7 +18,7 @@
       tools:layout_editor_absoluteX="-16dp" />
 
   <ImageView
-      android:id="@+id/backFragmentHome"
+      android:id="@+id/iconBack"
       android:layout_width="30dp"
       android:layout_height="30dp"
       android:src="@drawable/return_aroww"
@@ -41,7 +41,7 @@
       app:layout_constraintTop_toTopOf="parent" />
 
   <ImageView
-      android:id="@+id/imgCartHome"
+      android:id="@+id/imgCart"
       android:layout_width="30dp"
       android:layout_height="30dp"
       android:layout_marginTop="18dp"

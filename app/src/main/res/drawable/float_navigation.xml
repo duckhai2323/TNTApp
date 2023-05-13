@@ -2,9 +2,7 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item>
         <shape android:shape="oval">
-            <gradient android:startColor="#874cfd"
-                android:endColor="#6e56e2"
-                android:angle="45"/>
+            <solid android:color="#1ED760"/>
         </shape>
     </item>
     <item android:drawable="@drawable/baseline_add_24"

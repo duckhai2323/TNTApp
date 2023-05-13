@@ -25,35 +25,36 @@ class ConfirmFragment1 : Fragment() {
         var rvConfirmOrder:RecyclerView = view.findViewById(R.id.rvProductOrder)
         var listOrder:MutableList<ItemBill1> = mutableListOf()
         db.collection("WaitConfirm").whereEqualTo("receiver", username)
-            .get()
-            .addOnSuccessListener {
-                if(!it.isEmpty){
-                    for(document in it.documents) {
-                        val id = document.data?.get("id").toString()
-                        db.collection("products").document(id)
-                            .get()
-                            .addOnSuccessListener {it1->
-                                if(it1.exists()) {
-                                    val client = it1.data?.get("username").toString()
-                                    val imageUrl = it1.data?.get("picture") as MutableList<String>
-                                    var title = it1.data?.get("title").toString()
-                                    var price = it1.data?.get("price").toString()
-                                    var city  = it1.data?.get("city").toString()
-                                    var  idProduct =it1.data?.get("id").toString()
-                                    val timestamp = it1.getTimestamp("timestamp")
-                                    var mTimeCount = timestamp?.let { it1 -> TimeCount(it1) }
-                                    val txtTimeCount = mTimeCount?.timeCount()
-                                    city = "$city . $txtTimeCount"
-                                    listOrder.add(ItemBill1(idProduct,client,imageUrl[0],title,price,city,"Đang xử lí"))
-                                }
-                                rvConfirmOrder.adapter = ViewItemBill1Adapter(listOrder,R.drawable.background_xemtruoc,object:ClickInterface{
-                                    override fun setOnClick(pos: Int) {
-
-                                    }
-                                })
-                                rvConfirmOrder.layoutManager = LinearLayoutManager(context,LinearLayoutManager.VERTICAL,false)
+            .addSnapshotListener{result,e->
+                if(e!=null) {}
+                val newOrderList = mutableListOf<ItemBill1>()
+                for(document in result!!.documents) {
+                    val id = document.data?.get("id").toString()
+                    db.collection("products").document(id)
+                        .get()
+                        .addOnSuccessListener {it1->
+                            if(it1.exists()) {
+                                val client = it1.data?.get("username").toString()
+                                val imageUrl = it1.data?.get("picture") as MutableList<String>
+                                var title = it1.data?.get("title").toString()
+                                var price = it1.data?.get("price").toString()
+                                var city  = it1.data?.get("city").toString()
+                                var  idProduct =it1.data?.get("id").toString()
+                                val timestamp = it1.getTimestamp("timestamp")
+                                var mTimeCount = timestamp?.let { it1 -> TimeCount(it1) }
+                                val txtTimeCount = mTimeCount?.timeCount()
+                                city = "$city . $txtTimeCount"
+                                newOrderList.add(ItemBill1(idProduct,client,imageUrl[0],title,price,city,"Đang xử lí"))
                             }
-                    }
+                            listOrder.clear()
+                            listOrder.addAll(newOrderList)
+                            rvConfirmOrder.adapter = ViewItemBill1Adapter(listOrder,R.drawable.background_xemtruoc,object:ClickInterface{
+                                override fun setOnClick(pos: Int) {
+
+                                }
+                            })
+                            rvConfirmOrder.layoutManager = LinearLayoutManager(context,LinearLayoutManager.VERTICAL,false)
+                        }
                 }
             }
         return view

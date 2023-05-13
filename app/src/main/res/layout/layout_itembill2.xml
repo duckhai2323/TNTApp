@@ -47,7 +47,7 @@
                     app:layout_constraintTop_toTopOf="@+id/imageView6" />
 
                 <LinearLayout
-                    android:id="@+id/linearLayout3"
+                    android:id="@+id/NameNumberPhone"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="5dp"
@@ -96,7 +96,7 @@
                     android:textColor="#777777"
                     android:textSize="15dp"
                     app:layout_constraintStart_toEndOf="@+id/imageView6"
-                    app:layout_constraintTop_toBottomOf="@+id/linearLayout3" />
+                    app:layout_constraintTop_toBottomOf="@+id/NameNumberPhone" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -174,7 +174,7 @@
                         android:ellipsize="end"
                         android:lines="1"
                         android:text="Đã sử dụng 1 năm"
-                        android:textColor="@color/textColor"
+                        android:textColor="@color/textHint"
                         android:textSize="17dp" />
 
                 </LinearLayout>

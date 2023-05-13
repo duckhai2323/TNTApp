@@ -15,6 +15,8 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.example.myapp1.CartActivity
 import com.example.myapp1.R
+import com.example.myapp1.ViewItemProduct2Adapter
+import com.example.myapp1.ViewPageElecAdapter
 import com.example.myapp1.detail.DetailActivity
 import com.example.myapp1.home.adapter.ViewItemAdapter
 import com.example.myapp1.home.adapter.ViewItemAdapter0
@@ -52,34 +54,21 @@ class HomeFragment : Fragment() {
         //DisplaySuggest0()
         val rvGoiYChuDe:RecyclerView = view.findViewById(R.id.rvGoiYChuDe)
         var listItemGoiY0:MutableList<ItemImageText> = mutableListOf()
-        listItemGoiY0.add(ItemImageText(R.drawable.nhatot,"Bất động sản",""))
-        listItemGoiY0.add(ItemImageText(R.drawable.myphamtot,"Thực phẩm, Mỹ phẩm",""))
-        listItemGoiY0.add(ItemImageText(R.drawable.xetot,"Xe cộ",""))
-        listItemGoiY0.add(ItemImageText(R.drawable.tulanhtot,"Điện lạnh",""))
-        listItemGoiY0.add(ItemImageText(R.drawable.dienthoaitot,"Đồ điện tử",""))
-        listItemGoiY0.add(ItemImageText(R.drawable.thoitrangtot,"Thời trang",""))
-        listItemGoiY0.add(ItemImageText(R.drawable.noithattot,"Nội thất",""))
-        listItemGoiY0.add(ItemImageText(R.drawable.vanphongphamtot,"Văn phòng phẩm",""))
-        listItemGoiY0.add(ItemImageText(R.drawable.giaitritot,"Giải trí, Thể thao, Sở thích",""))
-        listItemGoiY0.add(ItemImageText(R.drawable.mevabetot,"Mẹ và bé",""))
+
+        listItemGoiY0.add(ItemImageText(R.drawable.xetot1,"Xe cộ",""))
+        listItemGoiY0.add(ItemImageText(R.drawable.tulanhtot1,"Điện lạnh",""))
+        listItemGoiY0.add(ItemImageText(R.drawable.dienthoaitot1,"Đồ điện tử",""))
+        listItemGoiY0.add(ItemImageText(R.drawable.thoitrangtot1,"Thời trang",""))
+        listItemGoiY0.add(ItemImageText(R.drawable.noithattot1,"Nội thất",""))
+        listItemGoiY0.add(ItemImageText(R.drawable.vanphongphamtot1,"Văn phòng phẩm",""))
+        listItemGoiY0.add(ItemImageText(R.drawable.giaitritot1,"Giải trí, Thể thao, Sở thích",""))
+        listItemGoiY0.add(ItemImageText(R.drawable.myphamtot1,"Mỹ phẩm",""))
         rvGoiYChuDe.adapter = ViewItemAdapter0(listItemGoiY0,object:ClickInterface{
             override fun setOnClick(pos: Int) {
                 mActivityHome.getFragment("electron")
             }
         })
         rvGoiYChuDe.layoutManager= GridLayoutManager(context, 2, GridLayoutManager.HORIZONTAL, false)
-
-        //DisplaySuggest1()
-        val rvGoiY:RecyclerView = view.findViewById(R.id.rvGoiY)
-        var listItemGoiY:MutableList<ItemGoiY> = mutableListOf()
-        listItemGoiY.add(ItemGoiY(R.drawable.goi4,"đ 333.000","ĐANG BÁN CHẠY"))
-        listItemGoiY.add(ItemGoiY(R.drawable.goi1,"đ 363.000","ĐÃ BÁN 11"))
-        listItemGoiY.add(ItemGoiY(R.drawable.goi2,"đ 653.000","ĐÃ BÁN 23"))
-        listItemGoiY.add(ItemGoiY(R.drawable.goi5,"đ 130.000","ĐANG BÁN CHẠY"))
-        listItemGoiY.add(ItemGoiY(R.drawable.goi3,"đ 433.000","ĐÃ BÁN 18"))
-        listItemGoiY.add(ItemGoiY(R.drawable.goi1,"đ 833.000","ĐANG BÁN CHẠY"))
-        rvGoiY.adapter = ViewItemAdapter(listItemGoiY)
-        rvGoiY.layoutManager= LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL,false)
 
         //DisplayProduct1()
         val rvProduct:RecyclerView = view.findViewById(R.id.rvProduct)
@@ -91,7 +80,7 @@ class HomeFragment : Fragment() {
         listProduct1.add((ItemProduct("",resources.getString(R.string.linkImage),"[Mã ELAP500K giảm 8% đơn 500K] Apple AirPods ...","đ28.000.000","Đã bán 10.6k")))
         listProduct1.add((ItemProduct("",resources.getString(R.string.linkImage),"[Mã ELAP500K giảm 8% đơn 500K] Apple AirPods ...","đ28.000.000","Đã bán 10.6k")))
 
-        rvProduct.adapter = ViewProductAdapter(listProduct1,object : ClickInterface {
+        rvProduct.adapter = ViewItemProduct2Adapter(listProduct1,object : ClickInterface {
             override fun setOnClick(pos: Int) {
                 val intent1 = Intent(requireContext(),DetailActivity::class.java)
                 startActivity(intent1)

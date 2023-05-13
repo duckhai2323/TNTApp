@@ -85,7 +85,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="20dp"
                     android:text="Đã sử dụng 1 năm"
-                    android:textColor="@color/textColor"
+                    android:textColor="#777777"
                     android:textSize="17dp"/>
 
             </LinearLayout>

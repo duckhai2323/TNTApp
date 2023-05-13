@@ -11,9 +11,8 @@
         android:background="@color/white"
         android:layout_marginRight="10dp"
         android:layout_marginLeft="10dp"
-        app:cardCornerRadius="8dp"
-        android:layout_height="140dp">
-
+        app:cardCornerRadius="10dp"
+        android:layout_height="150dp">
         <ImageView
             android:id="@+id/imgItem"
             android:layout_width="match_parent"

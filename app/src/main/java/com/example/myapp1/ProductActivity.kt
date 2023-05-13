@@ -90,10 +90,6 @@ class ProductActivity : AppCompatActivity(), OnInputData1 {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_product)
         mapFilter["display"] ="true"
-        var backFragmentHome = findViewById<ImageView>(R.id.backFragmentHome)
-        backFragmentHome.setOnClickListener{
-            onBackPressed()
-        }
         city = findViewById<TextView>(R.id.cityText)
         val i = intent
         val bundle = i.extras
@@ -138,6 +134,18 @@ class ProductActivity : AppCompatActivity(), OnInputData1 {
                 check = true
             }
         }
+
+        var iconBack = findViewById<ImageView>(R.id.iconBack)
+        iconBack.setOnClickListener{
+            onBackPressed()
+        }
+
+        var imgCart = findViewById<ImageView>(R.id.imgCart)
+        imgCart.setOnClickListener{
+            val i = Intent(this@ProductActivity,CartActivity::class.java)
+            startActivity(i)
+        }
+
     }
 
     private fun displayListFilter() {
@@ -208,10 +216,10 @@ class ProductActivity : AppCompatActivity(), OnInputData1 {
             query = query.whereEqualTo(field,value)
         }
         query
-            .get()
-            .addOnSuccessListener {
-                if(!it.isEmpty) {
-                    for(document in it.documents) {
+            .addSnapshotListener{result,e->
+                if(result !=null) {
+                    listProductFilter.clear()
+                    for(document in result!!) {
                         val imageUrl = document.data?.get("picture") as MutableList<String>
                         var title = document.data?.get("title").toString()
                         var price = document.data?.get("price").toString()

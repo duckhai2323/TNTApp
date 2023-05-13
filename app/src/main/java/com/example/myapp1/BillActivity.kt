@@ -3,6 +3,7 @@ package com.example.myapp1
 import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.ImageView
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabItem
 import com.google.android.material.tabs.TabLayout
@@ -34,5 +35,10 @@ class BillActivity : AppCompatActivity() {
                 }
             }
         }.attach()
+
+        var back = findViewById<ImageView>(R.id.backFromBill)
+        back.setOnClickListener{
+            onBackPressed()
+        }
     }
 }

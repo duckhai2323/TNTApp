@@ -86,7 +86,12 @@ class SignupActivity : AppCompatActivity() {
                                     var dangban:MutableList<String> = mutableListOf()
                                     var daban:MutableList<String> = mutableListOf()
                                     var cart:MutableList<String> = mutableListOf()
-                                    var user = Users(userName.text.toString(),"100100",edtFirst.text.toString()+edtLast.text.toString(),inputEmail,edtPhone.text.toString(),"null","null","null","null", FieldValue.serverTimestamp(),dangban,daban,cart)
+                                    var address:Map<String,String> = hashMapOf(
+                                        "addressInfor" to "",
+                                        "name" to "",
+                                        "numberPhoneX" to ""
+                                    )
+                                    var user = Users(userName.text.toString(),"100100",edtFirst.text.toString()+edtLast.text.toString(),inputEmail,edtPhone.text.toString(),"null","null","null","null", FieldValue.serverTimestamp(),dangban,daban,cart,address)
                                     db.collection("users").document(userName.text.toString()).set(user)
                                     Toast.makeText(this,"Tao tai khoan thanh cong",Toast.LENGTH_LONG)
                                     val intent_home = Intent(this,LoginActivity::class.java)

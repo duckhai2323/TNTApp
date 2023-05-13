@@ -11,14 +11,13 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
-private val homeFragment = HomeFragment()
-private val profileFragment = ProfleFragment()
-private val electronicFragment = ElectronicFragment()
-private val chatFragment = ChatFragment()
-private val productManagerFragment = ProductManagerFragment()
+val productManagerFragment = ProductManagerFragment()
+val chatFragment = ChatFragment()
 lateinit var username:String
 class HomeActivity : AppCompatActivity(), OnInputData0 {
-
+    private val homeFragment = HomeFragment()
+    private val profileFragment = ProfleFragment()
+    private val electronicFragment = ElectronicFragment()
     private var dialogDSP: DialogPhone = DialogPhone()
     val db = Firebase.firestore
     @SuppressLint("MissingInflatedId")
@@ -70,7 +69,7 @@ class HomeActivity : AppCompatActivity(), OnInputData0 {
         }
     }
 
-    private fun replaceFragment(fragment:Fragment) {
+     fun replaceFragment(fragment:Fragment) {
         val transaction = supportFragmentManager.beginTransaction()
         transaction.replace(R.id.frameLayout, fragment)
         transaction.commit()

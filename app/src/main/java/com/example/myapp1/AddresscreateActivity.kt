@@ -33,7 +33,10 @@ class AddresscreateActivity : AppCompatActivity() {
             } else if(txtSodienThoai.text.toString().length != 10) {
                 Toast.makeText(this,"So dien thoai khong hop le", Toast.LENGTH_LONG).show()
             } else {
-                var address:Address = Address(txtHovaTen.text.toString(),"(+84)" + txtSodienThoai.text.toString().substring(1),txtSonha.text.toString())
+                var addressInfor = txtSonha.text.toString()
+                var name = txtHovaTen.text.toString()
+                var numberPhoneX = "(+84)" + txtSodienThoai.text.toString().substring(1)
+                var address:Address = Address(name,numberPhoneX,addressInfor)
                 val db = Firebase.firestore
                 val userRef = db.collection("users").document(username)
                 userRef.collection("address").document((n+1).toString()).set(address)
@@ -41,6 +44,13 @@ class AddresscreateActivity : AppCompatActivity() {
                 txtSodienThoai.setText("")
                 txtSonha.setText("")
                 txtDiaChi.setText("")
+                var map:Map<String,String> = hashMapOf(
+                    "addressInfor" to addressInfor,
+                    "name" to name,
+                    "numberPhoneX" to numberPhoneX
+                )
+                var mapAddress:Map<String,Map<String,String>> = hashMapOf("address" to map)
+                db.collection("users").document(username).update(mapAddress)
                 onBackPressed()
             }
         }

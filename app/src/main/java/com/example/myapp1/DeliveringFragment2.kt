@@ -34,13 +34,16 @@ class DeliveringFragment2: Fragment() {
         var listIdProduct:MutableList<Pair<String,String>> = mutableListOf()
         db.collection("Delivering").whereEqualTo("seller", username)
             .addSnapshotListener{result,e->
-                listProduct.clear()
-                for(document in result!!) {
+                val newListIdProduct:MutableList<Pair<String,String>> = mutableListOf()
+                for(document in result!!.documents) {
                     var receiver = document.data?.get("receiver").toString()
                     var idProduct = document.data?.get("id").toString()
                     val pair:Pair<String,String> = Pair(receiver,idProduct)
-                    listIdProduct.add(pair)
+                    newListIdProduct.add(pair)
                 }
+                listIdProduct.clear()
+                listIdProduct.addAll(newListIdProduct)
+                val newListProduct:MutableList<ItemBill2> = mutableListOf()
                 for(pair in listIdProduct) {
                     var receiverMap:Map<String,String>
                     db.collection("products").document(pair.second)
@@ -62,8 +65,10 @@ class DeliveringFragment2: Fragment() {
                                             var mTimeCount = timestamp?.let { it1 -> TimeCount(it1) }
                                             val txtTimeCount = mTimeCount?.timeCount()
                                             city = "$city . $txtTimeCount"
-                                            listProduct.add(ItemBill2(idProduct,imageUrl[0],title,price,city,"Đang vận chuyển",client,receiverMap["name"].toString(),receiverMap["numberPhoneX"].toString(),receiverMap["addressInfor"].toString()))
+                                            newListProduct.add(ItemBill2(idProduct,imageUrl[0],title,price,city,"Đang vận chuyển",client,receiverMap["name"].toString(),receiverMap["numberPhoneX"].toString(),receiverMap["addressInfor"].toString()))
                                         }
+                                        listProduct.clear()
+                                        listProduct.addAll(newListProduct)
                                         rvDelivering.adapter = ViewItemBill2Adapter(listProduct,R.drawable.background_xemtruoc,object:
                                             ClickInterface {
                                             override fun setOnClick(pos: Int) {

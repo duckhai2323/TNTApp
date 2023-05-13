@@ -4,8 +4,12 @@ import android.content.Intent
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
+import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.annotation.RequiresApi
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapp1.home.username
@@ -33,9 +37,26 @@ class PayActivity : AppCompatActivity() {
     @RequiresApi(Build.VERSION_CODES.O)
     private fun addEvent() {
         DisplayInfor()
+        UpdateAdress()
         DisplayProduct()
         Order()
         StartBill()
+        Back()
+    }
+
+    private fun Back() {
+        var back = findViewById<ImageView>(R.id.backFromCart)
+        back.setOnClickListener{
+            onBackPressed()
+        }
+    }
+
+    private fun UpdateAdress() {
+        var addressConstrant = findViewById<ConstraintLayout>(R.id.addressConstrant)
+        addressConstrant.setOnClickListener{
+            val i = Intent(this@PayActivity, UpdateaddressActivity::class.java)
+            startActivity(i)
+        }
     }
 
     private fun StartBill() {
@@ -55,9 +76,22 @@ class PayActivity : AppCompatActivity() {
                            )
                            val ref = db.collection("WaitConfirm")
                            ref.document(ref.document().id).set(waitConfirm)
-                               .addOnSuccessListener {  }
-                               .addOnFailureListener{ }
+
+                           /*db.collection("users").document(seller)
+                               .get()
+                               .addOnSuccessListener {it1->
+                                   if(it1.exists()) {
+                                       var listDaban = it1.data?.get("daban") as MutableList<String>
+                                       listDaban.add(id)
+                                       db.collection("users").document(seller).update("daban",listDaban)
+
+                                       var listDangban = it1.data?.get("dangban") as MutableList<String>
+                                       listDangban.remove(id)
+                                       db.collection("users").document(seller).update("dangban",listDangban)
+                                   }
+                               }*/
                        }
+
                    }
            }
             db.collection("users").document(username)
@@ -73,6 +107,7 @@ class PayActivity : AppCompatActivity() {
                 }
             val i = Intent(this@PayActivity,BillActivity::class.java)
             startActivity(i)
+            finish()
         }
     }
 
@@ -82,13 +117,18 @@ class PayActivity : AppCompatActivity() {
         var txtNumberPhone = findViewById<TextView>(R.id.txtNumberPhone)
         var txtInfor = findViewById<TextView>(R.id.txtInfor)
         db.collection("users").document(com.example.myapp1.home.username)
-            .get()
-            .addOnSuccessListener {
-                if(it.exists()) {
+            .addSnapshotListener {result,e->
+                if(result != null) {
+                    val it = result
                     val addressMap:Map<String,String> = it.data?.get("address") as Map<String, String>
                     txtName.text = addressMap["name"].toString()
                     txtNumberPhone.text = addressMap["numberPhoneX"].toString()
                     txtInfor.text = addressMap["addressInfor"].toString()
+                    if(txtName.text.toString() == "" && txtNumberPhone.text.toString() == "" && txtInfor.text.toString() == "") {
+                        var inforUser = findViewById<LinearLayout>(R.id.NameNumberPhone)
+                        inforUser.visibility = View.GONE
+                        txtInfor.visibility = View.GONE
+                    }
                 }
             }
     }

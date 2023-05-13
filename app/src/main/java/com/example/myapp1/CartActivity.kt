@@ -74,7 +74,19 @@ class CartActivity : AppCompatActivity() {
                             var mTimeCount = timestamp?.let { it1 -> TimeCount(it1) }
                             val txtTimeCount = mTimeCount?.timeCount()
                             city = "$city . $txtTimeCount"
-                            listProduct.add(ItemCart(idProduct,client,imageUrl[0],title,price,city,false))
+                            if(it1.data?.get("display").toString() == "true") {
+                                listProduct.add(ItemCart(idProduct,client,imageUrl[0],title,price,city,false))
+                            } else {
+                                db.collection("users").document(username)
+                                    .get()
+                                    .addOnSuccessListener {
+                                        if(it.exists()) {
+                                            val listCart = it.data?.get("cart")  as MutableList<String>
+                                            listCart.remove(idProduct)
+                                            db.collection("users").document(username).update("cart",listCart)
+                                        }
+                                    }
+                            }
                         }
                         val adapter_ = ViewItemCartAdapter(listProduct,this,object:ClickInterface{
                             override fun setOnClick(pos: Int) {

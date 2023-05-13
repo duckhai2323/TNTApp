@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.LinearLayout
 import android.widget.TextView
+import com.example.myapp1.home.username
 import com.google.firebase.database.*
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -21,28 +22,21 @@ class UpdateprofileActivity : AppCompatActivity() {
         var txtSex = findViewById<TextView>(R.id.txtSex)
         var txtNumberPhone = findViewById<TextView>(R.id.txtNumberPhone)
         var txtEmail = findViewById<TextView>(R.id.txtEmail)
-
-        val i = intent
-        val str = i.getStringExtra("Email")
         val db = Firebase.firestore
-        db.collection("users").whereEqualTo("email",str)
-            .get()
-            .addOnSuccessListener {
-                if(!it.isEmpty) {
-                    for(document in it.documents){
+        db.collection("users").whereEqualTo("username",username)
+            .addSnapshotListener {result,e->
+                if(result!=null) {
+                    for(document in result!!){
                         val fullName = document.data?.get("fullName")?.toString()
                         val userName = document.data?.get("username")?.toString()
                         var numberPhone = document.data?.get("numberPhone")?.toString()
                         numberPhone = "********" + numberPhone?.substring(8)
                         txtname.text = fullName
                         txtUser.text = userName
-                        txtEmail.text = str
+                        txtEmail.text = document.data?.get("email").toString()
                         txtNumberPhone.text = numberPhone
                     }
                 }
-            }
-            .addOnFailureListener{
-
             }
         addEventUpdate()
     }

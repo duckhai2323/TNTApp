@@ -21,11 +21,11 @@ class UpdateaddressActivity : AppCompatActivity() {
         val db = Firebase.firestore
         val userRef = db.collection("users").document(username)
         userRef.collection("address")
-            .get()
-            .addOnSuccessListener {
+            .addSnapshotListener{result,e->
                 n = 0
-                if(!it.isEmpty){
-                    for(document in it.documents){
+                if(result!=null){
+                    listAddress.clear()
+                    for(document in result!!){
                         val name = document.data?.get("name").toString()
                         val addressInfo = document.data?.get("addressInfo").toString()
                         val numberPhone = document.data?.get("numberPhonex").toString()
@@ -36,9 +36,6 @@ class UpdateaddressActivity : AppCompatActivity() {
                     rvAddress.adapter = ViewItemAdapterAddress(listAddress)
                     rvAddress.layoutManager= LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false)
                 }
-            }
-            .addOnFailureListener{
-
             }
         addEvent()
     }

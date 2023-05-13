@@ -41,6 +41,14 @@ class ClientActivity : AppCompatActivity() {
         DisplayBangTin()
         DisplayComplete()
         DisplayTelephoneNumber()
+        Back()
+    }
+
+    private fun Back() {
+        var back = findViewById<ImageView>(R.id.backFromClient)
+        back.setOnClickListener{
+            onBackPressed()
+        }
     }
 
     private fun DisplayTelephoneNumber() {
@@ -119,7 +127,7 @@ class ClientActivity : AppCompatActivity() {
         var txtAddress = findViewById<TextView>(R.id.txtClientAddress)
         var listTin:MutableList<ItemProduct> = mutableListOf()
         var rvDangsp = findViewById<RecyclerView>(R.id.rvDangsp)
-        db.collection("products").whereEqualTo("username",clientName)
+        db.collection("products").whereEqualTo("username",clientName).whereEqualTo("display","true")
             .get()
             .addOnSuccessListener {
                 if(!it.isEmpty){

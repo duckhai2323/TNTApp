@@ -15,6 +15,7 @@ class Users(
     var timestamp: FieldValue,
     var dangban:MutableList<String>,
     var daban:MutableList<String>,
-    var cart:MutableList<String>
+    var cart:MutableList<String>,
+    var address:Map<String,String>
 ) {
 }

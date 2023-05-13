@@ -1,44 +1,115 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     tools:context=".ChatActivity">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/chatRecyclerView"
-        android:layout_above="@+id/linearLayout6"
-        android:layout_alignParentTop="true"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
-        android:id="@+id/linearLayout6"
-        android:layout_alignParentBottom="true"
+        android:id="@+id/linearLayout3"
+        android:elevation="5dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
-        android:weightSum="100"
-        android:orientation="horizontal">
+        android:layout_height="60dp"
+        android:background="#ffffff"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <EditText
-            android:id="@+id/messageBox"
-            android:layout_width="wrap_content"
-            android:layout_height="50dp"
-            android:hint="Aa"
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="35dp"
+            android:layout_gravity="center"
+            android:layout_marginLeft="15dp"
+            android:src="@drawable/baseline_arrow_bac_green" />
+
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_gravity="center"
             android:layout_marginLeft="10dp"
-            android:paddingLeft="10dp"
-            android:background="@drawable/background_message_box"
-            android:layout_weight="80" />
+            android:src="@drawable/user1"
+            app:riv_corner_radius="25dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="10dp"
+            android:gravity="top"
+            android:text="tuantran1"
+            android:textColor="@color/black"
+            android:textSize="19dp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:elevation="3dp"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="#ffffff"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <ImageView
+            android:layout_marginLeft="15dp"
+            android:layout_gravity="center"
+            android:layout_width="45dp"
+            android:layout_height="38dp"
+            android:src="@drawable/baseline_photo_camera_24"/>
+
+        <ImageView
+            android:layout_marginLeft="15dp"
+            android:layout_gravity="center"
+            android:layout_width="45dp"
+            android:layout_height="38dp"
+            android:src="@drawable/outline_image_24"/>
+
+        <LinearLayout
+            android:layout_marginLeft="15dp"
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/background_message_box">
+
+
+            <EditText
+                android:id="@+id/messageBox"
+                android:layout_marginLeft="10dp"
+                android:layout_width="190dp"
+                android:layout_height="45dp"
+                android:layout_gravity="center"
+                android:textSize="18dp"
+                android:gravity="center|left"
+                android:hint="Aa"
+                android:textColor="@color/black"
+                android:textColorHint="@color/textHint"/>
+        </LinearLayout>
 
         <ImageView
             android:id="@+id/sendButton"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:src="@drawable/baseline_arrow_forward_ios_24"
-            android:layout_weight="20" />
+            android:layout_marginLeft="10dp"
+            android:layout_gravity="center"
+            android:layout_width="45dp"
+            android:layout_height="38dp"
+            android:src="@drawable/baseline_send_24"/>
 
-            
     </LinearLayout>
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
+    <!--android:id="@+id/linearLayout6"-->
+    <!--android:id="@+id/messageBox"-->
+    <!--android:id="@+id/sendButton"-->

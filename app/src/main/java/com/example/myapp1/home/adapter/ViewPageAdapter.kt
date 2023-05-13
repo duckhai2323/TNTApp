@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapp1.R
 
@@ -18,6 +19,13 @@ class ViewPageAdapter  (private val listItem:MutableList<Int>) : RecyclerView.Ad
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
         holder.itemView.apply {
             val imgItem = findViewById<ImageView>(R.id.imgItem)
+            var titleText = findViewById<TextView>(R.id.titleText)
+            when(position) {
+                0->{titleText.text = "Click Now"}
+                1 ->{titleText.text = "Đặt đơn ngay!"}
+                2 ->{titleText.text = "Khám phá ngay!"}
+                else ->{titleText.text = "Click Now"}
+            }
             imgItem.setImageResource(listItem[position])
         }
     }

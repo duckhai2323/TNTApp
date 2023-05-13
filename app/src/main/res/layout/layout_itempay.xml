@@ -125,7 +125,7 @@
                         android:ellipsize="end"
                         android:lines="1"
                         android:text="Đã sử dụng 1 năm"
-                        android:textColor="@color/textColor"
+                        android:textColor="@color/textHint"
                         android:textSize="17dp" />
 
                 </LinearLayout>
