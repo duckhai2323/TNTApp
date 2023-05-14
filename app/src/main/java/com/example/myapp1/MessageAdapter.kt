@@ -10,8 +10,10 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.example.myapp1.home.username
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuth.*
+import com.makeramen.roundedimageview.RoundedImageView
+import com.squareup.picasso.Picasso
 
-class MessageAdapter(val context: Context, val messageList: ArrayList<Message>, val currentEmail: String?): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class MessageAdapter(val context: Context, val messageList: ArrayList<Message>,val imgUrl:String): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     val item_received = 1
     val item_sent = 2
@@ -22,6 +24,7 @@ class MessageAdapter(val context: Context, val messageList: ArrayList<Message>, 
 
     class ReceivedViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         val receivedMessage = itemView.findViewById<TextView>(R.id.txt_received_message)
+        val imgUser = itemView.findViewById<RoundedImageView>(R.id.imgSentUser)
 
     }
 
@@ -44,6 +47,7 @@ class MessageAdapter(val context: Context, val messageList: ArrayList<Message>, 
         } else {
             val viewHolder = holder as ReceivedViewHolder
             holder.receivedMessage.text = currentMessage.message
+            Picasso.get().load(imgUrl).into(holder.imgUser)
         }
     }
 

@@ -3,18 +3,21 @@ package com.example.myapp1.home
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.example.myapp1.CartActivity
 import com.example.myapp1.R
+import com.example.myapp1.TimeCount
 import com.example.myapp1.ViewItemProduct2Adapter
 import com.example.myapp1.ViewPageElecAdapter
 import com.example.myapp1.detail.DetailActivity
@@ -22,6 +25,9 @@ import com.example.myapp1.home.adapter.ViewItemAdapter
 import com.example.myapp1.home.adapter.ViewItemAdapter0
 import com.example.myapp1.home.adapter.ViewPageAdapter
 import com.example.myapp1.home.adapter.ViewProductAdapter
+import com.google.firebase.firestore.Query
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import me.relex.circleindicator.CircleIndicator3
 class HomeFragment : Fragment() {
     lateinit var mActivityHome:HomeActivity
@@ -30,6 +36,7 @@ class HomeFragment : Fragment() {
         super.onCreate(savedInstanceState)
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     @SuppressLint("MissingInflatedId")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -73,22 +80,38 @@ class HomeFragment : Fragment() {
         //DisplayProduct1()
         val rvProduct:RecyclerView = view.findViewById(R.id.rvProduct)
         val listProduct1:MutableList<ItemProduct> = mutableListOf()
-        listProduct1.add((ItemProduct("",resources.getString(R.string.linkImage),"[Mã ELAP500K giảm 8% đơn 500K] Apple AirPods ...","đ28.000.000","Đã bán 10.6k")))
-        listProduct1.add((ItemProduct("",resources.getString(R.string.linkImage),"[Mã ELAP500K giảm 8% đơn 500K] Apple AirPods ...","đ28.000.000","Đã bán 10.6k")))
-        listProduct1.add((ItemProduct("",resources.getString(R.string.linkImage),"[Mã ELAP500K giảm 8% đơn 500K] Apple AirPods ...","đ28.000.000","Đã bán 10.6k")))
-        listProduct1.add((ItemProduct("",resources.getString(R.string.linkImage),"[Mã ELAP500K giảm 8% đơn 500K] Apple AirPods ...","đ28.000.000","Đã bán 10.6k")))
-        listProduct1.add((ItemProduct("",resources.getString(R.string.linkImage),"[Mã ELAP500K giảm 8% đơn 500K] Apple AirPods ...","đ28.000.000","Đã bán 10.6k")))
-        listProduct1.add((ItemProduct("",resources.getString(R.string.linkImage),"[Mã ELAP500K giảm 8% đơn 500K] Apple AirPods ...","đ28.000.000","Đã bán 10.6k")))
-
-        rvProduct.adapter = ViewItemProduct2Adapter(listProduct1,object : ClickInterface {
-            override fun setOnClick(pos: Int) {
-                val intent1 = Intent(requireContext(),DetailActivity::class.java)
-                startActivity(intent1)
+        val db = Firebase.firestore
+        db.collection("products")
+            .orderBy("timestamp", Query.Direction.DESCENDING)
+            .addSnapshotListener{result,e->
+                if(e!=null) {}
+                listProduct1.clear()
+                for(document in result!!) {
+                    val imageUrl = document.data?.get("picture") as MutableList<String>
+                    var title = document.data?.get("title").toString()
+                    var price = document.data?.get("price").toString()
+                    var city  = document.data?.get("city").toString()
+                    var  idProduct = document.data?.get("id").toString()
+                    val timestamp = document.getTimestamp("timestamp")
+                    var mTimeCount = timestamp?.let { it1 -> TimeCount(it1) }
+                    val txtTimeCount = mTimeCount?.timeCount()
+                    city = "$city . $txtTimeCount"
+                    if(document.data?.get("display").toString() == "true") {
+                        listProduct1.add(ItemProduct(idProduct,imageUrl[0],title,price,city))
+                    }
+                    if(listProduct1.size == 10){break}
+                }
+                rvProduct.adapter = ViewItemProduct2Adapter(listProduct1,object : ClickInterface {
+                    override fun setOnClick(pos: Int) {
+                        val i1 = Intent(context, DetailActivity::class.java)
+                        i1.putExtra("id",listProduct1[pos].id)
+                        startActivity(i1)
+                    }
+                })
+                rvProduct.layoutManager = GridLayoutManager(
+                    context,2
+                )
             }
-        })
-        rvProduct.layoutManager = GridLayoutManager(
-            context,2
-        )
 
         var imgCart:ImageView = view.findViewById(R.id.imgCartHome)
         imgCart.setOnClickListener{

@@ -112,22 +112,26 @@ class DetailActivity : AppCompatActivity() {
 
 
     private fun Chat() {
+        var mImageProfile:String
         var chatButton = findViewById<ImageView>(R.id.imgChat)
         chatButton.setOnClickListener{
-            var chatButton = findViewById<ImageView>(R.id.imgChat)
-            chatButton.setOnClickListener{
-                db.collection("products").document(id)
-                    .get().addOnSuccessListener {
-                        if (it.exists()) {
-                            val name = it.data?.get("username").toString()
-                            val intent = Intent(this@DetailActivity, ChatActivity::class.java)
-                            intent.putExtra("name", name)
-                            intent.putExtra("email", "")
-                            intent.putExtra("currentEmail", "")
-                            startActivity(intent)
+            db.collection("products").document(id)
+                .get().addOnSuccessListener { it ->
+                    if (it.exists()) {
+                        val name = it.data?.get("username").toString()
+                        db.collection("users").document(name)
+                            .get()
+                            .addOnSuccessListener {it1->
+                                if(it1.exists()) {
+                                    mImageProfile = it1.data?.get("imageProfile").toString()
+                                    val intent = Intent(this, ChatActivity::class.java)
+                                    intent.putExtra("name", name)
+                                    intent.putExtra("imageProfile",mImageProfile)
+                                    startActivity(intent)
+                                }
                         }
                     }
-            }
+                }
         }
     }
 

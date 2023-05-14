@@ -13,12 +13,15 @@ import android.widget.ImageView
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.myapp1.home.ClickInterface
 import com.example.myapp1.home.HomeActivity
 import com.example.myapp1.home.HomeFragment
 import com.example.myapp1.home.username
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 class ChatFragment : Fragment() {
 
@@ -66,7 +69,10 @@ class ChatFragment : Fragment() {
                     val message = document.data?.get("message").toString()
                     val senderName = document.data?.get("senderName").toString()
                     val receiverName = document.data?.get("receiverName").toString()
-                    val date = document.data?.get("timeStamp")
+                    val timestamp = document.getTimestamp("timeStamp")
+                    val date = timestamp?.toDate()
+                    val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+                    val dateStr = /*dateFormat.format(date)*/ ""
                     if (senderName == username || receiverName == username) {
                         var flag = false
                         for (i: ItemUserChat in userList) {
@@ -78,14 +84,52 @@ class ChatFragment : Fragment() {
                             }
                         }
                         if (!flag) {
-                            if (senderName == username) userList.add(ItemUserChat("", "", receiverName, date.toString(), message, ""))
-                            else userList.add(ItemUserChat("", "", senderName, date.toString(), message, ""))
+                            if (senderName == username){
+                                userList.add(ItemUserChat( "", receiverName, dateStr, message, ""))
+                            }
+                            else {
+                                userList.add(ItemUserChat( "", senderName, dateStr, message, ""))
+                            }
                         }
                     }
                 }
-                adapter = context?.let { UserAdapter(it, userList, email) }!!
-                userRecyclerView.adapter = adapter
-                userRecyclerView.layoutManager = LinearLayoutManager(context,LinearLayoutManager.VERTICAL,false)
+                /*for (i in 0 until userList.size) {
+                    var user = userList[i]
+                    val name = user.userName
+                    mDbRef.collection("users").document(name)
+                        .get()
+                        .addOnSuccessListener { documentSnapshot ->
+                            val imageProfile = documentSnapshot.data?.get("imageProfile").toString()
+                            user.imageProfile = imageProfile
+                            adapter = context?.let { UserAdapter(it, userList, email) }!!
+                            userRecyclerView.adapter = adapter
+                            userRecyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+                        }
+                }*/
+                mDbRef.collection("users")
+                    .get()
+                    .addOnSuccessListener {
+                        if(!it.isEmpty) {
+                            for(document in it.documents) {
+                                val userName = document.data?.get("username").toString()
+                                for(i in userList) {
+                                    if(i.userName == userName) {
+                                        i.imageProfile = document.data?.get("imageProfile").toString()
+                                    }
+                                }
+                            }
+                            adapter = UserAdapter(userList,object : ClickInterface{
+                                override fun setOnClick(pos: Int) {
+                                    val intent = Intent(context, ChatActivity::class.java)
+                                    intent.putExtra("imageProfile",userList[pos].imageProfile)
+                                    intent.putExtra("name", userList[pos].userName)
+                                    startActivity(intent)
+                                }
+                            })
+                            userRecyclerView.adapter = adapter
+                            userRecyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+                        }
+                    }
             }
 
         backButton.setOnClickListener {
