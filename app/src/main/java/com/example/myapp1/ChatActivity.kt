@@ -78,5 +78,11 @@ class ChatActivity : AppCompatActivity() {
             messageBox.setText("")
 
         }
+
+//        val backButton: ImageView = findViewById(R.id.backFromChat)
+//        backButton.setOnClickListener {
+//            val intent = Intent(this@ChatActivity, ChatFragment::class.java)
+//            startActivity(intent)
+//        }
     }
 }

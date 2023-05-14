@@ -4,11 +4,13 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.ImageView
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapp1.detail.DetailActivity
 import com.example.myapp1.home.ClickInterface
+import com.example.myapp1.home.HomeActivity
 import com.example.myapp1.home.ItemProduct
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
@@ -23,6 +25,7 @@ class SearchActivity : AppCompatActivity() {
         setContentView(R.layout.activity_search)
         val rvProduct2: RecyclerView = findViewById(R.id.rvListItem)
         key = intent.getStringExtra("KeyWord").toString()
+        val backButton: ImageView = findViewById(R.id.backFromSearch)
         var productList:MutableList<ItemProduct> = mutableListOf()
         db.collection("products")
             .get().addOnSuccessListener { result ->
@@ -41,11 +44,16 @@ class SearchActivity : AppCompatActivity() {
                 rvProduct2.adapter = ViewItemAdapterTin(productList,object : ClickInterface {
                     override fun setOnClick(pos: Int) {
                         val intent1 = Intent(this@SearchActivity, DetailActivity::class.java)
+                        intent1.putExtra("id", productList[pos].id)
                         startActivity(intent1)
                     }
                 })
                 rvProduct2.layoutManager = LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false)
             }
+        backButton.setOnClickListener {
+            val intent2 = Intent(this@SearchActivity, HomeActivity::class.java)
+            startActivity(intent2)
+        }
 
     }
 }
