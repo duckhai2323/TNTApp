@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapp1.home.ItemProduct
-import com.example.myapp1.home.SearchActivity
 
 class SearchAdapter(val context: Context, val productList: ArrayList<ItemProduct>):
     RecyclerView.Adapter<SearchAdapter.SearchViewHolder>() {

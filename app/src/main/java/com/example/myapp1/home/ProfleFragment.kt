@@ -71,6 +71,7 @@ class ProfleFragment : Fragment() {
         logOut.setOnClickListener {
             mAuth.signOut()
             val i2 = Intent(requireContext(), LoginActivity::class.java)
+
             startActivity(i2)
         }
         addEvent()

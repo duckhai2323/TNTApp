@@ -45,22 +45,6 @@ class ChatFragment : Fragment() {
         userList = ArrayList()
         backButton = view.findViewById(R.id.backFromChat)
         userRecyclerView = view.findViewById(R.id.userRecyclerView)
-//        mDbRef.collection("users").get()
-//            .addOnSuccessListener { result ->
-//                userList.clear()
-//                for (document in result) {
-//                    val mUserName = document.data?.get("username").toString()
-//                    val mEmail = document.data?.get("email").toString()
-//                    senderRoom = mEmail + email
-//                    userList.add(ItemUserChat("", "", mUserName,"","", mEmail))
-//                }
-//                adapter = context?.let { UserAdapter(it, userList, email) }!!
-//                userRecyclerView.adapter = adapter
-//                userRecyclerView.layoutManager = LinearLayoutManager(context,LinearLayoutManager.VERTICAL,false)
-//            }
-//            .addOnFailureListener {
-//                Toast.makeText(context,"Chưa có người nhắn tin", Toast.LENGTH_LONG)
-//            }
         mDbRef.collection("chats")
             .orderBy("timeStamp", Query.Direction.DESCENDING)
             .addSnapshotListener { result, e ->
@@ -70,9 +54,9 @@ class ChatFragment : Fragment() {
                     val senderName = document.data?.get("senderName").toString()
                     val receiverName = document.data?.get("receiverName").toString()
                     val timestamp = document.getTimestamp("timeStamp")
-                    val date = timestamp?.toDate()
                     val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
-                    val dateStr = /*dateFormat.format(date)*/ ""
+                    val date = timestamp?.toDate()
+                    var dateStr:String
                     if (senderName == username || receiverName == username) {
                         var flag = false
                         for (i: ItemUserChat in userList) {
@@ -84,28 +68,17 @@ class ChatFragment : Fragment() {
                             }
                         }
                         if (!flag) {
-                            if (senderName == username){
-                                userList.add(ItemUserChat( "", receiverName, dateStr, message, ""))
+                            if (senderName == username && date != null){
+                                dateStr = dateFormat.format(date)
+                                userList.add(ItemUserChat( "", receiverName, dateStr, message))
                             }
-                            else {
-                                userList.add(ItemUserChat( "", senderName, dateStr, message, ""))
+                            else if(receiverName == username && date != null) {
+                                dateStr = dateFormat.format(date)
+                                userList.add(ItemUserChat( "", senderName, dateStr, message))
                             }
                         }
                     }
                 }
-                /*for (i in 0 until userList.size) {
-                    var user = userList[i]
-                    val name = user.userName
-                    mDbRef.collection("users").document(name)
-                        .get()
-                        .addOnSuccessListener { documentSnapshot ->
-                            val imageProfile = documentSnapshot.data?.get("imageProfile").toString()
-                            user.imageProfile = imageProfile
-                            adapter = context?.let { UserAdapter(it, userList, email) }!!
-                            userRecyclerView.adapter = adapter
-                            userRecyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-                        }
-                }*/
                 mDbRef.collection("users")
                     .get()
                     .addOnSuccessListener {

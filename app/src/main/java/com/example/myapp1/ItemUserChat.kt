@@ -4,7 +4,6 @@ class ItemUserChat(
     var imageProfile:String,
     var userName:String,
     var date:String,
-    var mess:String,
-    var email:String
+    var mess:String
 ) {
 }
