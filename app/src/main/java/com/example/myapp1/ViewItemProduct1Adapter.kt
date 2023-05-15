@@ -8,11 +8,10 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapp1.home.ClickInterface
 import com.example.myapp1.home.ItemProduct
-import com.example.myapp1.home.adapter.ViewProductAdapter
 import com.squareup.picasso.Picasso
 
-class ViewItemProdcut1Adapter (private val listItemproduct:MutableList<ItemProduct>, val onProductClick: ClickInterface):
-    RecyclerView.Adapter<ViewItemProdcut1Adapter.ItemViewHolder>() {
+class ViewItemProduct1Adapter (private val listItemproduct:MutableList<ItemProduct>, val onProductClick: ClickInterface):
+    RecyclerView.Adapter<ViewItemProduct1Adapter.ItemViewHolder>() {
     inner class ItemViewHolder(itemView: View): RecyclerView.ViewHolder(itemView)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {

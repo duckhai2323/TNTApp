@@ -8,7 +8,6 @@ import android.os.Bundle
 import android.view.View
 import android.view.animation.OvershootInterpolator
 import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
@@ -23,8 +22,7 @@ import com.example.myapp1.ChatActivity
 import com.example.myapp1.ClientActivity
 import com.example.myapp1.R
 import com.example.myapp1.TimeCount
-import com.example.myapp1.ViewItemAdapterTin
-import com.example.myapp1.ViewItemProdcut1Adapter
+import com.example.myapp1.ViewItemProduct1Adapter
 import com.example.myapp1.ViewItemProduct2Adapter
 import com.example.myapp1.home.ClickInterface
 import com.example.myapp1.home.ItemProduct
@@ -291,7 +289,7 @@ class DetailActivity : AppCompatActivity() {
                                     listTin1.add(listTuongTu[0])
                                     listTin1.add(listTuongTu[1])
                                     listTin1.add(listTuongTu[2])
-                                    rvTuongtu.adapter = ViewItemProdcut1Adapter(listTin1,object:ClickInterface{
+                                    rvTuongtu.adapter = ViewItemProduct1Adapter(listTin1,object:ClickInterface{
                                         override fun setOnClick(pos: Int) {
                                             val i1 = Intent(this@DetailActivity, DetailActivity::class.java)
                                             i1.putExtra("id",listTuongTu[pos].id)
@@ -300,7 +298,7 @@ class DetailActivity : AppCompatActivity() {
                                     })
                                 } else {
                                     txtMore.visibility = View.GONE
-                                    rvTuongtu.adapter = ViewItemProdcut1Adapter(listTuongTu,object:ClickInterface{
+                                    rvTuongtu.adapter = ViewItemProduct1Adapter(listTuongTu,object:ClickInterface{
                                         override fun setOnClick(pos: Int) {
                                             val i1 = Intent(this@DetailActivity, DetailActivity::class.java)
                                             i1.putExtra("id",listTuongTu[pos].id)

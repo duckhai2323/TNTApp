@@ -2,6 +2,7 @@ package com.example.myapp1
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -10,19 +11,24 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
+import com.example.myapp1.detail.DetailActivity
 import com.example.myapp1.home.ClickInterface
 import com.example.myapp1.home.ItemImageText
 import com.example.myapp1.home.ItemProduct
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import me.relex.circleindicator.CircleIndicator3
 
 val TagElectron:String = ElectronicFragment::class.java.name
 class ElectronicFragment : Fragment(){
     lateinit var txtCity:TextView
+    @RequiresApi(Build.VERSION_CODES.O)
     @SuppressLint("MissingInflatedId")
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -32,6 +38,7 @@ class ElectronicFragment : Fragment(){
         //selectCity
         var selectCity:LinearLayout = view.findViewById(R.id.selectCity)
         txtCity = view.findViewById(R.id.city)
+        txtCity.text = "Hà Nội"
         selectCity.setOnClickListener {
             var dialogSelectCity:DialogSelectCity = DialogSelectCity()
             dialogSelectCity.show(requireFragmentManager(),"aaa")
@@ -80,18 +87,36 @@ class ElectronicFragment : Fragment(){
         //DisplaySuggest1
         var rvGoiYElec1:RecyclerView = view.findViewById(R.id.rvGoiYElec1)
         var listGoiYElec1:MutableList<ItemProduct> = mutableListOf()
-        listGoiYElec1.add(ItemProduct("",resources.getString(R.string.linkImage),"[Mã ELAP500K giảm 8% đơn 500K] Apple AirPods ...","đ28.000.000","Đã bán 10.6k"))
-        listGoiYElec1.add(ItemProduct("",resources.getString(R.string.linkImage),"[Mã ELAP500K giảm 8% đơn 500K] Apple AirPods ...","đ28.000.000","Đã bán 10.6k"))
-        listGoiYElec1.add(ItemProduct("",resources.getString(R.string.linkImage),"[Mã ELAP500K giảm 8% đơn 500K] Apple AirPods ...","đ28.000.000","Đã bán 10.6k"))
-        listGoiYElec1.add(ItemProduct("",resources.getString(R.string.linkImage),"[Mã ELAP500K giảm 8% đơn 500K] Apple AirPods ...","đ28.000.000","Đã bán 10.6k"))
-        listGoiYElec1.add(ItemProduct("",resources.getString(R.string.linkImage),"[Mã ELAP500K giảm 8% đơn 500K] Apple AirPods ...","đ28.000.000","Đã bán 10.6k"))
-
-        rvGoiYElec1.adapter = ViewItemProdcut1Adapter(listGoiYElec1,object:ClickInterface{
-            override fun setOnClick(pos: Int) {
-
+        val db = FirebaseFirestore.getInstance()
+        db.collection("products")
+            .orderBy("timestamp", Query.Direction.DESCENDING)
+            .addSnapshotListener{result,e->
+                if(e!=null) {}
+                listGoiYElec1.clear()
+                for(document in result!!) {
+                    val imageUrl = document.data?.get("picture") as MutableList<String>
+                    var title = document.data?.get("title").toString()
+                    var price = document.data?.get("price").toString()
+                    var city  = document.data?.get("city").toString()
+                    var  idProduct = document.data?.get("id").toString()
+                    val timestamp = document.getTimestamp("timestamp")
+                    var mTimeCount = timestamp?.let { it1 -> TimeCount(it1) }
+                    val txtTimeCount = mTimeCount?.timeCount()
+                    city = "$city . $txtTimeCount"
+                    if(document.data?.get("display").toString() == "true" && price.length == 10) {
+                        listGoiYElec1.add(ItemProduct(idProduct,imageUrl[0],title,price,city))
+                    }
+                    if(listGoiYElec1.size == 5){break}
+                }
+                rvGoiYElec1.adapter = ViewItemProduct1Adapter(listGoiYElec1,object : ClickInterface {
+                    override fun setOnClick(pos: Int) {
+                        val i1 = Intent(context, DetailActivity::class.java)
+                        i1.putExtra("id",listGoiYElec1[pos].id)
+                        startActivity(i1)
+                    }
+                })
+                rvGoiYElec1.layoutManager = LinearLayoutManager(context,LinearLayoutManager.HORIZONTAL,false)
             }
-        })
-        rvGoiYElec1.layoutManager = LinearLayoutManager(context,LinearLayoutManager.HORIZONTAL,false)
 
         var LLDanhChoBan:LinearLayout = view.findViewById(R.id.LLDanhChoBan)
         LLDanhChoBan.setBackgroundResource(R.drawable.background_home2)
@@ -99,12 +124,48 @@ class ElectronicFragment : Fragment(){
         txtDanhChoBan.setTextColor(ContextCompat.getColor(requireContext(),R.color.textColor))
         var txtMoiNhat:TextView = view.findViewById(R.id.txtMoiNhat)
         var LLMoiNhat:LinearLayout = view.findViewById(R.id.LLMoiNhat)
+        var rvGoiYElec2:RecyclerView = view.findViewById(R.id.rvGoiYElec2)
+        var listGoiYElec2:MutableList<ItemProduct> = mutableListOf()
 
         LLDanhChoBan.setOnClickListener {
             LLDanhChoBan.setBackgroundResource(R.drawable.background_home2)
             LLMoiNhat.setBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
             txtDanhChoBan.setTextColor(ContextCompat.getColor(requireContext(),R.color.textColor))
             txtMoiNhat.setTextColor(ContextCompat.getColor(requireContext(),R.color.black))
+
+            val db = FirebaseFirestore.getInstance()
+            db.collection("products")
+                .whereEqualTo("city",txtCity.text.toString())
+                .whereEqualTo("display","true")
+                .addSnapshotListener{result,e->
+                    if(e!=null) {}
+                    listGoiYElec2.clear()
+                    for(document in result!!) {
+                        val category = document.data?.get("category").toString()
+                        val imageUrl = document.data?.get("picture") as MutableList<String>
+                        var title = document.data?.get("title").toString()
+                        var price = document.data?.get("price").toString()
+                        var city  = document.data?.get("city").toString()
+                        var  idProduct = document.data?.get("id").toString()
+                        val timestamp = document.getTimestamp("timestamp")
+                        var mTimeCount = timestamp?.let { it1 -> TimeCount(it1) }
+                        val txtTimeCount = mTimeCount?.timeCount()
+                        city = "$city . $txtTimeCount"
+                        if(category.contains("electron")){
+                            listGoiYElec2.add(ItemProduct(idProduct,imageUrl[0],title,price,city))
+                        }
+                    }
+                    rvGoiYElec2.adapter = ViewItemProduct2Adapter(listGoiYElec2,object : ClickInterface {
+                        override fun setOnClick(pos: Int) {
+                            val i1 = Intent(context, DetailActivity::class.java)
+                            i1.putExtra("id",listGoiYElec2[pos].id)
+                            startActivity(i1)
+                        }
+                    })
+                    rvGoiYElec2.layoutManager = GridLayoutManager(
+                        context,2
+                    )
+                }
         }
 
         LLMoiNhat.setOnClickListener {
@@ -112,25 +173,74 @@ class ElectronicFragment : Fragment(){
             LLDanhChoBan.setBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
             txtDanhChoBan.setTextColor(ContextCompat.getColor(requireContext(),R.color.black))
             txtMoiNhat.setTextColor(ContextCompat.getColor(requireContext(),R.color.textColor))
+
+            db.collection("products")
+                .orderBy("timestamp", Query.Direction.DESCENDING)
+                .addSnapshotListener{result,e->
+                    if(e!=null) {}
+                    listGoiYElec2.clear()
+                    for(document in result!!) {
+                        val imageUrl = document.data?.get("picture") as MutableList<String>
+                        var title = document.data?.get("title").toString()
+                        var price = document.data?.get("price").toString()
+                        var city  = document.data?.get("city").toString()
+                        var  idProduct = document.data?.get("id").toString()
+                        val timestamp = document.getTimestamp("timestamp")
+                        var mTimeCount = timestamp?.let { it1 -> TimeCount(it1) }
+                        val txtTimeCount = mTimeCount?.timeCount()
+                        city = "$city . $txtTimeCount"
+                        if(document.data?.get("display").toString() == "true" && document.data?.get("category") == "electron/telephone") {
+                            listGoiYElec2.add(ItemProduct(idProduct,imageUrl[0],title,price,city))
+                        }
+                    }
+                    rvGoiYElec2.adapter = ViewItemProduct2Adapter(listGoiYElec2,object : ClickInterface {
+                        override fun setOnClick(pos: Int) {
+                            val i1 = Intent(context, DetailActivity::class.java)
+                            i1.putExtra("id",listGoiYElec2[pos].id)
+                            startActivity(i1)
+                        }
+                    })
+                    rvGoiYElec2.layoutManager = GridLayoutManager(
+                        context,2
+                    )
+                }
         }
 
-        var rvGoiYElec2:RecyclerView = view.findViewById(R.id.rvGoiYElec2)
-        var listGoiYElec2:MutableList<ItemProduct> = mutableListOf()
-        listGoiYElec2.add(ItemProduct("",resources.getString(R.string.linkImage),"[Mã ELAP500K giảm 8% đơn 500K] Apple AirPods ...","đ28.000.000","Đã bán 10.6k"))
-        listGoiYElec2.add(ItemProduct("",resources.getString(R.string.linkImage),"[Mã ELAP500K giảm 8% đơn 500K] Apple AirPods ...","đ28.000.000","Đã bán 10.6k"))
-        listGoiYElec2.add(ItemProduct("",resources.getString(R.string.linkImage),"[Mã ELAP500K giảm 8% đơn 500K] Apple AirPods ...","đ28.000.000","Đã bán 10.6k"))
-        listGoiYElec2.add(ItemProduct("",resources.getString(R.string.linkImage),"[Mã ELAP500K giảm 8% đơn 500K] Apple AirPods ...","đ28.000.000","Đã bán 10.6k"))
-        listGoiYElec2.add(ItemProduct("",resources.getString(R.string.linkImage),"[Mã ELAP500K giảm 8% đơn 500K] Apple AirPods ...","đ28.000.000","Đã bán 10.6k"))
-        listGoiYElec2.add(ItemProduct("",resources.getString(R.string.linkImage),"[Mã ELAP500K giảm 8% đơn 500K] Apple AirPods ...","đ28.000.000","Đã bán 10.6k"))
-
-        rvGoiYElec2.adapter = ViewItemProduct2Adapter(listGoiYElec2,object:ClickInterface{
-            override fun setOnClick(pos: Int) {
-
+        db.collection("products")
+            .whereEqualTo("city",txtCity.text.toString())
+            .whereEqualTo("display","true")
+            /*.whereArrayContains("category","electron")*/
+            .addSnapshotListener{result,e->
+                if(e!=null) {}
+                listGoiYElec2.clear()
+                for(document in result!!) {
+                    val category = document.data?.get("category").toString()
+                    val imageUrl = document.data?.get("picture") as MutableList<String>
+                    var title = document.data?.get("title").toString()
+                    var price = document.data?.get("price").toString()
+                    var city  = document.data?.get("city").toString()
+                    var  idProduct = document.data?.get("id").toString()
+                    val timestamp = document.getTimestamp("timestamp")
+                    var mTimeCount = timestamp?.let { it1 -> TimeCount(it1) }
+                    val txtTimeCount = mTimeCount?.timeCount()
+                    city = "$city . $txtTimeCount"
+                    if(category.contains("electron")){
+                        listGoiYElec2.add(ItemProduct(idProduct,imageUrl[0],title,price,city))
+                    }
+                }
+                rvGoiYElec2.adapter = ViewItemProduct2Adapter(listGoiYElec2,object : ClickInterface {
+                    override fun setOnClick(pos: Int) {
+                        val i1 = Intent(context, DetailActivity::class.java)
+                        i1.putExtra("id",listGoiYElec2[pos].id)
+                        startActivity(i1)
+                    }
+                })
+                rvGoiYElec2.layoutManager = GridLayoutManager(
+                    context,2
+                )
             }
-        })
-        rvGoiYElec2.layoutManager = GridLayoutManager(
-            context,2
-        )
+
+
 
         backFragmentHom.setOnClickListener{
             fragmentManager?.popBackStack()

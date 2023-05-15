@@ -131,6 +131,14 @@ class ProfleFragment : Fragment() {
         startActivityForResult(intent,IMAGE_REQUEST_CODE)
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if(requestCode == IMAGE_REQUEST_CODE && resultCode == RESULT_OK && data!=null && data.data!=null){
+            img = data?.data!!
+            imageView.setImageURI(data?.data)
+        }
+    }
+
     private fun Bill() {
         var lloDonMua:LinearLayout = view.findViewById(R.id.lloDonMua)
         var lloDonBan:LinearLayout = view.findViewById(R.id.lloDonBan)
@@ -154,13 +162,6 @@ class ProfleFragment : Fragment() {
         }
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if(requestCode == IMAGE_REQUEST_CODE && resultCode == RESULT_OK && data!=null && data.data!=null){
-            img = data?.data!!
-            imageView.setImageURI(data?.data)
-        }
-    }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
