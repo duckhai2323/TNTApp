@@ -73,10 +73,12 @@ class ChatActivity : AppCompatActivity() {
             }
         sendButton.setOnClickListener {
             val message = messageBox.text.toString()
-            val chatRoomObject1 = ChatRoom("100100", username, name, message, FieldValue.serverTimestamp())
-            db.collection("chats").add(chatRoomObject1)
-            messageBox.setText("")
-
+            if (message != "") {
+                val chatRoomObject1 =
+                    ChatRoom("100100", username, name, message, FieldValue.serverTimestamp())
+                db.collection("chats").add(chatRoomObject1)
+                messageBox.setText("")
+            }
         }
 
 //        val backButton: ImageView = findViewById(R.id.backFromChat)
