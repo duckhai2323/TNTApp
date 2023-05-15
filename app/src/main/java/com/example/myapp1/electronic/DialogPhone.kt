@@ -267,7 +267,7 @@ class DialogPhone() : BottomSheetDialogFragment(){
                 "description" to edtDescription.text.toString(),
                 "display" to "true",
                 "id" to id,
-                "price" to "$edtPrice.text.toString()đ",
+                "price" to (edtPrice.text.toString()+"đ"),
                 "series" to c,
                 "status" to txtTinhTrang.text.toString(),
                 "time" to txtThoiGianSD.text.toString(),
