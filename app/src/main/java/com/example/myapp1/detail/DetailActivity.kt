@@ -20,6 +20,7 @@ import at.blogc.android.views.ExpandableTextView
 import com.example.myapp1.CartActivity
 import com.example.myapp1.ChatActivity
 import com.example.myapp1.ClientActivity
+import com.example.myapp1.PayActivity
 import com.example.myapp1.R
 import com.example.myapp1.TimeCount
 import com.example.myapp1.ViewItemProduct1Adapter
@@ -34,10 +35,12 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.squareup.picasso.Picasso
 import me.relex.circleindicator.CircleIndicator3
+import java.util.MissingFormatArgumentException
 
 class DetailActivity : AppCompatActivity() {
     lateinit var id:String
     private val db = Firebase.firestore
+    lateinit var txtPrice:TextView
     @RequiresApi(Build.VERSION_CODES.O)
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,6 +49,7 @@ class DetailActivity : AppCompatActivity() {
         val i = intent
         id = i.getStringExtra("id").toString()
         addEvent()
+        txtPrice = findViewById<TextView>(R.id.txtPrice1)
 
         val btnReturn = findViewById<ImageView>(R.id.btnReturn)
         btnReturn.setOnClickListener{
@@ -64,6 +68,23 @@ class DetailActivity : AppCompatActivity() {
         Chat()
         AddToCart()
         DisplayCart()
+        StartPay()
+    }
+
+    private fun StartPay() {
+        var txtShopping = findViewById<TextView>(R.id.txtShopping)
+        var listIsChecked:MutableList<String> = mutableListOf()
+        listIsChecked.add(id)
+        txtShopping.setOnClickListener{
+            val i = Intent(this@DetailActivity, PayActivity::class.java)
+            i.putExtra("listIsChecked",listIsChecked.toTypedArray())
+            i.putExtra("quantity",1)
+            val txtPrice1 = txtPrice.text.toString()
+            val priceStr = txtPrice1.substring(0,txtPrice1.length-1)
+            val priceLong = priceStr.replace(".","").toLong()
+            i.putExtra("price",priceLong)
+            startActivity(i)
+        }
     }
 
     private fun DisplayCart() {
@@ -319,7 +340,6 @@ class DetailActivity : AppCompatActivity() {
         val circle1 = findViewById<CircleIndicator3>(R.id.circle1)
         var txtTitle = findViewById<TextView>(R.id.txtTitle)
         var txtTime = findViewById<TextView>(R.id.txtTime)
-        var txtPrice = findViewById<TextView>(R.id.txtPrice1)
         var txtAddress = findViewById<TextView>(R.id.txtClientAddress)
         db.collection("products")
             .document(id)
