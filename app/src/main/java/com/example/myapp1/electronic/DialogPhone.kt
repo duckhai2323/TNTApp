@@ -1,22 +1,49 @@
 package com.example.myapp1.electronic
 
 import android.annotation.SuppressLint
+import android.app.Activity
+import android.app.Activity.RESULT_OK
 import android.app.Dialog
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.myapp1.R
+import com.example.myapp1.ViewItemAdapterImage
 import com.example.myapp1.home.ItemImageText
+import com.example.myapp1.home.username
+import com.google.android.gms.cast.framework.media.ImagePicker
+import com.google.android.gms.tasks.Task
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.UploadTask
+import com.google.firebase.storage.ktx.storage
+import java.sql.Timestamp
+import java.util.UUID
 
-class DialogPhone : BottomSheetDialogFragment(){
+class DialogPhone() : BottomSheetDialogFragment(){
+    private val IMAGE_REQUEST_CODE = 1000
+    lateinit var rvImagePush:RecyclerView
+    lateinit var selectImagePush:LinearLayout
+    private lateinit var adapter: ViewItemAdapterImage
+    var images:MutableList<Uri> = mutableListOf()
+
+    val db = Firebase.firestore
+    val ref = db.collection("products")
+    val id = ref.document().id
     lateinit var txtphanloai:TextView
     lateinit var txtNhaSanXuatMin:TextView
     lateinit var txtNhaSanXuat:TextView
@@ -41,6 +68,9 @@ class DialogPhone : BottomSheetDialogFragment(){
     lateinit var txtGiaMin:TextView
     lateinit var txtGia:TextView
     lateinit var edtGia:TextView
+    lateinit var edtPrice:EditText
+    lateinit var edtTitle:EditText
+    lateinit var edtDescription:EditText
 
     lateinit var txtThoiGianSDMin:TextView
     lateinit var txtThoiGianSD:TextView
@@ -139,9 +169,12 @@ class DialogPhone : BottomSheetDialogFragment(){
         txtBaoHanh = view.findViewById(R.id.txtBaoHanh)
         edtBaoHanh = view.findViewById(R.id.edtBaoHanh)
 
-        txtGiaMin = view.findViewById(R.id.txtGiaMin)
+        /*txtGiaMin = view.findViewById(R.id.txtGiaMin)
         txtGia = view.findViewById(R.id.txtGia)
-        edtGia = view.findViewById(R.id.edtGia)
+        edtGia = view.findViewById(R.id.edtGia)*/
+        edtPrice = view.findViewById(R.id.edtPrice)
+        edtTitle = view.findViewById(R.id.edtTitle)
+        edtDescription = view.findViewById(R.id.edtDescription)
 
         txtThoiGianSDMin = view.findViewById(R.id.txtThoiGianDaSDMin)
         txtThoiGianSD = view.findViewById(R.id.txtThoiGianDaSD)
@@ -181,11 +214,11 @@ class DialogPhone : BottomSheetDialogFragment(){
             fragmentManager?.let { it1 -> dialogBrand.show(it1, "aaaa") }
         }
 
-        var selectPrice:LinearLayout = view.findViewById(R.id.selectPrice)
+        /*var selectPrice:LinearLayout = view.findViewById(R.id.selectPrice)
         selectPrice.setOnClickListener {
             var dialogBrand: DialogSelect = DialogSelect("price")
             fragmentManager?.let { it1 -> dialogBrand.show(it1, "aaaa") }
-        }
+        }*/
 
         var selectAddress:LinearLayout = view.findViewById(R.id.selectAddress)
         selectAddress.setOnClickListener {
@@ -203,9 +236,135 @@ class DialogPhone : BottomSheetDialogFragment(){
         imgClose.setOnClickListener{
             bottomSheetDialog.dismiss()
         }
+
+        selectImagePush = view.findViewById(R.id.selectImagePush)
+        rvImagePush  =view.findViewById(R.id.rvImagePush)
+        adapter = ViewItemAdapterImage(images)
+        rvImagePush.adapter = adapter
+        rvImagePush.layoutManager = LinearLayoutManager(context,LinearLayoutManager.HORIZONTAL,false)
+        selectImagePush.setOnClickListener{
+            selectImagesFromGallery()
+            var video:LinearLayout = view.findViewById(R.id.video)
+            video.setOnClickListener{
+                uploadImages(images)
+            }
+        }
+
+        val txtPushData:LinearLayout = view.findViewById(R.id.pushData)
+        txtPushData.setOnClickListener{
+            val str = txtNhaSanXuat.text.toString()
+            val index = str.indexOf("-")
+            val b = str.substring(0, index).trim()
+            val c = str.substring(index + 1).trim()
+            val db = Firebase.firestore
+            val mapTelephone:Map<String,String> = hashMapOf(
+                "address" to txtDiaChi.text.toString(),
+                "brand" to b,
+                "capacity" to txtDungLuong.text.toString(),
+                "category" to "electron/telephone",
+                "city" to "Hà Nội",
+                "color" to txtMauSac.text.toString(),
+                "description" to edtDescription.text.toString(),
+                "display" to "true",
+                "id" to id,
+                "price" to edtPrice.text.toString(),
+                "series" to c,
+                "status" to txtTinhTrang.text.toString(),
+                "time" to txtThoiGianSD.text.toString(),
+                "title" to edtTitle.text.toString(),
+                "username" to username,
+                "warranty" to txtBaoHanh.text.toString()
+             )
+            ref.document(id).update(mapTelephone)
+            ref.document(id).update("timestamp",FieldValue.serverTimestamp())
+
+            bottomSheetDialog.dismiss()
+        }
+
         bottomSheetDialog.setContentView(view)
         bottomSheetDialog.behavior.state = BottomSheetBehavior.STATE_EXPANDED
         bottomSheetDialog.setCancelable(false)
         return bottomSheetDialog
     }
+    private fun selectImagesFromGallery() {
+        val intent = Intent(Intent.ACTION_GET_CONTENT)
+        intent.type = "image/*"
+        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
+        startActivityForResult(Intent.createChooser(intent, "Select Images"), IMAGE_REQUEST_CODE)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == IMAGE_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
+            if (data.clipData != null) {
+                val count = data.clipData!!.itemCount
+                for (i in 0 until count) {
+                    val imageUri = data.clipData!!.getItemAt(i).uri
+                    images.add(imageUri)
+                }
+                selectImagePush.visibility = View.GONE
+                rvImagePush.visibility = View.VISIBLE
+            } else {
+                val imageUri = data.data!!
+                selectImagePush.visibility = View.GONE
+                images.add(imageUri)
+                rvImagePush.visibility = View.VISIBLE
+            }
+            adapter.notifyDataSetChanged()
+        }
+    }
+
+    private fun uploadImages(images: List<Uri>) {
+        val storage = Firebase.storage
+        val storageRef = storage.reference
+
+        val pictureUrls = mutableListOf<String>()
+        val uploadTasks = mutableListOf<UploadTask>()
+        for (image in images) {
+            val imageName = UUID.randomUUID().toString() + ".jpg"
+            val imageRef = storageRef.child("images/$imageName")
+
+            val uploadTask = imageRef.putFile(image)
+            uploadTasks.add(uploadTask)
+
+            val urlTask = uploadTask.continueWithTask { task ->
+                if (!task.isSuccessful) {
+                    task.exception?.let { throw it }
+                }
+                imageRef.downloadUrl
+            }.addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val downloadUrl = task.result.toString()
+                    pictureUrls.add(downloadUrl)
+                } else {
+                    // Xử lý lỗi tải lên ảnh
+                }
+
+                if (pictureUrls.size == images.size) {
+                    // Tất cả các ảnh đã được tải lên thành công
+                    // Tiến hành lưu các URL vào Firestore
+                    savePictureUrls(pictureUrls)
+                }
+            }
+        }
+    }
+
+    private fun savePictureUrls(pictureUrls: List<String>) {
+        val db = Firebase.firestore
+        val productRef = db.collection("products").document(id)
+
+        val data:Map<String , Any> = hashMapOf(
+            "picture" to pictureUrls
+        )
+
+        productRef.set(data)
+            .addOnSuccessListener {
+                // Xử lý khi cập nhật thành công
+            }
+            .addOnFailureListener { e ->
+                // Xử lý khi cập nhật thất bại
+            }
+    }
+
+
 }
