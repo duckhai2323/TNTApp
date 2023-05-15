@@ -1,5 +1,6 @@
 package com.example.myapp1
 
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,6 +10,7 @@ import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.myapp1.detail.DetailActivity
 import com.example.myapp1.home.ClickInterface
 import com.example.myapp1.home.ItemProduct
 import com.example.myapp1.home.username
@@ -46,7 +48,9 @@ class ProductDisplayFragment: Fragment() {
                     }
                     rvProductDisplay.adapter = ViewItemAdapterTin(listProduct,object:ClickInterface{
                         override fun setOnClick(pos: Int) {
-                            TODO("Not yet implemented")
+                            val intent = Intent(context, DetailActivity::class.java)
+                            intent.putExtra("id", listProduct[pos].id)
+                            startActivity(intent)
                         }
                     })
                 }
