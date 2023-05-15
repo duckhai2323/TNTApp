@@ -122,6 +122,7 @@ class HomeFragment : Fragment() {
         search.setOnClickListener {
             val intent = Intent(context,SearchActivity::class.java)
             intent.putExtra("KeyWord",searchBox.text.toString())
+            searchBox.setText("")
             startActivity(intent)
         }
 

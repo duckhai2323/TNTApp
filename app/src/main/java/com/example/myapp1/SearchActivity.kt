@@ -28,9 +28,9 @@ class SearchActivity : AppCompatActivity() {
         val backButton: ImageView = findViewById(R.id.backFromSearch)
         var productList:MutableList<ItemProduct> = mutableListOf()
         db.collection("products")
-            .get().addOnSuccessListener { result ->
+            .addSnapshotListener { result, e ->
                 productList.clear()
-                for (document in result) {
+                for (document in result!!) {
                     val imageUrl = document.data?.get("picture") as MutableList<String>
                     val title = document.data?.get("title").toString()
                     val price = document.data?.get("price").toString()
@@ -38,7 +38,7 @@ class SearchActivity : AppCompatActivity() {
                     var  idProduct = document.data?.get("id").toString()
                     val timestamp = document.getTimestamp("timestamp")
                     val title_check = title.uppercase().replace(" ", "")
-                    if (title_check.contains(key)) {
+                    if (title_check.contains(key) && key != "") {
                         productList.add(ItemProduct(idProduct, imageUrl[0], title, price, city))
                     }
                 }
