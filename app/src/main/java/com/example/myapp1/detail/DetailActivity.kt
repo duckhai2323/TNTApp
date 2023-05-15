@@ -175,7 +175,7 @@ class DetailActivity : AppCompatActivity() {
                                     var mTimeCount = timestamp?.let { it1 -> TimeCount(it1) }
                                     val txtTimeCount = mTimeCount?.timeCount()
                                     city = "$city . $txtTimeCount"
-                                    if(idProduct!=id) {
+                                    if(idProduct!=id && document.data?.get("username").toString() != username) {
                                         listProduct1.add(ItemProduct(idProduct,imageUrl[0],title,price,city))
                                     }
                                 }

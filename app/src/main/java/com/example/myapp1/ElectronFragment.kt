@@ -21,6 +21,7 @@ import com.example.myapp1.detail.DetailActivity
 import com.example.myapp1.home.ClickInterface
 import com.example.myapp1.home.ItemImageText
 import com.example.myapp1.home.ItemProduct
+import com.example.myapp1.home.username
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import me.relex.circleindicator.CircleIndicator3
@@ -103,7 +104,7 @@ class ElectronicFragment : Fragment(){
                     var mTimeCount = timestamp?.let { it1 -> TimeCount(it1) }
                     val txtTimeCount = mTimeCount?.timeCount()
                     city = "$city . $txtTimeCount"
-                    if(document.data?.get("display").toString() == "true" && price.length == 10) {
+                    if(document.data?.get("display").toString() == "true" && price.length == 10 && document.data?.get("username").toString() != username) {
                         listGoiYElec1.add(ItemProduct(idProduct,imageUrl[0],title,price,city))
                     }
                     if(listGoiYElec1.size == 5){break}
@@ -151,7 +152,7 @@ class ElectronicFragment : Fragment(){
                         var mTimeCount = timestamp?.let { it1 -> TimeCount(it1) }
                         val txtTimeCount = mTimeCount?.timeCount()
                         city = "$city . $txtTimeCount"
-                        if(category.contains("electron")){
+                        if(category.contains("electron") && document.data?.get("username").toString() != username){
                             listGoiYElec2.add(ItemProduct(idProduct,imageUrl[0],title,price,city))
                         }
                     }
@@ -189,7 +190,7 @@ class ElectronicFragment : Fragment(){
                         var mTimeCount = timestamp?.let { it1 -> TimeCount(it1) }
                         val txtTimeCount = mTimeCount?.timeCount()
                         city = "$city . $txtTimeCount"
-                        if(document.data?.get("display").toString() == "true" && document.data?.get("category") == "electron/telephone") {
+                        if(document.data?.get("display").toString() == "true" && document.data?.get("category") == "electron/telephone" && document.data?.get("username").toString() != username) {
                             listGoiYElec2.add(ItemProduct(idProduct,imageUrl[0],title,price,city))
                         }
                     }
@@ -224,7 +225,7 @@ class ElectronicFragment : Fragment(){
                     var mTimeCount = timestamp?.let { it1 -> TimeCount(it1) }
                     val txtTimeCount = mTimeCount?.timeCount()
                     city = "$city . $txtTimeCount"
-                    if(category.contains("electron")){
+                    if(category.contains("electron") && document.data?.get("username").toString() != username){
                         listGoiYElec2.add(ItemProduct(idProduct,imageUrl[0],title,price,city))
                     }
                 }

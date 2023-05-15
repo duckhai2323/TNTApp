@@ -18,6 +18,7 @@ import com.example.myapp1.detail.DetailActivity
 import com.example.myapp1.home.ClickInterface
 import com.example.myapp1.home.HomeActivity
 import com.example.myapp1.home.ItemProduct
+import com.example.myapp1.home.username
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -230,25 +231,48 @@ class ProductActivity : AppCompatActivity(), OnInputData1 {
                         val txtTimeCount = mTimeCount?.timeCount()
                         city = "$city . $txtTimeCount"
 
-                        if(mapFilter["price"]!=null) {
-                            val priceStr = mapFilter["price"].toString()
-                            val index:Int = priceStr.lastIndexOf("-")
-                            var fromPrice:Float
-                            if(priceStr[0] == '0'){
-                                fromPrice = 0F
-                            } else if(priceStr[3] == '.') {
-                                fromPrice = priceStr.substring(startIndex = 0, endIndex = 2).toFloat()/1000
+                        if (document.data?.get("username").toString() != username) {
+                            if (mapFilter["price"] != null) {
+                                val priceStr = mapFilter["price"].toString()
+                                val index: Int = priceStr.lastIndexOf("-")
+                                var fromPrice: Float
+                                if (priceStr[0] == '0') {
+                                    fromPrice = 0F
+                                } else if (priceStr[3] == '.') {
+                                    fromPrice = priceStr.substring(startIndex = 0, endIndex = 2)
+                                        .toFloat() / 1000
+                                } else {
+                                    fromPrice =
+                                        priceStr.substring(startIndex = 0, endIndex = 3).toFloat()
+                                }
+                                val toPrice = priceStr.substring(
+                                    startIndex = (index + 2),
+                                    endIndex = (index + 5)
+                                ).toFloat()
+                                val priceProduct =
+                                    price.substring(startIndex = 0, endIndex = 3).toFloat()
+                                if (priceProduct in fromPrice..toPrice) {
+                                    listProductFilter.add(
+                                        ItemProduct(
+                                            idProduct,
+                                            imageUrl[0],
+                                            title,
+                                            price,
+                                            city
+                                        )
+                                    )
+                                }
+                            } else {
+                                listProductFilter.add(
+                                    ItemProduct(
+                                        idProduct,
+                                        imageUrl[0],
+                                        title,
+                                        price,
+                                        city
+                                    )
+                                )
                             }
-                            else {
-                                 fromPrice = priceStr.substring(startIndex = 0, endIndex = 3).toFloat()
-                            }
-                            val toPrice = priceStr.substring(startIndex = (index+2), endIndex = (index+5)).toFloat()
-                            val priceProduct = price.substring(startIndex = 0, endIndex = 3).toFloat()
-                            if(priceProduct in fromPrice..toPrice) {
-                                listProductFilter.add(ItemProduct(idProduct,imageUrl[0],title,price,city))
-                            }
-                        } else {
-                            listProductFilter.add(ItemProduct(idProduct,imageUrl[0],title,price,city))
                         }
                     }
                     DisplayListProduct(listProductFilter)
