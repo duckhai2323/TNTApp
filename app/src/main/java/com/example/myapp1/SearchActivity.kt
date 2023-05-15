@@ -24,7 +24,7 @@ class SearchActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
         val rvProduct2: RecyclerView = findViewById(R.id.rvListItem)
-        key = intent.getStringExtra("KeyWord").toString()
+        key = intent.getStringExtra("KeyWord").toString().uppercase().replace(" ", "")
         val backButton: ImageView = findViewById(R.id.backFromSearch)
         var productList:MutableList<ItemProduct> = mutableListOf()
         db.collection("products")
@@ -37,7 +37,8 @@ class SearchActivity : AppCompatActivity() {
                     var city  = document.data?.get("city").toString()
                     var  idProduct = document.data?.get("id").toString()
                     val timestamp = document.getTimestamp("timestamp")
-                    if (title.contains(key)) {
+                    val title_check = title.uppercase().replace(" ", "")
+                    if (title_check.contains(key)) {
                         productList.add(ItemProduct(idProduct, imageUrl[0], title, price, city))
                     }
                 }
